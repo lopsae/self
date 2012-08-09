@@ -127,6 +127,13 @@ ARGV.each do |target|
 	
 	# If self is used, the directory is an entry itself
 	if options[:use_self] and options[:use_dirs]
+		# TODO When self is used there is some ambiguity
+		# should the -d option be respected? using self always should
+		# handle the target directory
+		# and in that cases should the contents be handled too?
+		# 
+		# Using self should handle ONLY the target, unless -r is given
+		# or another option (--contents) is specified
 		entries << target
 	end
 	
@@ -172,62 +179,4 @@ end
 
 exit 0
 
-
-
-	
-	# is directory? is self?
-# end
-
-# ----------------
-
-# If no target is given the files of the current dir are assumed
-# by default it could show the permition and contents of .
-# similar to lsi
-# yes, ls, when used with folder it works with its contents,
-# not the folder itself, if used with files it work with the
-# files
-# using perms -df is the same as using it without parameters
-# when setting perms, print only changes, unless -v
-
-
-puts "ARGV >> #{ARGV}"
-puts "options >> #{options}"
-puts RUBY_VERSION
-
-
-
-
-
-exit
-
-
-
-
-folders = Dir.glob('**/', File::FNM_DOTMATCH)
-
-folders.each do |folder|
-	stats = File.stat(folder)
-	perms = sprintf('%o', stats.mode)
-	perms = perms[-3, 3]
-
-	puts "#{perms} #{folder}"
-end
-
-folders.each do |folder|
-	files = Dir.glob(folder + '*', File::FNM_DOTMATCH)
-	# puts "#{folder + '*'} globed #{files}"
-	files.delete('.')
-	files.delete('..')
-
-	files.each do |file|
-		# puts "#{file} is dir? #{File.directory?(file)}"
-		next if File.directory?(file)
-		
-		stats = File.stat(file)
-		perms = sprintf('%o', stats.mode)
-		perms = perms[-3, 3]
-
-		puts "#{perms} #{file}"
-	end
-end
 
