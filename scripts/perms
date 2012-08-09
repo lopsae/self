@@ -101,7 +101,7 @@ entries = []
 ARGV.each do |target|
 	if not File.exists? target
 		warn "'#{target}' no such file or directory"
-		errors[:missing_target]
+		errors[:missing_target] = true
 		next
 	end
 	
@@ -112,44 +112,53 @@ ARGV.each do |target|
 	end
 	
 	# Not a file, we have a directory
-	if options[:use_dirs]
-		# Array to save all the dirs we need to go through
-		# starting with the target itself
-		dirs_to_check = ['.']
-		
-		if options[:recursive]
-			glob_params = ['**/']
-			glob_params << File::FNM_DOTMATCH if options[:use_all]
-			Dir.chdir(target) do |path|
-				# We keep al subdirs of the target
-				dirs_to_check += Dir.glob(*glob_params)
-			end
-		end
-		
-		if options[:use_self]
-			entries << target
-		end
-		
-		glob_params = ['*']
+	# For directories we keep a list of the directories we have to go
+	# through, starting with the target itself
+	dirs_to_check = ['.']
+	
+	# If using recursive we add to the list all subdirectories
+	if options[:recursive]
+		glob_params = ['**/']
 		glob_params << File::FNM_DOTMATCH if options[:use_all]
-		dirs_to_check.each do |subdir_target|
-			# For each dir we keep the contents as entries
-			Dir.chdir(target) do |path|
-				Dir.chdir(subdir_target) do |path|
-					dir_contents = Dir.glob(*glob_params)
-					dir_contents.delete('.')
-					dir_contents.delete('..')
-					dir_path = [target, subdir_target]
-					dir_path.delete('.')
-					dir_contents.map! do |value|
-						File.join(*dir_path, value)
-					end
-					entries += dir_contents
-				end
-			end
+		Dir.chdir(target) do |path|
+			dirs_to_check += Dir.glob(*glob_params)
 		end
-
-	end # if
+	end
+	
+	# If self is used, the directory is an entry itself
+	if options[:use_self] and options[:use_dirs]
+		entries << target
+	end
+	
+	glob_params = ['*']
+	glob_params << File::FNM_DOTMATCH if options[:use_all]
+	dirs_to_check.each do |subdir_target|
+		# Clean up the path to check
+		dir_parts = [target, subdir_target]
+		dir_path = File.join(*dir_parts)
+		
+		# For each dir we keep the contents as entries
+		Dir.chdir(dir_path) do |path|
+			dir_contents = Dir.glob(*glob_params)
+			dir_contents.delete('.')
+			dir_contents.delete('..')
+			
+			# Cleanup of files or dirs, depending on options
+			dir_contents.select! do |item|
+				next true if options[:use_files] and File.file? item
+				next true if options[:use_dirs] and File.directory? item
+				false
+			end
+			
+			# Add the leading path to properly add them as entries
+			dir_parts.delete('.')
+			dir_contents.map! do |value|
+				File.join(*dir_parts, value)
+			end
+			
+			entries += dir_contents
+		end
+	end
 
 end # each
 
