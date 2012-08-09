@@ -10,23 +10,29 @@ opts = OptionParser.new
 opts.banner = "#{opts.banner} [<target>]"
 opts.separator ''
 opts.separator <<SEP
-Perms prints and sets the permitions of files and directores. If used alone
-the permitions of the current directory is printed, when used with the -F
-and/or -D options the permitions of files or directores are changed
-accordingly. If <target> is a file only that file will be handled, if
-<target> is a directory the contents of that directory will be handled and
-the directory itself if -s is used. Options -f and -d can limit showing and
-setting the permitions to only files or directories, the default behavior
-is the same as using both options, both files and directories are handled.
+Perms prints and sets the permitions of files and directores. If used 
+without any options or targets the permitions of the visible items in
+the current directory are displayed.
+
+If a <target> is provided and it is a file, its permitions will be
+displayed, if it is a directory the permitions of its contents will be
+displayed.
+
+Options -f and -d can limit the displayed items to only files or
+directories. By default both are shown. Using option -a displays also
+hidden files and/or folders.
+
+Using option -F or -D will modify the permitions of any files and/or
+directories that are displayed.
 SEP
 opts.separator ''
 opts.separator 'Options:'
 
-opts.on('-f', '--files', 'Handles files.') do
+opts.on('-f', '--files', 'Displays and handles files.') do
 	options[:use_files] = true
 end
 
-opts.on('-d', '--dirs', 'Handles directories.') do
+opts.on('-d', '--dirs', 'Displays and handles directories.') do
 	options[:use_dirs] = true
 end
 
@@ -42,11 +48,11 @@ opts.on('-D', '--set-dirs MODE', 'Sets MODE in all handled directories.') do |mo
 	options[:mode_dirs] = mode
 end
 
-opts.on('-s', '--self', 'If the target is a directory, also handles it.') do
+opts.on('-s', '--self', 'If the target is a directory, also displays and handles it.') do
 	options[:use_self] = true
 end
 
-opts.on('-a', '--all', 'Also handle hidden files and/or directories.') do
+opts.on('-a', '--all', 'Also displays and handles hidden files and/or directories.') do
 	options[:use_all] = true
 end
 
