@@ -145,15 +145,14 @@ ARGV.each do |target|
 	end
 	
 	# If self is used, the directory is an entry itself
-	if options[:use_self] and options[:use_dirs]
-		# TODO When self is used there is some ambiguity
-		# should the -d option be respected? using self always should
-		# handle the target directory
-		# and in that cases should the contents be handled too?
-		# 
-		# Using self should handle ONLY the target, unless -r is given
-		# or another option (--contents) is specified
+	if options[:use_self]
 		entries << target
+
+		# We only continue with the directory contents if
+		# we use recursive or contents
+		if not options[:use_contents] and not options[:recursive]
+			next
+		end
 	end
 	
 	glob_params = ['*']
