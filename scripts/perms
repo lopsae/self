@@ -10,41 +10,52 @@ opts = OptionParser.new
 opts.banner = "#{opts.banner} [<target>]"
 opts.separator ''
 opts.separator <<SEP
-Perms prints and sets the permitions of files and directores. If used 
-without any options or targets the permitions of the visible items in
+Perms prints or sets the permitions of files and directores. If used 
+without any option or target the permitions of the visible items in
 the current directory are displayed.
 
 If a <target> is provided and it is a file, its permitions will be
 displayed, if it is a directory the permitions of its contents will be
 displayed.
 
-Options -f and -d can limit the displayed items to only files or
-directories. By default both are shown. Using option -a displays also
-hidden files and/or folders.
+If <target> is a folder the option --self can be used to display the
+permitions of the folder itself, instead of their contents. Option
+--contents can be used along with --self to display both the <target>
+folder and its contents.
 
-Using option -F or -D will modify the permitions of any files and/or
-directories that are displayed.
+Options --files and -dirs can limit the displayed items to only files
+or directories. By default both are shown. Using option --all displays
+also hidden files and/or folders.
+
+Using option --set_files or --set-dirs will modify the permitions of
+any files and/or directories that are also displayed. Option --set-both
+will modify the permitions of all items displayed.
 SEP
 opts.separator ''
 opts.separator 'Options:'
 
-opts.on('-f', '--files', 'Displays and handles files.') do
+opts.on('-f', '--files', 'Displays only files.') do
 	options[:use_files] = true
 end
 
-opts.on('-d', '--dirs', 'Displays and handles directories.') do
+opts.on('-d', '--dirs', 'Displays only directories.') do
 	options[:use_dirs] = true
 end
 
-opts.on('-r', '--recursive', 'Enters recursively into subdirectories.') do
-	options[:recursive] = true;
+opts.on('-a', '--all', 'Also displays hidden files and/or directories.') do
+	options[:use_all] = true
 end
 
-opts.on('-F', '--set-files MODE', OptionParser::OctalInteger, 'Sets MODE in all handled files.') do |mode|
+opts.on('-F', '--set-files MODE', OptionParser::OctalInteger, 'Sets MODE in all displayed files.') do |mode|
 	options[:mode_files] = mode
 end
 
-opts.on('-D', '--set-dirs MODE', 'Sets MODE in all handled directories.') do |mode|
+opts.on('-D', '--set-dirs MODE', 'Sets MODE in all displayed directories.') do |mode|
+	options[:mode_dirs] = mode
+end
+
+opts.on('-B', '--set-both MODE', 'Sets MODE in all displayed files and directories.') do |mode|
+	options[:mode_files] = mode
 	options[:mode_dirs] = mode
 end
 
@@ -52,8 +63,16 @@ opts.on('-s', '--self', 'If the target is a directory, also displays and handles
 	options[:use_self] = true
 end
 
-opts.on('-a', '--all', 'Also displays and handles hidden files and/or directories.') do
-	options[:use_all] = true
+opts.on('-c', '--contents', 'If the --self option is used..') do
+	options[:use_contents] = true
+end
+
+opts.on('-r', '--recursive', 'Enters recursively into subdirectories.') do
+	options[:recursive] = true;
+end
+
+opts.on('-g', '--color', 'Displays colored output.') do
+	options[:colorize] = true
 end
 
 opts.on('-v', '--verbose', 'When setting modes, see all unchanged entries.') do
