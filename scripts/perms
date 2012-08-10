@@ -71,9 +71,9 @@ opts.on('-r', '--recursive', 'Enters recursively into subdirectories.') do
 	options[:recursive] = true;
 end
 
-opts.on('-g', '--color', 'Displays colored output.') do
-	options[:colorize] = true
-end
+# opts.on('-g', '--color', 'Displays colored output.') do
+# 	options[:colorize] = true
+# end
 
 opts.on('-v', '--verbose', 'When setting modes, see all unchanged entries.') do
 	options[:verbose] = true
@@ -117,7 +117,7 @@ if options[:mode_files] or options[:mode_dirs]
 	modes.each do |mode|
 		if not mode.match(/^[0-7]+$/) or mode.to_i(8) > 0777
 			warn "Invalid mode #{mode}"
-			exit 1
+			exit 2
 		end
 	end
 end
@@ -151,6 +151,17 @@ ARGV.each do |target|
 	# through, starting with the target itself
 	dirs_to_check = ['.']
 	
+	# If self is used, the directory is an entry itself
+	if options[:use_self]
+		entries << target
+		
+		# We only continue with the directory contents if
+		# we use recursive or contents
+		if not options[:use_contents] and not options[:recursive]
+			next
+		end
+	end
+	
 	# If using recursive we add to the list all subdirectories
 	if options[:recursive]
 		glob_params = ['**/']
@@ -160,17 +171,8 @@ ARGV.each do |target|
 		end
 	end
 	
-	# If self is used, the directory is an entry itself
-	if options[:use_self]
-		entries << target
-
-		# We only continue with the directory contents if
-		# we use recursive or contents
-		if not options[:use_contents] and not options[:recursive]
-			next
-		end
-	end
-	
+	# Using the list of dirs to check, we go through each of them
+	# and all all apropiate contents to entries
 	glob_params = ['*']
 	glob_params << File::FNM_DOTMATCH if options[:use_all]
 	dirs_to_check.each do |subdir_target|
