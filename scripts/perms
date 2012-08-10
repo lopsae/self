@@ -29,7 +29,8 @@ also hidden files and/or folders.
 
 Using option --set_files or --set-dirs will modify the permitions of
 any files and/or directories that are also displayed. Option --set-both
-will modify the permitions of all items displayed.
+will modify the permitions of all items displayed. All provided modes
+should in octal form.
 SEP
 opts.separator ''
 opts.separator 'Options:'
@@ -209,10 +210,24 @@ entries.each do |entry|
 	stats = File.stat(entry)
 	perms = sprintf('%o', stats.mode)
 	perms = perms[-3, 3]
+	new_perms = nil
 	
-	puts "#{perms} #{entry}"
+	if File.file? entry
+		new_perms = options[:mode_files] if options[:mode_files]
+	else
+		new_perms = options[:mode_dirs] if options[:mode_dirs]
+	end
+	
+	if new_perms
+		File.chmod(new_perms, entry)
+		puts "#{perms} -> #{new_perms.to_s(8)} #{entry}"
+	else
+		puts "#{perms} #{entry}"
+	end
 end
 
-exit 0
+# Bye bye
+exit 3 if errors.length > 0
+exit
 
 
