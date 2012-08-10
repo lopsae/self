@@ -46,7 +46,7 @@ opts.on('-a', '--all', 'Also displays hidden files and/or directories.') do
 	options[:use_all] = true
 end
 
-opts.on('-F', '--set-files MODE', OptionParser::OctalInteger, 'Sets MODE in all displayed files.') do |mode|
+opts.on('-F', '--set-files MODE', 'Sets MODE in all displayed files.') do |mode|
 	options[:mode_files] = mode
 end
 
@@ -109,6 +109,22 @@ if not options[:use_files] and not options[:use_dirs]
 	options[:use_files] = true
 	options[:use_dirs] = true
 end
+
+# Check provided modes
+if options[:mode_files] or options[:mode_dirs]
+	modes = [options[:mode_files], options[:mode_dirs]]
+	modes.compact!
+	modes.each do |mode|
+		if not mode.match(/^[0-7]+$/) or mode.to_i(8) > 0777
+			warn "Invalid mode #{mode}"
+			exit 1
+		end
+	end
+end
+
+# All modes ok, so we get them to ints
+options[:mode_files] = options[:mode_files].to_i(8) if options[:mode_files]
+options[:mode_dirs] = options[:mode_dirs].to_i(8) if options[:mode_dirs]
 
 # Hash for errors encountered
 errors = {}
