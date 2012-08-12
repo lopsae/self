@@ -72,9 +72,11 @@ opts.on('-r', '--recursive', 'Enters recursively into subdirectories.') do
 	options[:recursive] = true;
 end
 
-# opts.on('-g', '--color', 'Displays colored output.') do
-# 	options[:colorize] = true
-# end
+opts.on('-g', '--color', 'Displays colored output.') do
+	if STDOUT.tty?
+		options[:colorize] = true
+	end
+end
 
 opts.on('-v', '--verbose', 'When setting modes, see all unchanged entries.') do
 	options[:verbose] = true
@@ -212,17 +214,36 @@ entries.each do |entry|
 	perms = perms[-3, 3]
 	new_perms = nil
 	
+	# Colorization values
+	entry_color = ''
+	end_color = ''
+	set_color = ''
+	same_color = ''
+	if options[:colorize]
+		end_color = "\033[0m" # exit code
+		set_color = "\033[1;31m" # bold red
+		same_color = "\033[1;32m" # bold green
+	end
+	
+	# Check if file or dir to modify permitions
 	if File.file? entry
 		new_perms = options[:mode_files] if options[:mode_files]
 	else
 		new_perms = options[:mode_dirs] if options[:mode_dirs]
+		# Blue for dirs
+		entry_color = "\033[1;34m" if options[:colorize]
 	end
 	
 	if new_perms
-		File.chmod(new_perms, entry)
-		puts "#{perms} -> #{new_perms.to_s(8)} #{entry}"
+		new_perms_string = new_perms.to_s(8)
+		if new_perms_string != perms
+			File.chmod(new_perms, entry)
+			puts "#{set_color}#{perms} -> #{new_perms_string}#{end_color} #{entry_color}#{entry}#{end_color}"
+		else
+			puts "#{same_color}#{perms} *#{end_color} #{entry_color}#{entry}#{end_color}"
+		end
 	else
-		puts "#{perms} #{entry}"
+		puts "#{perms} #{entry_color}#{entry}#{end_color}"
 	end
 end
 
