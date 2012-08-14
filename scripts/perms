@@ -64,12 +64,16 @@ opts.on('-s', '--self', 'If the target is a directory, also displays and handles
 	options[:use_self] = true
 end
 
-opts.on('-c', '--contents', 'If the --self option is used..') do
+opts.on('-c', '--contents', 'If the --self option is used.') do
 	options[:use_contents] = true
 end
 
 opts.on('-r', '--recursive', 'Enters recursively into subdirectories.') do
 	options[:recursive] = true;
+end
+
+opts.on('-y', '--dry-run', 'Prints all changes that would be made but no permitions are actually changed.') do |dry_run|
+	options[:dry_run] = true
 end
 
 opts.on('-g', '--color', 'Displays colored output.') do
@@ -126,8 +130,8 @@ if options[:mode_files] or options[:mode_dirs]
 end
 
 # All modes ok, so we get them to ints
-options[:mode_files] = options[:mode_files].to_i(8) if options[:mode_files]
-options[:mode_dirs] = options[:mode_dirs].to_i(8) if options[:mode_dirs]
+options[:mode_files] = options[:mode_files].oct if options[:mode_files]
+options[:mode_dirs] = options[:mode_dirs].oct if options[:mode_dirs]
 
 # Hash for errors encountered
 errors = {}
@@ -237,7 +241,7 @@ entries.each do |entry|
 	if new_perms
 		new_perms_string = new_perms.to_s(8)
 		if new_perms_string != perms
-			File.chmod(new_perms, entry)
+			File.chmod(new_perms, entry) if not options[:dry_run]
 			puts "#{set_color}#{perms} -> #{new_perms_string}#{end_color} #{entry_color}#{entry}#{end_color}"
 		else
 			puts "#{same_color}#{perms} *#{end_color} #{entry_color}#{entry}#{end_color}"
