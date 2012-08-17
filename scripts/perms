@@ -256,3 +256,21 @@ exit 3 if errors.length > 0
 exit
 
 
+#1 poner en el help que sin argumentos, el cwd es el target
+#2 poner en el help que el --use-both es el default de los 3
+#3 «# Parsing and handling help» comentario inutil
+#4 "-g" por qué eso para colores? -> -C
+#5 en la sección con comentario «# No files or dirs options means both» se prenden, agregar que ya no haga nada si se usó el --use-both
+#6 /^[0-7]+$/ es una mala regexp, sólo pueden ser 3-4 dígitos, explícitamente menciónalos -> {1, 3}
+#7 crea constantes significativa, para sustituir el 'exit 1' y 'exit 2', y documenta eso en algún lado
+#9 tal vez hacer la conversión a oct desde la definición de -F, -B, -D
+#10 remove trailing whitespace -> 238
+#11 line 175, dirs_to_check += Dir.glob(*glob_params) ====> dirs_to_check.push( Dir.glob(*glob_params) )
+#12 Colors mover a una helper function
+#15 exit if errors.empty?; exit TOO_MANY_ERRORS
+#16, permitions => permissions (spellchecker)
+#17 All provided modes should in octal form. =>  All modes provided should be in octal form.
+# -> All moves are expected to be in octal notation
+
+
+
