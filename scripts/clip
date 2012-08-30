@@ -1,9 +1,19 @@
 #!/bin/bash
 
+# Sets and prints the contents of the clipboard. If any parameters
+# or input content are provided, those are copied to the clipboard
+# and then printed.
+
+# If both parameters and input are provided both are saved to the
+# clipboard separated by a space or by a newline if the piped content
+# contains more that a single line. In both cases parameters are placed
+# first.
+
 hasPipe=false
 if [[ ! -t 0 ]]; then
 	hasPipe=true
 	piped=`cat`
+	pipedLines=`echo "$piped" | wc -l | tr -d ' '`
 fi
 
 hasParam=false
@@ -14,7 +24,14 @@ fi
 if [[ $hasPipe = true || $hasParam = true ]]; then
 	# there was some input
 	if [[ $hasPipe = true && $hasParam = true ]]; then
-		input="$@ $piped"
+		sep='x x'
+		if [[ $pipedLines > 1 ]]; then
+			sep=`echo -e "x\nx"`
+		fi
+
+		# sep weirdness used to print a freaking newline in the middle
+		# saving a new line to a var loses it, unless its surrounded...
+		input="$@${sep:1:1}$piped"
 	else
 		input="$@$piped"
 	fi
