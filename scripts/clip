@@ -1,0 +1,26 @@
+#!/bin/bash
+
+hasPipe=false
+if [[ ! -t 0 ]]; then
+	hasPipe=true
+	piped=`cat`
+fi
+
+hasParam=false
+if [[ "$@" != '' ]]; then
+	hasParam=true
+fi
+
+if [[ $hasPipe = true || $hasParam = true ]]; then
+	# there was some input
+	if [[ $hasPipe = true && $hasParam = true ]]; then
+		input="$@ $piped"
+	else
+		input="$@$piped"
+	fi
+
+	echo "$input" | pbcopy
+fi
+
+pbpaste
+
