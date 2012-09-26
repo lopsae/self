@@ -3,8 +3,7 @@
 # Sets the settings contained in self.
 # This file must be sourced from the directory where it resides.
 
-PATH=$PATH:$(pwd)/scripts
-export PATH
 
-# TODO add aliases
+source functions/addpath
 
+addpath `pwd`/scripts
