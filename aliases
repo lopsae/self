@@ -1,0 +1,10 @@
+# aliases
+
+
+# utilities
+alias cd..='cd ..'
+
+# pick
+# prints the first matched line
+alias pick='grep --max-count 1'
+

@@ -1,0 +1,9 @@
+# seepath
+
+# Prints the values in the PATH enviroment variable
+
+seepath() {
+	currentPath="$PATH"
+	echo $currentPath | tr : '\n'
+}
+

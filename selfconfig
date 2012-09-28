@@ -5,5 +5,9 @@
 
 
 source functions/addpath
+source functions/seepath
+
+source aliases
 
 addpath `pwd`/scripts
+
