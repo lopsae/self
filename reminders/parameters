@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Reading parameters with getopts
+
+echo "Original parameters: $@"
+
+params=`getopt abc: $*`
+paramParse=$?
+
+echo "Params: $params"
+set -- $params
+echo "Params after --: $params"
+
+if [[ $paramParse = 0 ]]; then
+	echo "Parameters parsed correctly"
+else
+	echo "Parameters parsed failed"
+fi
+
