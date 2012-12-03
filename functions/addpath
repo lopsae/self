@@ -5,7 +5,12 @@
 
 addpath() {
 	# Cleanup the path if it exists previously
-	PATH=`echo $PATH | sed -E "s<(^|:)$1(:|$)<:<g"`
+	# Sed has different options in each system
+	if [[ `uname` == 'Darwin' ]]; then
+		PATH=`echo $PATH | sed -E "s<(^|:)$1(:|$)<:<g"`
+	else
+		PATH=`echo $PATH | sed -r "s<(^|:)$1(:|$)<:<g"`
+	fi
 	
 	# Remove leading and trailing ':' that may happen
 	PATH=${PATH#:}
