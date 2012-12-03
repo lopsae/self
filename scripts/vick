@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Using gick it opens with vim a single file in the current directory that
+# matches the pattern given.
+
+# This script uses gick, with currently resides in the gools project.
+
+foundLine=`ls -a | pick $@ 2>/dev/null`
+
+if [[ $? != 0 ]]; then
+	echo 'No match found' >&2
+	exit 1
+fi
+
+echo "opening '$foundLine'"
+vim $foundLine
+

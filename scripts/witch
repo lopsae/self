@@ -3,22 +3,16 @@
 # Opens a script with vim. If the given parameter is a function
 # or an alias a message is printed in the stderr.
 
-if [[ $# -le 0 ]]; then
-	echo 'No parameter given' >&2
-	exit 1
-fi
 
-
-pathToFile=`which $1`
+pathToFile=`which $@ 2>/dev/null`
 
 # Not a program
 if [[ $? != 0 ]]; then
 	echo 'No program found' >&2
 	# type $1 | head -n 1 >&2
-	exit 2
+	exit 1
 fi
 
 echo opening \'$pathToFile\'
-sleep 1
 vim $pathToFile
 
