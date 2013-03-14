@@ -17,9 +17,10 @@ addpath() {
 	PATH=${PATH%:}
 	
 	# If the directory exists, add it on top
-	if [[ -d $1 ]]
-	then
+	if [[ -d $1 ]]; then
 		PATH=$1:$PATH
+	else
+		echo "addpath with invalid directory: '$1'" >&2
 	fi
 }
 
