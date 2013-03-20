@@ -4,3 +4,31 @@
 # utilities
 alias cd..='cd ..'
 
+# git aliases
+# some use gools
+alias gt='git status --short --branch'
+alias gtt='git status'
+alias gb='git branch -v'
+alias gol='git log --graph --decorate --pretty=short --abbrev-commit'
+alias ginfo='git remote show origin'
+alias getch='git fetch; gt | grep "^##"'
+alias gup='git merge $(gracking)'
+alias glast='git --no-pager log --pretty=short -n 1'
+alias glist='git --no-pager stash list'
+alias gstash='git stash -u'
+alias guser='git config user.name; git config user.email'
+alias gitcheck='ssh -T git@github.com'
+
+# subversion aliases
+alias st='svn st'
+alias sup='svn up'
+alias sate='svn log -l4'
+
+# mercurial aliases
+alias ht='hg status'
+alias hup='hg update'
+alias hin='hg incoming'
+alias hout='hg outgoing'
+alias hate='hg late'
+
+
