@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Run a git merge using the first matching file found using gick
+
+fileFound=`gick $@ 2> /dev/null`
+
+if [[ $? != 0 ]]; then
+	echo 'No file found' >&2
+	exit 1
+fi
+
+echo merge \'$fileFound\'
+git mergetool --tool $GOOLS_DIFFTOOL --no-prompt $fileFound
+
