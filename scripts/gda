@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Runs the gif script, followed with a gad of the same file.
+
+fileFound=$(gick $@ 2> /dev/null)
+
+if [[ $? != 0 ]]; then
+	echo 'No file found' >&2
+	exit 1
+fi
+
+echo 'Waiting for diff tool to return...'
+
+giff $fileFound
+
+read -p 'Git add? (y) ' addConfirm
+
+if [ "$addConfirm" = 'y' ]; then
+	echo $fileFound | gadd
+else
+	echo 'Aborted' >&2
+	exit 1
+fi
+
