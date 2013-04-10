@@ -4,15 +4,21 @@
 # or an alias a message is printed in the stderr.
 
 
-pathToFile=`which $@ 2>/dev/null`
+pathToFile=$(which $@ 2>/dev/null)
 
 # Not a program
 if [[ $? != 0 ]]; then
 	echo 'No program found' >&2
-	# type $1 | head -n 1 >&2
+	
+	# Trying to print the type here will not work since aliases,
+	# the most common after scripts, will fail. Making aliases
+	# available here would be too complicated and would require
+	# sourcing with a hardcoded path to the specific file that
+	# contains the alias definitions.
+
 	exit 1
 fi
 
-echo opening \'$pathToFile\'
+echo "opening '$pathToFile'"
 vim $pathToFile
 
