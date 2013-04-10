@@ -14,7 +14,6 @@ alias getch='git fetch; gt | grep "^##"'
 alias gup='git merge $(ginfo tracking)'
 alias glast='git --no-pager log --pretty=short -n 1'
 alias glist='git --no-pager stash list'
-alias gstash='git stash -u'
 alias gitcheck='ssh -T git@github.com'
 
 # subversion aliases
