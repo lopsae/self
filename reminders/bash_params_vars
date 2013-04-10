@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# The two most basic ones
+echo "@: $@"
+echo "*: $*"
+
+# Converting it to a list
+params=($@)
+
+# And accessing list values
+echo "list[0]: ${params[0]}"
+echo "list[1]: ${params[1]}"
+
+for a; do
+	echo "forloop: $a"
+done
+
