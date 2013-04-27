@@ -13,7 +13,7 @@ hasPipe=false
 if [[ ! -t 0 ]]; then
 	hasPipe=true
 	piped=`cat`
-	pipedLines=`echo "$piped" | wc -l | tr -d ' '`
+	pipedLines=$(echo "$piped" | wc -l | tr -d [:blank:])
 fi
 
 hasParam=false
@@ -24,20 +24,21 @@ fi
 if [[ $hasPipe = true || $hasParam = true ]]; then
 	# there was some input
 	if [[ $hasPipe = true && $hasParam = true ]]; then
-		sep='x x'
+		separator=' '
 		if [[ $pipedLines > 1 ]]; then
-			sep=`echo -e "x\nx"`
+			separator=$'\n'
 		fi
 
-		# sep weirdness used to print a freaking newline in the middle
-		# saving a new line to a var loses it, unless its surrounded...
-		input="$@${sep:1:1}$piped"
+		input="$@$separator$piped"
 	else
 		input="$@$piped"
 	fi
-
-	echo "$input" | pbcopy
+	
+	# -n flag used to not print the trailing newline
+	echo -n "$input" | pbcopy
 fi
 
+# Printing what was just copied
+# Or if used without any input, it pastes the clipboard
 pbpaste
 
