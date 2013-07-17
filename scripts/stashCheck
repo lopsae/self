@@ -1,0 +1,21 @@
+#!/bin/bash
+
+stashList=$(git stash list | grep -o "^stash@{[0-9]*}")
+
+for stashRef in $stashList; do
+	currentHash=$(git rev-parse $stashRef)
+	parentHash=$(git rev-parse $stashRef^)
+
+	echo "$stashRef: $currentHash"
+	echo "parent: $parentHash"
+	
+	mergeBase=$(git merge-base $parentHash HEAD)
+
+	if [[ $mergeBase == $parentHash ]]; then
+		echo 'Contained in HEAD'
+	else
+		echo 'Not contained in HEAD'
+	fi
+done
+
+
