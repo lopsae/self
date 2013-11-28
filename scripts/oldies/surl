@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Retrieves the url of a repostory
+
+SVN_DIR=.
+if [ $# -gt 0 ]; then
+	SVN_DIR=$1
+fi
+
+svn info $SVN_DIR | grep '^URL' | cut -c6-
+
