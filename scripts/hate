@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Short history for mercurial
+
+LIMIT=4
+
+if [ $# -gt 0 ]; then
+	LIMIT=$1
+fi
+
+hg log -r -$LIMIT:tip . | grep -v '^$' | grep -v '^\(date:\|files:\|description:\)'
+

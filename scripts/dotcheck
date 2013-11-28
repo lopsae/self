@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# Checks that files present in the dotfile folder are present in home and
+# that both files are actually the same.
+
+
+# Error codes
+error_invalidOptions=1
+
+# Options values
+forceCopy=false
+
+# Options parsing
+params=$(getopt F $*)
+getoptStatus=$?
+set -- $params
+
+if [[ $getoptStatus != 0 ]]; then
+	echo 'Invalid options' >&2
+	exit $error_invalidOptions
+fi
+
+for param; do
+	case "$param" in
+		-F)
+			# Force copy from dotfiles to home
+			forceCopy=true
+			shift
+			;;
+		--)
+			shift
+			break
+			;;
+	esac
+done
+
+# Get all files except for the readme
+dotfilePath="$HOME/zelf/dotfiles/"
+homePath="$HOME/"
+dotfileList=$(ls $dotfilePath | grep -v "^readme.md$")
+
+for filename in $dotfileList; do
+	dotFilename=$dotfilePath$filename
+	homeFilename=$homePath.$filename
+	
+	if [[ $forceCopy == true ]]; then
+		echo "Forcing copy!"
+		exit 0
+		
+		ln -Fv $dotFilename $homeFilename
+	else
+		if [[ $dotFilename -ef $homeFilename ]]; then
+			echo "matched $filename"
+		else
+			echo "override $filename"
+			ln -F $homeFilename $dotFilename
+		fi
+	fi
+done
