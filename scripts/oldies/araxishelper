@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Uses the command line tools provided by Araxis to compare conflicts.
+# When used with svn the files appear in the following order:
+# theirs | base | mine
+
+# This command is to be used by subversion by defining it on the svn
+# configuration under the [helpers] section:
+# 
+# merge-tool-cmd = /path/to/araxishelper
+# 
+# Four parameter will be sent to this command: base theirs mine merged
+# 
+# 
+# As an additional helpfull setting, add araxis for the diff command too:
+# 
+# diff-cmd = /usr/local/bin/araxismerge/araxissvndiff
+
+
+araxissvndiff3 $2 $1 $3 > $4
+exit $?
+

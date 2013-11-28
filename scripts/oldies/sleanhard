@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Removes all ignored and unversioned files from an svn local copy
+# leaving it completely clean.
+
+svn status --no-ignore $1 | egrep '^[I\?]' | cut -c8- | xargs rm -rfv
+

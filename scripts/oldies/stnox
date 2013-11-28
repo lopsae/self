@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# svn status with no externals printout
+
+svn st $1 | grep -v '^\(X\|Performing\)' | grep -v '^$'
+

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Simple svn update followed by status
+
+echo Update
+svn up $1
+
+echo
+echo Status
+svn st $1
+

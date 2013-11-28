@@ -1,0 +1,65 @@
+#! /bin/bash
+
+# Testing for help or not enough arguments
+
+test $# -lt 3
+notEnoughArguments=$?
+
+test "$1" = "help"
+isHelpCommand=$?
+
+if [ $notEnoughArguments -eq 0 -o $isHelpCommand -eq 0 ]; then
+
+echo Info:
+echo -e "\tCompares two directories and submit the diff report to a Code"
+echo -e "\tCollaborator review. The 'ccollab' command should be available"
+echo -e "\tand already logged in. Type 'ccollab help', 'collab info', or"
+echo -e "\t'collab login' for more info. Upon submitting, the command will"
+echo -e "\ttry to get the svn info of the directories being compared to"
+echo -e "\tsubmit that info as comment to the review."
+
+echo Usage:
+echo -e "\tcodeReview REVIEW BASE NEW"
+echo
+echo -e "\tREVIEW - the code review number"
+echo -e "\tBASE - base folder, usually a trunk local copy"
+echo -e "\tNEW - new folder, usually a branch local copy"
+echo
+	
+	exit $isHelpCommand
+	
+fi
+
+# Get repositories info...
+
+tempOut=`mktemp /tmp/codeReviewTempOut.XXXXXX`
+
+svn info $2 > $tempOut 2> /dev/null
+
+if [ $? -eq 0 ]; then
+	baseUrl=`grep "^URL:" $tempOut | cut -c6-`
+	baseRev=`grep "^Revision:" $tempOut | cut -c11-`
+	baseNote="BASE: $baseUrl rev:$baseRev"
+else
+	baseNote="BASE: not svn local copy"
+fi
+
+svn info $3 > $tempOut 2> /dev/null
+
+if [ $? -eq 0 ]; then
+	newUrl=`grep "^URL:" $tempOut | cut -c6-`
+	newRev=`grep "^Revision:" $tempOut | cut -c11-`
+	newNote="NEW: $newUrl rev:$newRev"
+else
+	newNote="NEW: not svn local copy"
+fi
+
+# ...to generate a note related to the versions
+
+uploadNote="$baseNote $newNote"
+
+echo -e "$baseNote\n$newNote"
+
+echo "Sending to code review $1"
+
+diff -rwPU9999 --exclude=.svn $2 $3 | ccollab adddiffs $1 --upload-comment "$uploadNote" -
