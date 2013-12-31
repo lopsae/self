@@ -1,0 +1,36 @@
+
+" Vimrc comment
+
+set nocompatible
+
+syntax on
+filetype plugin indent on
+
+set tabstop=4
+set shiftwidth=4
+set noexpandtab
+
+" Autocomplete similar to bash
+set wildmode=longest,list
+
+set ruler
+set scrolloff=5
+set number
+
+set showcmd
+set showmode
+set laststatus=2
+
+set ignorecase
+set showmatch
+set incsearch
+set hlsearch
+set smartcase
+
+set list
+set listchars=tab:»\ ,trail:¬,eol:¶,extends:›,precedes:‹
+
+" To make tabs, trails, and eols appear as gray
+highlight SpecialKey ctermfg=Gray
+highlight NonText ctermfg=Gray
+highlight LineNr ctermfg=Gray

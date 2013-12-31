@@ -1,0 +1,10 @@
+# Mercurial configuration file
+
+[alias]
+
+late = log -r -4:tip
+
+
+[ui]
+verbose = True
+username = Maic Lopez Saenz <maic@lopsae.com>

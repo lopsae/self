@@ -1,0 +1,21 @@
+[user]
+	name = Maic Lopez Saenz
+#	email should be defined by repository
+[push]
+	default = tracking
+[mergetool]
+	keepBackup = false
+[color]
+	branch = auto
+	status = auto
+[color "branch"]
+	current = green bold
+	local = blue bold
+	remote = magenta bold
+[color "status"]
+	header = normal
+	added = yellow
+	changed = blue bold
+	untracked = magenta bold
+	branch = green bold
+	nobranch = red bold

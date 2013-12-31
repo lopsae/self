@@ -1,0 +1,12 @@
+# .bash_profile
+
+
+# zelfconfig
+source $HOME/zelf/zelfconfig
+
+addpath /usr/local/araxis
+addpath /usr/local/bin
+
+# Loading RVM
+[[ -s $HOME/.rvm/scripts/rvm ]] && . $HOME/.rvm/scripts/rvm
+
