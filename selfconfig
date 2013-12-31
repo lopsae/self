@@ -9,5 +9,5 @@ source functions/seepath
 
 source aliases
 
-addpath `pwd`/scripts
+addpath $(pwd)/scripts
 

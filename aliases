@@ -5,9 +5,9 @@
 alias cd..='cd ..'
 
 # git aliases
-# some use gools
-alias gt='git status --short --branch'
-alias gtt='git status'
+# some use the gools project: https://github.com/lopsae/gools
+alias gs='git status --short --branch'
+alias gss='git status'
 alias gb='git branch -v'
 alias gol='git log --graph --decorate --pretty=short --abbrev-commit'
 alias getch='git fetch; gt | grep "^##"'
@@ -17,7 +17,7 @@ alias glist='git --no-pager stash list'
 alias gitcheck='ssh -T git@github.com'
 
 # subversion aliases
-alias st='svn st'
+alias ss='svn st'
 alias sup='svn up'
 alias sate='svn log -l4'
 
