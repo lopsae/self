@@ -9,6 +9,12 @@ else
 	where='nowhere'
 fi
 
+# --short option, the only one
+if [[ $1 = '--short' ]]; then
+	echo $where
+	exit
+fi
+
 pwd=$(pwd)
 echo "$where:$pwd"
 
