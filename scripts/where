@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Displays the first line string found in ~/.self_where followed 
+
+if [[ -f ~/.self_where ]]; then
+	where=$(cat ~/.self_where | head -n 1)
+else
+	echo '~/.self_where file does not exist' >&2
+	where='nowhere'
+fi
+
+pwd=$(pwd)
+echo "$where:$pwd"
+
