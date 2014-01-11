@@ -1,0 +1,18 @@
+# vars
+
+# Global exports used maily on other aliases or scripts
+
+
+# Only for OSX
+if [[ $(uname) == 'Darwin' ]]; then
+	# ls coloring
+	export CLICOLOR=1
+	export LSCOLORS='ExFxcxdxBxegedabagacad'
+fi
+
+
+# Bash coloring
+# The separator line expects a with of 80 characters
+export PS1='\[\e[0;37m\]   -------------------------------  ~  `echo $?`  ~  -------------------------------    \n\n[\W] \[\e[0m\]'
+export PS2='\[\e[0;37m\]> \[\e[0m\]'
+
