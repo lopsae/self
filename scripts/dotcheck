@@ -4,6 +4,20 @@
 # that both files are actually the same.
 
 
+
+# dotcheck checks a list of files in .self_dotcheck to mirror them
+# first line in the file is the mirror folder
+# comments start with #
+# white lines ignored
+
+# options for dotcheck
+# no option: only diagnosis
+# --restore restore from dotfiles backup folder
+# --update updates backup with files in dotfiles backup folder
+# --config FILE provides the file to use, instead of .self_dotcheck
+
+
+
 # Error codes
 error_invalidOptions=1
 
