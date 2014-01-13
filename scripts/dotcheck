@@ -13,24 +13,27 @@
 # dotfiles considered are both present in the backup folder and in home, and if
 # they are the same.
 
-# --force will force the backup dotfiles into the home folder. Each file in the
+# -F will force the backup dotfiles into the home folder. Each file in the
 # home folder will be created as a hard link of the file in the backup folder.
 
-# --update will update the files in the backup folder. Each file in the
+# -u will update the files in the backup folder. Each file in the
 # backup folder will be created as a hard link of the file in the home folder.
 
-# --settings FILE provides an alternate path for the settings file.
+# -s FILE provides an alternate path for the settings file.
 
 
 
 # Error codes
 error_invalidOptions=1
+error_missingSettingsFile=2
 
 # Options values
-forceCopy=false
+settingsFile=~/.self_dotcheck
+updateMode=false
+forceMode=false
 
 # Options parsing
-params=$(getopt F $*)
+params=$(getopt Fus: $*)
 getoptStatus=$?
 set -- $params
 
@@ -41,9 +44,20 @@ fi
 
 for param; do
 	case "$param" in
+		-s)
+			# settings file
+			shift
+			settingsFile=$1
+			shift
+			;;
 		-F)
 			# Force copy from dotfiles to home
-			forceCopy=true
+			forceMode=true
+			shift
+			;;
+		-u)
+			# Update dotfiles
+			updateMode=true
 			shift
 			;;
 		--)
@@ -52,6 +66,41 @@ for param; do
 			;;
 	esac
 done
+
+
+if [[ ! -f $settingsFile ]]; then
+	echo "Settings file not found: $settingsFile" >&2
+	exit $error_missingSettingsFile
+fi
+
+if [[ $forceMode = true && $updateMode = true ]]; then
+	echo "Invalid double options"
+	exit
+fi
+
+if [[ $forceMode = false && $updateMode = false ]]; then
+	echo "diagnostics"
+	exit
+fi
+
+if [[ $forceMode = true ]]; then
+	echo "force mode"
+	exit
+fi
+
+if [[ $updateMode = true ]]; then
+	echo "update mode"
+	exit
+fi
+
+
+
+
+
+
+
+
+exit
 
 # Get all files except for the readme
 dotfilePath="$HOME/zelf/dotfiles/"
