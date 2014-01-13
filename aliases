@@ -4,6 +4,14 @@
 # utilities
 alias cd..='cd ..'
 
+# ls coloring and long list alias
+if [[ $(uname) == 'Darwin' ]]; then
+	alias ls='ls -G'
+	alias ll='ls -al'
+else
+	alias ll='ls -al --color=tty'
+fi
+
 # git aliases
 # some use the gools project: https://github.com/lopsae/gools
 alias gs='git status --short --branch'
