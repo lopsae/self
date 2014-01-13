@@ -1,20 +1,25 @@
 #!/bin/bash
 
-# Checks that files present in the dotfile folder are present in home and
-# that both files are actually the same.
+# dotcheck helps to keep a backup of dotfiles in a given backup folder.
 
+# By default the program reads its settings from the ~/.self_dotcheck file, if
+# the file is not pressent and none is provided through the options the
+# program halts.
 
+# If the settings file is found the first line read is considered the backup
+# folder and the rest is considered a list of dotfiles to consider.
 
-# dotcheck checks a list of files in .self_dotcheck to mirror them
-# first line in the file is the mirror folder
-# comments start with #
-# white lines ignored
+# Without options the program will print only diagnostic information, if the
+# dotfiles considered are both present in the backup folder and in home, and if
+# they are the same.
 
-# options for dotcheck
-# no option: only diagnosis
-# --restore restore from dotfiles backup folder
-# --update updates backup with files in dotfiles backup folder
-# --config FILE provides the file to use, instead of .self_dotcheck
+# --force will force the backup dotfiles into the home folder. Each file in the
+# home folder will be created as a hard link of the file in the backup folder.
+
+# --update will update the files in the backup folder. Each file in the
+# backup folder will be created as a hard link of the file in the home folder.
+
+# --settings FILE provides an alternate path for the settings file.
 
 
 
