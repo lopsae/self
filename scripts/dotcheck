@@ -26,6 +26,8 @@
 # Error codes
 error_invalidOptions=1
 error_missingSettingsFile=2
+error_invalidBackupLocation=3
+error_noDotfiles=4
 
 # Options values
 settingsFile=~/.self_dotcheck
@@ -67,16 +69,75 @@ for param; do
 	esac
 done
 
-
+# Checks for options before we start
 if [[ ! -f $settingsFile ]]; then
 	echo "Settings file not found: $settingsFile" >&2
 	exit $error_missingSettingsFile
 fi
 
 if [[ $forceMode = true && $updateMode = true ]]; then
-	echo "Invalid double options"
-	exit
+	echo 'Invalid options: -F and -u cannot be used simultaneously'
+	exit $error_invalidOptions
 fi
+
+
+# Reading settings
+backupLocation=''
+dotfiles=()
+
+IFS=$'\n'
+for settingsLine in $(cat $settingsFile); do
+	
+	# Checking for empty lines
+	trimmed=$(echo $settingsLine | tr -d [[:space:]])
+	if [[ $trimmed = '' ]]; then
+		continue
+	fi
+	
+	# Checking for comments
+	if [[ ${trimmed:0:1} = '#' ]]; then
+		continue
+	fi
+	
+	# First line is always the backup location
+	if [[ $backupLocation = '' ]]; then
+		backupLocation=$settingsLine
+		# Expanding relative paths
+		eval backupLocation=$backupLocation
+		continue
+	fi
+	
+	# Rest of lines are dotfiles
+	dotfiles+=($settingsLine)
+done
+unset IFS
+
+
+# Checking for valid settings
+if [[ ! -d $backupLocation ]]; then
+	echo "Invalid backup location: $backupLocation" >&2
+	exit $error_invalidBackupLocation
+fi
+
+if [[ ${#dotfiles[@]} -le 0 ]]; then
+	echo "No dotfiles found in settings" >&2
+	exit $error_noDotfiles
+fi
+
+
+
+
+
+echo "Backup in: $backupLocation"
+echo "Dotfiles: ${dotfiles[@]}"
+
+
+exit
+
+
+
+
+
 
 if [[ $forceMode = false && $updateMode = false ]]; then
 	echo "diagnostics"

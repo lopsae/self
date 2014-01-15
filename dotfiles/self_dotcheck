@@ -1,6 +1,11 @@
 # First line is the location of the dotfiles backup folder
 ~/self/dotfiles
 
+# Some extra lines for dotcheck sanity
+	#
+	
+    
+
 # All the following lines are dotfiles to keep in sync, without the dot
 
 bash_profile
