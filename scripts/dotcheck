@@ -125,14 +125,18 @@ if [[ ${#dotfiles[@]} -le 0 ]]; then
 fi
 
 
+# Checking backup location for ending slash
+stringLength=$((${#backupLocation}-1))
+lastCharacter=${backupLocation:$stringLength:1}
+if [[ $lastCharacter != '/' ]]; then
+	backupLocation=$backupLocation/
+fi
 
 
 
 echo "Backup in: $backupLocation"
-echo "Dotfiles: ${dotfiles[@]}"
 
 
-exit
 
 
 
@@ -140,9 +144,18 @@ exit
 
 
 if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
+	IFS=$'\n'
+	for dotfile in ${dotfiles[@]}; do
+		echo "dotfile: $dotfile"
+	done
+	unset IFS
+	
+	
 	echo "diagnostics"
 	exit
 fi
+
+
 
 if [[ $forceMode = 'true' ]]; then
 	echo "force mode"
