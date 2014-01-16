@@ -11,7 +11,14 @@
 
 # Without options the program will print only diagnostic information, if the
 # dotfiles considered are both present in the backup folder and in home, and if
-# they are the same.
+# they are the same. This information is presented by listing each dotfile
+# and the following status:
+# First letter is status in home, second in backup
+# MM - missing on both places
+# MF - missing in home, present in backup
+# FM - missing in backup, present in home
+# FF - Present and matching
+# FX - Present and different
 
 # -F will force the backup dotfiles into the home folder. Each file in the
 # home folder will be created as a hard link of the file in the backup folder.
@@ -128,30 +135,40 @@ fi
 # Checking backup location for ending slash
 stringLength=$((${#backupLocation}-1))
 lastCharacter=${backupLocation:$stringLength:1}
-if [[ $lastCharacter != '/' ]]; then
-	backupLocation=$backupLocation/
+if [[ $lastCharacter = '/' ]]; then
+	backupLocation=${backupLocation:0:$stringLength}
 fi
 
 
-
-echo "Backup in: $backupLocation"
-
-
-
-
-
-
-
-
+# Running diagnostic mode
 if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
 	IFS=$'\n'
 	for dotfile in ${dotfiles[@]}; do
-		echo "dotfile: $dotfile"
+		homeDotfile=$HOME/.$dotfile
+		backupDotfile=$backupLocation/$dotfile
+		
+		homeStatus='M'
+		if [[ -f $homeDotfile ]]; then
+			homeStatus='F'
+		fi
+		
+		backupStatus='M'
+		if [[ -f $backupDotfile ]]; then
+			backupStatus='F'
+		fi
+		
+		# If both files where found
+		if [[ $backupStatus = 'F' && $backupStatus = 'F' ]]; then
+			# TODO check here that if one file is a symbolic link it will still say true
+			if [[ ! $homeDotfile -ef $backupDotfile ]]; then
+				backupStatus='X'
+			fi
+		fi
+		
+		echo "$homeStatus$backupStatus $dotfile"
 	done
 	unset IFS
 	
-	
-	echo "diagnostics"
 	exit
 fi
 
