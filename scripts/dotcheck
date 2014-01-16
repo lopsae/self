@@ -31,8 +31,8 @@ error_noDotfiles=4
 
 # Options values
 settingsFile=~/.self_dotcheck
-updateMode=false
-forceMode=false
+updateMode='false'
+forceMode='false'
 
 # Options parsing
 params=$(getopt Fus: $*)
@@ -54,12 +54,12 @@ for param; do
 			;;
 		-F)
 			# Force copy from dotfiles to home
-			forceMode=true
+			forceMode='true'
 			shift
 			;;
 		-u)
 			# Update dotfiles
-			updateMode=true
+			updateMode='true'
 			shift
 			;;
 		--)
@@ -75,7 +75,7 @@ if [[ ! -f $settingsFile ]]; then
 	exit $error_missingSettingsFile
 fi
 
-if [[ $forceMode = true && $updateMode = true ]]; then
+if [[ $forceMode = 'true' && $updateMode = 'true' ]]; then
 	echo 'Invalid options: -F and -u cannot be used simultaneously'
 	exit $error_invalidOptions
 fi
@@ -139,17 +139,17 @@ exit
 
 
 
-if [[ $forceMode = false && $updateMode = false ]]; then
+if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
 	echo "diagnostics"
 	exit
 fi
 
-if [[ $forceMode = true ]]; then
+if [[ $forceMode = 'true' ]]; then
 	echo "force mode"
 	exit
 fi
 
-if [[ $updateMode = true ]]; then
+if [[ $updateMode = 'true' ]]; then
 	echo "update mode"
 	exit
 fi
@@ -172,7 +172,7 @@ for filename in $dotfileList; do
 	dotFilename=$dotfilePath$filename
 	homeFilename=$homePath.$filename
 	
-	if [[ $forceCopy == true ]]; then
+	if [[ $forceCopy == 'true' ]]; then
 		echo "Forcing copy!"
 		exit 0
 		
