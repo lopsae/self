@@ -173,21 +173,34 @@ for dotfile in ${dotfiles[@]}; do
 	fi
 	
 	
+	# Running update mode
+	if [[ $updateMode = 'true' ]]; then
+		if [[ -f $homeDotfile ]]; then
+			echo "Updating $backupDotfile"
+			# ln -f "$homeDotfile" "$backupDotfile"
+		else
+			echo "Missing $homeDotfile"
+		fi
+		continue
+	fi
+	
+	
+	# Running update mode
+	if [[ $forceMode = 'true' ]]; then
+		if [[ -f $backupDotfile ]]; then
+			echo "Forcing $homeDotfile"
+			# ln -f "$backupDotfile" "$homeDotfile"
+		else
+			echo "Missing $backupDotfile"
+		fi
+		continue
+	fi
 	
 done
 unset IFS
 
 
 
-if [[ $forceMode = 'true' ]]; then
-	echo "force mode"
-	exit
-fi
-
-if [[ $updateMode = 'true' ]]; then
-	echo "update mode"
-	exit
-fi
 
 
 
