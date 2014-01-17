@@ -177,7 +177,7 @@ for dotfile in ${dotfiles[@]}; do
 	if [[ $updateMode = 'true' ]]; then
 		if [[ -f $homeDotfile ]]; then
 			echo "Updating $backupDotfile"
-			# ln -f "$homeDotfile" "$backupDotfile"
+			ln -f "$homeDotfile" "$backupDotfile"
 		else
 			echo "Missing $homeDotfile"
 		fi
@@ -189,7 +189,7 @@ for dotfile in ${dotfiles[@]}; do
 	if [[ $forceMode = 'true' ]]; then
 		if [[ -f $backupDotfile ]]; then
 			echo "Forcing $homeDotfile"
-			# ln -f "$backupDotfile" "$homeDotfile"
+			ln -f "$backupDotfile" "$homeDotfile"
 		else
 			echo "Missing $backupDotfile"
 		fi
