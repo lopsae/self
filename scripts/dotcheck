@@ -9,7 +9,7 @@
 # If the settings file is found the first line read is considered the backup
 # folder and the rest is considered a list of dotfiles to consider.
 
-# Without options the program will print only diagnostic information, if the
+# Without options the program will print only status information, if the
 # dotfiles considered are both present in the backup folder and in home, and if
 # they are the same. This information is presented by listing each dotfile
 # and the following status:
@@ -140,13 +140,14 @@ if [[ $lastCharacter = '/' ]]; then
 fi
 
 
-# Running diagnostic mode
-if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
-	IFS=$'\n'
-	for dotfile in ${dotfiles[@]}; do
-		homeDotfile=$HOME/.$dotfile
-		backupDotfile=$backupLocation/$dotfile
-		
+# Working with the dotfiles
+IFS=$'\n'
+for dotfile in ${dotfiles[@]}; do
+	homeDotfile=$HOME/.$dotfile
+	backupDotfile=$backupLocation/$dotfile
+	
+	# Running status mode
+	if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
 		homeStatus='M'
 		if [[ -f $homeDotfile ]]; then
 			homeStatus='F'
@@ -160,17 +161,21 @@ if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
 		# If both files where found
 		if [[ $backupStatus = 'F' && $backupStatus = 'F' ]]; then
 			# TODO check here that if one file is a symbolic link it will still say true
+			# we probably just need to check for symbolic link in the backup location
+			# otherwise the content is not really backed up to git
 			if [[ ! $homeDotfile -ef $backupDotfile ]]; then
 				backupStatus='X'
 			fi
 		fi
 		
 		echo "$homeStatus$backupStatus $dotfile"
-	done
-	unset IFS
+		continue
+	fi
 	
-	exit
-fi
+	
+	
+done
+unset IFS
 
 
 
