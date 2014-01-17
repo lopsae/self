@@ -199,38 +199,3 @@ for dotfile in ${dotfiles[@]}; do
 done
 unset IFS
 
-
-
-
-
-
-
-
-
-
-
-exit
-
-# Get all files except for the readme
-dotfilePath="$HOME/zelf/dotfiles/"
-homePath="$HOME/"
-dotfileList=$(ls $dotfilePath | grep -v "^readme.md$")
-
-for filename in $dotfileList; do
-	dotFilename=$dotfilePath$filename
-	homeFilename=$homePath.$filename
-	
-	if [[ $forceCopy == 'true' ]]; then
-		echo "Forcing copy!"
-		exit 0
-		
-		ln -Fv $dotFilename $homeFilename
-	else
-		if [[ $dotFilename -ef $homeFilename ]]; then
-			echo "matched $filename"
-		else
-			echo "override $filename"
-			ln -F $homeFilename $dotFilename
-		fi
-	fi
-done
