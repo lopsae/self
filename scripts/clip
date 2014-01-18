@@ -34,11 +34,18 @@ if [[ $hasPipe = true || $hasParam = true ]]; then
 		input="$@$piped"
 	fi
 	
-	# -n flag used to not print the trailing newline
-	echo -n "$input" | pbcopy
+	if [[ $(uname) == 'Darwin' ]]; then
+		# -n flag used to not print the trailing newline
+		echo -n "$input" | pbcopy
+	fi
 fi
 
 # Printing what was just copied
 # Or if used without any input, it pastes the clipboard
-pbpaste
+if [[ $(uname) == 'Darwin' ]]; then
+	pbpaste
+else
+	# Outside of OSX it just prints the input if there was any
+	echo "$input"
+fi
 
