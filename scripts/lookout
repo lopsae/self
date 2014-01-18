@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Looks in all files within the current folder, and all subfolders, for the
+# the given pattern.
+
+# to whitelist the files extension to look for:
+# find . -name "*.as" --or -name "*.rb"
+
+# to skip folders or files we dont want
+# grep --invert-match "/\.git/"
+
+
+# to not have to wait for the greps to return seems like it could use:
+# find "$@" . -iname "$name" -exec grep -H -i "$pat" $GREP_OPTS '{}' \;
+
+find . | grep --invert-match "/\.git/" | tr '\n' '\0' | xargs -0 grep --with-filename --ignore-case --line-number $@
