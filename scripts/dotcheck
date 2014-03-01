@@ -1,18 +1,18 @@
 #!/bin/bash
 
 # dotcheck helps to keep a backup of dotfiles in a given backup folder.
-
-# By default the program reads its settings from the ~/.self_dotcheck file, if
-# the file is not pressent and none is provided through the options the
+# 
+# By default the program reads its settings from the ~/.self_dotcheck file,
+# if the file is not pressent and none is provided through the options the
 # program halts.
-
-# If the settings file is found the first line read is considered the backup
-# folder and the rest is considered a list of dotfiles to consider.
-
+# 
+# If the settings file is found the first line read is considered the
+# backup folder and the rest is considered a list of dotfiles to consider.
+# 
 # Without options the program will print only status information, if the
-# dotfiles considered are both present in the backup folder and in home, and if
-# they are the same. This information is presented by listing each dotfile
-# and the following status:
+# dotfiles considered are both present in the backup folder and in home,
+# and if they are the same. This information is presented by listing each
+# dotfile and the following status:
 # First letter is status in home, second in backup
 # MM - missing on both places
 # MF - missing in home, present in backup
@@ -20,13 +20,31 @@
 # FF - Present and matching
 # FX - Present and different
 
+
+# The script accepts the following options:
+# 
 # -F will force the backup dotfiles into the home folder. Each file in the
-# home folder will be created as a hard link of the file in the backup folder.
-
+# home folder will be created as a hard link of the file in the backup
+# folder.
+# 
 # -u will update the files in the backup folder. Each file in the
-# backup folder will be created as a hard link of the file in the home folder.
-
+# backup folder will be created as a hard link of the file in the home
+# folder.
+# 
 # -s FILE provides an alternate path for the settings file.
+
+
+# Normal usage for a new machine should be:
+# Run it once with the settings file from the backup location. This will
+# copy all files from backup to home:
+# > dotcheck -F -s ~/self/dotfiles/self_dotcheck
+# 
+# Afterwards just run it to check status:
+# > dotcheck
+# 
+# To update the backup just in update mode and then save the backup
+# > dotcheck -u
+
 
 
 
