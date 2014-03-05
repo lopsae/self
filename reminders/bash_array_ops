@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# an empty array can be initialized with ()
+# there is realy no use to this, it matches equality with non-definied vars
+# and empty strings ''
+cosa=()
+
+# it can contain intems separated by spaces or surrounded by quotes
+maic=('maic' 'lopez saenz')
+cosa=(cosa nostra)
+
+echo "maic[1]: ${maic[1]}"
+echo "cosa[1]: ${cosa[1]}"
+echo
+
+
+# To copy an array surround it in quotes and parenthesis
+goodMaic=("${maic[@]}")
+baadMaic=(${maic[@]})
+
+# Otherwise elements with spaces in them will get messed up
+echo "goodMaic[1]: ${goodMaic[1]}"
+echo "baadMaic[1]: ${baadMaic[1]}"
+echo
+
+# Elements can be pushed into an array
+cosaCopy=("${cosa[@]}")
+cosaCopy+=('internationale')
+
+echo "cosa full: ${cosaCopy[@]}"
+echo "cosa[2]: ${cosaCopy[2]}"
+echo
+
+
+# Or other arrays concatenated, same rules as copying apply
+goodCosa=("${cosa[@]}")
+baadCosa=("${cosa[@]}")
+
+goodCosa+=("${maic[@]}")
+baadCosa+=(${maic[@]})
+
+echo "goodCosa full: ${goodCosa[@]}"
+echo "goodCosa[3]: ${goodCosa[3]}"
+echo
+
+echo "baadCosa full: ${baadCosa[@]}"
+echo "baadCosa[3]: ${baadCosa[3]}"
+echo
+
+
+# To get the length use the #
+echo "goodCosa length: ${#goodCosa[@]}"
+echo "baadCosa length: ${#baadCosa[@]}"
+echo
+
+
+# To do a loop also use quotes
+for value in "${goodMaic[@]}"; do
+	echo "each good value: $value"
+done
+echo
+
+# Otherwise values without spaces will get messed up
+for value in ${goodMaic[@]}; do
+	echo "no quotes value: $value"
+done
+echo
+
