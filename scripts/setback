@@ -1,71 +1,57 @@
 #!/bin/bash
 
-# setback keeps a set of files mirrored between two locations. Both
-# locations and the files to be kept mirrored are defined in a file that
-# is read by the setback script.
+# setback keeps two directories syncronized by creating hardlinked files
+# between them. A file can be provided that contains sets of the two
+# locations and the files in these to keep syncronized. Generaly the first
+# folder is called the backup directory, the second one the deploy
+# directory.
 
 
-# dotcheck helps to keep a backup of dotfiles in a given backup folder.
+# The -s FILE option must be provided to define the settings file to use.
 # 
-# By default the program reads its settings from the ~/.self_dotcheck file,
-# if the file is not pressent and none is provided through the options the
-# program halts.
+# Without further options the program will print only status information.
+# For each file defined in the settings file two letters will be displayed,
+# the first for its status in backuo, the second in deploy:
 # 
-# If the settings file is found the first line read is considered the
-# backup folder and the rest is considered a list of dotfiles to consider.
-# 
-# Without options the program will print only status information, if the
-# dotfiles considered are both present in the backup folder and in home,
-# and if they are the same. This information is presented by listing each
-# dotfile and the following status:
-# First letter is status in home, second in backup
-# MM - missing on both places
-# MF - missing in home, present in backup
-# FM - missing in backup, present in home
-# FF - Present and matching
-# FX - Present and different
+# MM - missing on both folders
+# MF - missing in backup, present in deploy
+# FM - missing in deploy, present in backup
+# FF - Present in both folders and matching
+# FX - Present in both folders and different
 
 
-# The script accepts the following options:
+# The script also accepts the following options:
 # 
-# -F will force the backup dotfiles into the home folder. Each file in the
-# home folder will be created as a hard link of the file in the backup
+# -F will force the backup files into the deploy folder. In the deploy
+# folder a hardlinked file will be created for each file in the backup
 # folder.
 # 
-# -u will update the files in the backup folder. Each file in the
-# backup folder will be created as a hard link of the file in the home
+# -U will update the deploy files into the backup folder. In the backup
+# folder a hardlinked file will be created for each file in the deploy
 # folder.
-# 
-# -s FILE provides an alternate path for the settings file.
-
-
-# Normal usage for a new machine should be:
-# Run it once with the settings file from the backup location. This will
-# copy all files from backup to home:
-# > dotcheck -F -s ~/self/dotfiles/self_dotcheck
-# 
-# Afterwards just run it to check status:
-# > dotcheck
-# 
-# To update the backup just in update mode and then save the backup
-# > dotcheck -u
 
 
 
+########################################
+# Default values
+########################################
+
+# Options values
+settingsFile=''
+updateMode='false'
+forceMode='false'
 
 # Error codes
 error_invalidOptions=1
 error_missingSettingsFile=2
-error_invalidBackupLocation=3
-error_noDotfiles=4
 
-# Options values
-settingsFile=~/.self_dotcheck
-updateMode='false'
-forceMode='false'
 
+
+########################################
 # Options parsing
-params=$(getopt Fus: $*)
+########################################
+
+params=$(getopt FUs: $*)
 getoptStatus=$?
 set -- $params
 
@@ -87,7 +73,7 @@ for param; do
 			forceMode='true'
 			shift
 			;;
-		-u)
+		-U)
 			# Update dotfiles
 			updateMode='true'
 			shift
@@ -99,122 +85,168 @@ for param; do
 	esac
 done
 
-# Checks for options before we start
+# Options validations before we start
+
+if [[ $settingsFile = '' ]]; then
+	echo 'Settings file not provided' >&2
+	exit $error_missingSettingsFile
+fi
+
 if [[ ! -f $settingsFile ]]; then
 	echo "Settings file not found: $settingsFile" >&2
 	exit $error_missingSettingsFile
 fi
 
 if [[ $forceMode = 'true' && $updateMode = 'true' ]]; then
-	echo 'Invalid options: -F and -u cannot be used simultaneously'
+	echo 'Invalid options: -F and -U cannot be used simultaneously'
 	exit $error_invalidOptions
 fi
 
 
-# Reading settings
+
+########################################
+# Reading the settings file
+########################################
+
 backupLocation=''
-dotfiles=()
+deployLocation=''
+readStage='backupDir' # -> deployDir -> files -> backupDir
 
 IFS=$'\n'
 for settingsLine in $(cat $settingsFile); do
 	
-	# Checking for empty lines
+	# Checking for empty lines or comments
 	trimmed=$(echo $settingsLine | tr -d [[:space:]])
 	if [[ $trimmed = '' ]]; then
 		continue
 	fi
-	
-	# Checking for comments
 	if [[ ${trimmed:0:1} = '#' ]]; then
 		continue
 	fi
 	
-	# First line is always the backup location
-	if [[ $backupLocation = '' ]]; then
-		backupLocation=$settingsLine
-		# Expanding relative paths
-		eval backupLocation=$backupLocation
-		continue
+	# Trimming any edge whitespace
+	line="$settingsLine"
+	leading="${line%%[![:space:]]*}"
+	trailing="${var##*[![:space:]]}"
+	line="${line#"$leading}"
+	line="${line%"$trailing}"
+	settingsLine="$line"
+	
+	# Saving if we have a block separator
+	if [[ ${settingsLine:0:1} = '@' ]]
+		isBlockSeparator='true'
+		blockSeparatorMessage="${settingsLine#'@'}"
+	else
+		isBlockSeparator='false'
 	fi
 	
-	# Rest of lines are dotfiles
-	dotfiles+=($settingsLine)
-done
-unset IFS
-
-
-# Checking for valid settings
-if [[ ! -d $backupLocation ]]; then
-	echo "Invalid backup location: $backupLocation" >&2
-	exit $error_invalidBackupLocation
-fi
-
-if [[ ${#dotfiles[@]} -le 0 ]]; then
-	echo "No dotfiles found in settings" >&2
-	exit $error_noDotfiles
-fi
-
-
-# Checking backup location for ending slash
-stringLength=$((${#backupLocation}-1))
-lastCharacter=${backupLocation:$stringLength:1}
-if [[ $lastCharacter = '/' ]]; then
-	backupLocation=${backupLocation:0:$stringLength}
-fi
-
-
-# Working with the dotfiles
-IFS=$'\n'
-for dotfile in ${dotfiles[@]}; do
-	homeDotfile=$HOME/.$dotfile
-	backupDotfile=$backupLocation/$dotfile
+	# TODO jump block could be handled here, and in the case we just jump
+	# everything unless we are already in a block, instead of having the
+	# jumpBlock stage
+	
+	# Parse and check depending on the stage
+	case "$readStage" in
+		'backupDir')
+			if [[ ${settingsLine:0:1} = '~' ]]; then
+				# Fixing ~ prefix
+				$settingsLine="$HOME/${settingsLine#'~'}"
+			fi
+			if [[ -d "$settingsLine" ]]; then
+				backupLocation="${settingsLine%'/'}"
+				readStage='deployDir'
+				continue
+			else
+				readStage='jumpBlock'
+				echo 'Invalid backup location found: $settingsLine' >&2
+				continue
+			fi
+			;;
+		'deployDir')
+			if [[ ${settingsLine:0:1} = '~' ]]; then
+				# Fixing ~ prefix
+				$settingsLine="$HOME/${settingsLine#'~'}"
+			fi
+			if [[ -d "$settingsLine" ]]; then
+				deployLocation="${settingsLine%'/'}"
+				readStage='files'
+				continue
+			else
+				readStage='jumpBlock'
+				echo 'Invalid backup location found: $settingsLine' >&2
+				continue
+			fi
+			;;
+		'jumpBlock')
+			if [[ $isBlockSeparator = 'true' ]]; then
+				echo "Starting block: $blockSeparatorMessage"
+				readStage='backupDir'
+			fi
+			continue
+			;;
+		'files')
+			if [[ $isBlockSeparator = 'true' ]]; then
+				echo "Starting block: $blockSeparatorMessage"
+				readStage='backupDir'
+				continue
+			fi
+			# The rest of the logic for files is after the case statement
+			;;
+	esac
+	
+########################################
+# File linking and status logic
+########################################
+	
+	# If we reached this place we have a file in hands
+	$backupFilePath="$backupLocation/$settingsLine"
+	$deployFilePath="$deployLocation/$settingsLine"
 	
 	# Running status mode
 	if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
-		homeStatus='M'
-		if [[ -f $homeDotfile ]]; then
-			homeStatus='F'
-		fi
-		
 		backupStatus='M'
-		if [[ -f $backupDotfile ]]; then
+		if [[ -f "$backupFilePath" ]]; then
 			backupStatus='F'
 		fi
 		
+		deployStatus='M'
+		if [[ -f "$deployFilePath" ]]; then
+			deployStatus='F'
+		fi
+		
 		# If both files where found
-		if [[ $backupStatus = 'F' && $backupStatus = 'F' ]]; then
+		if [[ $deployStatus = 'F' && $deployStatus = 'F' ]]; then
 			# TODO check here that if one file is a symbolic link it will still say true
-			# we probably just need to check for symbolic link in the backup location
+			# we probably just need to check for symbolic link in the deploy location
 			# otherwise the content is not really backed up to git
-			if [[ ! $homeDotfile -ef $backupDotfile ]]; then
-				backupStatus='X'
+			if [[ ! "$backupFilePath" -ef "$deployFilePath" ]]; then
+				deployStatus='X'
 			fi
 		fi
 		
-		echo "$homeStatus$backupStatus $dotfile"
+		echo "$backupStatus$deployStatus $dotfile"
 		continue
 	fi
 	
 	
-	# Running update mode
+	# Running update mode, backup gets overwritten
 	if [[ $updateMode = 'true' ]]; then
-		if [[ -f $homeDotfile ]]; then
-			echo "Updating $backupDotfile"
-			ln -f "$homeDotfile" "$backupDotfile"
+		if [[ -f "$deployFilePath" ]]; then
+			echo "Forcing $backupFilePath"
+			# ln -f "$deployFilePath" "$backupFilePath"
 		else
-			echo "Missing $homeDotfile"
+			echo "Missing $deployFilePath"
 		fi
 		continue
 	fi
 	
 	
-	# Running update mode
+	# Running force mode, deploy gets overwriten
 	if [[ $forceMode = 'true' ]]; then
-		if [[ -f $backupDotfile ]]; then
-			echo "Forcing $homeDotfile"
-			ln -f "$backupDotfile" "$homeDotfile"
+		if [[ -f "$backupFilePath" ]]; then
+			echo "Updating $deployFilePath"
+			# ln -f "$backupFilePath" "$deployFilePath"
 		else
-			echo "Missing $backupDotfile"
+			echo "Missing $backupFilePath"
 		fi
 		continue
 	fi
