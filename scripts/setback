@@ -115,29 +115,37 @@ readStage='backupDir' # -> deployDir -> files -> backupDir
 IFS=$'\n'
 for settingsLine in $(cat $settingsFile); do
 	
-	# Checking for empty lines or comments
-	trimmed=$(echo $settingsLine | tr -d [[:space:]])
-	if [[ $trimmed = '' ]]; then
-		continue
-	fi
-	if [[ ${trimmed:0:1} = '#' ]]; then
-		continue
-	fi
-	
 	# Trimming any edge whitespace
 	line="$settingsLine"
 	leading="${line%%[![:space:]]*}"
 	trailing="${var##*[![:space:]]}"
-	line="${line#"$leading}"
-	line="${line%"$trailing}"
+	line="${line#$leading}"
+	line="${line%$trailing}"
 	settingsLine="$line"
 	
-	# Saving if we have a block separator
-	if [[ ${settingsLine:0:1} = '@' ]]
-		isBlockSeparator='true'
-		blockSeparatorMessage="${settingsLine#'@'}"
-	else
-		isBlockSeparator='false'
+	firstChar=${settingsLine:0:1}
+	
+	# Checking for empty lines or comments
+	if [[ $settingsLine = '' ]]; then
+		continue
+	fi
+	if [[ $firstChar = '#' ]]; then
+		continue
+	fi
+	
+	# If jumping a block, we ignore everything except a block separator
+	if [[ $readStage = 'jumpBlock' && ! $firstChar = '@' ]]; then
+		continue
+	fi
+	
+	# Handling block separator
+	if [[ ${settingsLine:0:1} = '@' ]]; then
+		blockMessage="${settingsLine#'@'}"
+		leading="${blockMessage%%[![:space:]]*}"
+		blockMessage="${blockMessage#$leading}"
+		echo "Block: $blockMessage"
+		readStage='backupDir'
+		continue
 	fi
 	
 	# TODO jump block could be handled here, and in the case we just jump
@@ -149,7 +157,7 @@ for settingsLine in $(cat $settingsFile); do
 		'backupDir')
 			if [[ ${settingsLine:0:1} = '~' ]]; then
 				# Fixing ~ prefix
-				$settingsLine="$HOME/${settingsLine#'~'}"
+				settingsLine="$HOME/${settingsLine#'~'}"
 			fi
 			if [[ -d "$settingsLine" ]]; then
 				backupLocation="${settingsLine%'/'}"
@@ -157,14 +165,14 @@ for settingsLine in $(cat $settingsFile); do
 				continue
 			else
 				readStage='jumpBlock'
-				echo 'Invalid backup location found: $settingsLine' >&2
+				echo "Invalid backup location found: $settingsLine" >&2
 				continue
 			fi
 			;;
 		'deployDir')
 			if [[ ${settingsLine:0:1} = '~' ]]; then
 				# Fixing ~ prefix
-				$settingsLine="$HOME/${settingsLine#'~'}"
+				settingsLine="$HOME/${settingsLine#'~'}"
 			fi
 			if [[ -d "$settingsLine" ]]; then
 				deployLocation="${settingsLine%'/'}"
@@ -176,19 +184,7 @@ for settingsLine in $(cat $settingsFile); do
 				continue
 			fi
 			;;
-		'jumpBlock')
-			if [[ $isBlockSeparator = 'true' ]]; then
-				echo "Starting block: $blockSeparatorMessage"
-				readStage='backupDir'
-			fi
-			continue
-			;;
 		'files')
-			if [[ $isBlockSeparator = 'true' ]]; then
-				echo "Starting block: $blockSeparatorMessage"
-				readStage='backupDir'
-				continue
-			fi
 			# The rest of the logic for files is after the case statement
 			;;
 	esac
@@ -198,8 +194,9 @@ for settingsLine in $(cat $settingsFile); do
 ########################################
 	
 	# If we reached this place we have a file in hands
-	$backupFilePath="$backupLocation/$settingsLine"
-	$deployFilePath="$deployLocation/$settingsLine"
+	simpleFilePath="$settingsLine"
+	backupFilePath="$backupLocation/$simpleFilePath"
+	deployFilePath="$deployLocation/$simpleFilePath"
 	
 	# Running status mode
 	if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
@@ -223,7 +220,7 @@ for settingsLine in $(cat $settingsFile); do
 			fi
 		fi
 		
-		echo "$backupStatus$deployStatus $dotfile"
+		echo "$backupStatus$deployStatus $simpleFilePath"
 		continue
 	fi
 	
