@@ -1,0 +1,14 @@
+# List of files to be kept on backup through setback
+
+# Each set defines backup and deploy locations first
+
+@ Sublime settings and scripts
+~/self/settings/sublime
+~/Library/Application Support/Sublime Text 2/Packages/User
+
+	Default (OSX).sublime-keymap
+	Preferences.sublime-settings
+    reset_font_size_command.py
+    
+    
+
