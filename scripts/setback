@@ -29,6 +29,11 @@
 # -B will update the files in the backup folder. The script will create
 # a hardlinked file in the backup directory, from its counterpart in the
 # deploy directory, for each file it handles.
+# 
+# -f by default the script prints the only the relative portion of the
+# handled filenames. If -f is provided the full filenames are printed.
+# This only applies when using the -D or -B options, since the status
+# printout always display only the relative portion of the filename.
 
 
 
@@ -40,6 +45,7 @@
 settingsFile=''
 backupMode='false'
 deployMode='false'
+fullFileName='false'
 
 # Error codes
 error_invalidOptions=1
@@ -51,7 +57,7 @@ error_missingSettingsFile=2
 # Options parsing
 ########################################
 
-params=$(getopt DBs: $*)
+params=$(getopt DBfs: $*)
 getoptStatus=$?
 set -- $params
 
@@ -76,6 +82,11 @@ for param; do
 		-B)
 			# Update dotfiles
 			backupMode='true'
+			shift
+			;;
+		-f)
+			# Update dotfiles
+			fullFileName='true'
 			shift
 			;;
 		--)
@@ -188,7 +199,7 @@ for line in $(cat $settingsFile); do
 	esac
 	
 ########################################
-# File linking and status logic
+# Status logic
 ########################################
 	
 	# If we reached this place we have a file in hands
@@ -223,25 +234,46 @@ for line in $(cat $settingsFile); do
 	fi
 	
 	
-	# Running update mode, backup gets overwritten
+########################################
+# File linking
+########################################
+	
 	if [[ $backupMode = 'true' ]]; then
 		if [[ -f "$deployFilePath" ]]; then
-			echo "B $backupFilePath"
-			# ln -f "$deployFilePath" "$backupFilePath"
+			if [[ $fullFileName = 'true' ]]; then
+				echo "B $backupFilePath"
+			else
+				echo "B $simpleFilePath"
+			fi
+			
+			ln -f "$deployFilePath" "$backupFilePath"
+			
 		else
-			echo "M $deployFilePath"
+			if [[ $fullFileName = 'true' ]]; then
+				echo "M $deployFilePath"
+			else
+				echo "M $simpleFilePath"
+			fi
 		fi
 		continue
 	fi
 	
-	
-	# Running force mode, deploy gets overwriten
 	if [[ $deployMode = 'true' ]]; then
 		if [[ -f "$backupFilePath" ]]; then
-			echo "D $deployFilePath"
-			# ln -f "$backupFilePath" "$deployFilePath"
+			if [[ $fullFileName = 'true' ]]; then
+				echo "D $deployFilePath"
+			else
+				echo "D $simpleFilePath"
+			fi
+			
+			ln -f "$backupFilePath" "$deployFilePath"
+			
 		else
-			echo "M $backupFilePath"
+			if [[ $fullFileName = 'true' ]]; then
+				echo "M $backupFilePath"
+			else
+				echo "M $simpleFilePath"
+			fi
 		fi
 		continue
 	fi
