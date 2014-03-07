@@ -22,13 +22,13 @@
 
 # The script also accepts the following options:
 # 
-# -F will force the backup files into the deploy folder. In the deploy
-# folder a hardlinked file will be created for each file in the backup
-# folder.
+# -D will deploy the backup files into the deploy directory. The script
+# will create a hardlinked file in de deploy directory, from its counterpart
+# in the backup directory, for each file it handles.
 # 
-# -U will update the deploy files into the backup folder. In the backup
-# folder a hardlinked file will be created for each file in the deploy
-# folder.
+# -B will update the files in the backup folder. The script will create
+# a hardlinked file in the backup directory, from its counterpart in the
+# deploy directory, for each file it handles.
 
 
 
@@ -38,8 +38,8 @@
 
 # Options values
 settingsFile=''
-updateMode='false'
-forceMode='false'
+backupMode='false'
+deployMode='false'
 
 # Error codes
 error_invalidOptions=1
@@ -51,7 +51,7 @@ error_missingSettingsFile=2
 # Options parsing
 ########################################
 
-params=$(getopt FUs: $*)
+params=$(getopt DBs: $*)
 getoptStatus=$?
 set -- $params
 
@@ -68,14 +68,14 @@ for param; do
 			settingsFile=$1
 			shift
 			;;
-		-F)
+		-D)
 			# Force copy from dotfiles to home
-			forceMode='true'
+			deployMode='true'
 			shift
 			;;
-		-U)
+		-B)
 			# Update dotfiles
-			updateMode='true'
+			backupMode='true'
 			shift
 			;;
 		--)
@@ -97,7 +97,7 @@ if [[ ! -f $settingsFile ]]; then
 	exit $error_missingSettingsFile
 fi
 
-if [[ $forceMode = 'true' && $updateMode = 'true' ]]; then
+if [[ $deployMode = 'true' && $backupMode = 'true' ]]; then
 	echo 'Invalid options: -F and -U cannot be used simultaneously'
 	exit $error_invalidOptions
 fi
@@ -113,20 +113,18 @@ deployLocation=''
 readStage='backupDir' # -> deployDir -> files -> backupDir
 
 IFS=$'\n'
-for settingsLine in $(cat $settingsFile); do
+for line in $(cat $settingsFile); do
 	
 	# Trimming any edge whitespace
-	line="$settingsLine"
 	leading="${line%%[![:space:]]*}"
 	trailing="${var##*[![:space:]]}"
 	line="${line#$leading}"
 	line="${line%$trailing}"
-	settingsLine="$line"
 	
-	firstChar=${settingsLine:0:1}
+	firstChar=${line:0:1}
 	
 	# Checking for empty lines or comments
-	if [[ $settingsLine = '' ]]; then
+	if [[ $line = '' ]]; then
 		continue
 	fi
 	if [[ $firstChar = '#' ]]; then
@@ -139,8 +137,8 @@ for settingsLine in $(cat $settingsFile); do
 	fi
 	
 	# Handling block separator
-	if [[ ${settingsLine:0:1} = '@' ]]; then
-		blockMessage="${settingsLine#'@'}"
+	if [[ $firstChar = '@' ]]; then
+		blockMessage="${line#'@'}"
 		leading="${blockMessage%%[![:space:]]*}"
 		blockMessage="${blockMessage#$leading}"
 		echo "Block: $blockMessage"
@@ -155,32 +153,32 @@ for settingsLine in $(cat $settingsFile); do
 	# Parse and check depending on the stage
 	case "$readStage" in
 		'backupDir')
-			if [[ ${settingsLine:0:1} = '~' ]]; then
+			if [[ ${line:0:1} = '~' ]]; then
 				# Fixing ~ prefix
-				settingsLine="$HOME/${settingsLine#'~'}"
+				line="$HOME${line#'~'}"
 			fi
-			if [[ -d "$settingsLine" ]]; then
-				backupLocation="${settingsLine%'/'}"
+			if [[ -d "$line" ]]; then
+				backupLocation="${line%'/'}"
 				readStage='deployDir'
 				continue
 			else
 				readStage='jumpBlock'
-				echo "Invalid backup location found: $settingsLine" >&2
+				echo "Invalid backup location found: $line" >&2
 				continue
 			fi
 			;;
 		'deployDir')
-			if [[ ${settingsLine:0:1} = '~' ]]; then
+			if [[ ${line:0:1} = '~' ]]; then
 				# Fixing ~ prefix
-				settingsLine="$HOME/${settingsLine#'~'}"
+				line="$HOME${line#'~'}"
 			fi
-			if [[ -d "$settingsLine" ]]; then
-				deployLocation="${settingsLine%'/'}"
+			if [[ -d "$line" ]]; then
+				deployLocation="${line%'/'}"
 				readStage='files'
 				continue
 			else
 				readStage='jumpBlock'
-				echo 'Invalid backup location found: $settingsLine' >&2
+				echo 'Invalid deploy location found: $line' >&2
 				continue
 			fi
 			;;
@@ -194,12 +192,12 @@ for settingsLine in $(cat $settingsFile); do
 ########################################
 	
 	# If we reached this place we have a file in hands
-	simpleFilePath="$settingsLine"
+	simpleFilePath="$line"
 	backupFilePath="$backupLocation/$simpleFilePath"
 	deployFilePath="$deployLocation/$simpleFilePath"
 	
 	# Running status mode
-	if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
+	if [[ $deployMode = 'false' && $backupMode = 'false' ]]; then
 		backupStatus='M'
 		if [[ -f "$backupFilePath" ]]; then
 			backupStatus='F'
@@ -226,24 +224,24 @@ for settingsLine in $(cat $settingsFile); do
 	
 	
 	# Running update mode, backup gets overwritten
-	if [[ $updateMode = 'true' ]]; then
+	if [[ $backupMode = 'true' ]]; then
 		if [[ -f "$deployFilePath" ]]; then
-			echo "Forcing $backupFilePath"
+			echo "B $backupFilePath"
 			# ln -f "$deployFilePath" "$backupFilePath"
 		else
-			echo "Missing $deployFilePath"
+			echo "M $deployFilePath"
 		fi
 		continue
 	fi
 	
 	
 	# Running force mode, deploy gets overwriten
-	if [[ $forceMode = 'true' ]]; then
+	if [[ $deployMode = 'true' ]]; then
 		if [[ -f "$backupFilePath" ]]; then
-			echo "Updating $deployFilePath"
+			echo "D $deployFilePath"
 			# ln -f "$backupFilePath" "$deployFilePath"
 		else
-			echo "Missing $backupFilePath"
+			echo "M $backupFilePath"
 		fi
 		continue
 	fi
