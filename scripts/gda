@@ -2,7 +2,7 @@
 
 # Runs the gif script, followed with a gad of the same file.
 
-fileFound=$(gick $@ 2> /dev/null)
+fileFound=$(gick "$@" 2> /dev/null)
 
 if [[ $? != 0 ]]; then
 	echo 'No file found' >&2
@@ -11,7 +11,9 @@ fi
 
 echo 'Waiting for diff tool to return...'
 
-giff $fileFound
+# With the -n option giff will just use the parameter as filename
+# instead of searching it with gick
+giff -n "$fileFound"
 
 read -p 'Git add? (y) ' addConfirm
 
