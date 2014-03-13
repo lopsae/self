@@ -5,13 +5,13 @@
 echo "Original parameters: $@"
 
 params=`getopt abc: $*`
-paramParse=$?
+paramReturn=$?
 
 echo "Params: $params"
 set -- $params
 echo "Params after --: $params"
 
-if [[ $paramParse = 0 ]]; then
+if [[ $paramReturn = 0 ]]; then
 	echo "Parameters parsed correctly"
 else
 	echo "Parameters parsed failed"
