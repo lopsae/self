@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # The two most basic ones
-echo "@: $@"
-echo "*: $*"
+echo "\$@: $@"
+echo "\$*: $*"
 
 # Converting it to a list
 params=($@)
