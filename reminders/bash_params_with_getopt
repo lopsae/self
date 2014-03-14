@@ -2,18 +2,56 @@
 
 # Reading parameters with getopts
 
-echo "Original parameters: $@"
+# try with
+# ./script -ac zero -b -d "minus one" one "  two   three"
 
-params=`getopt abc: $*`
+echo "Original parameters"
+echo "\$@: $@"
+
+
+echo
+echo 'Printing each value in "$@"'
+counter=1
+for param in "$@"; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+
+# All whitespace is lost by getopt...
+params=$(getopt abc:d: "$@")
 paramReturn=$?
 
-echo "Params: $params"
-set -- $params
-echo "Params after --: $params"
-
+echo
 if [[ $paramReturn = 0 ]]; then
 	echo "Parameters parsed correctly"
 else
 	echo "Parameters parsed failed"
 fi
+
+
+echo 'Parsed params'
+echo "\$params: $params"
+echo 'Printing each value in "$params[@]"'
+counter=1
+for param in "${params[@]}"; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+
+set -- $params
+
+echo
+echo 'After set -- $params'
+echo 'Printing each value in "$@"'
+counter=1
+for param in "$@"; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+
+
+
 
