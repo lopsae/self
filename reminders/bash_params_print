@@ -1,18 +1,169 @@
 #!/bin/bash
 
-# The two most basic ones
+# try with:
+# ./script uno "  dos   tres"
+
+echo 'Printing just the parameters arrays'
 echo "\$@: $@"
 echo "\$*: $*"
 
-# Converting it to a list
-params=($@)
 
-# And accessing list values
-echo "list[0]: ${params[0]}"
-echo "list[1]: ${params[1]}"
-echo "list length: ${#params[@]}"
 
-for a; do
-	echo "forloop: $a"
+
+echo
+echo 'Printing each value in "$@"'
+counter=1
+for param in "$@"; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+echo 'Printing each value in "$*"'
+counter=1
+for param in "$*"; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+
+
+
+echo
+echo 'Printing each value in $@'
+counter=1
+for param in $@; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+echo 'Printing each value in $*'
+counter=1
+for param in $*; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+
+
+
+echo
+echo 'Printing each value in a "copy" of "$@"'
+counter=1
+params="$@"
+for param in "$params"; do
+	
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+echo 'Printing each value in a "copy" of "$*"'
+counter=1
+params="$*"
+for param in "$params"; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+
+
+
+echo
+echo 'Printing each value in a copy of "$@"'
+counter=1
+params="$@"
+for param in $params; do
+	
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+echo 'Printing each value in a copy of "$*"'
+counter=1
+params="$*"
+for param in $params; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+
+
+
+echo
+echo 'Printing each value in a "copy" of $@'
+counter=1
+params=$@
+for param in "$params"; do
+	
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+echo 'Printing each value in a "copy" of $*'
+counter=1
+params=$*
+for param in "$params"; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+
+
+
+echo
+echo 'Printing each value in a copy of $@'
+counter=1
+params=$@
+for param in $params; do
+	
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+echo 'Printing each value in a copy of $*'
+counter=1
+params=$*
+for param in $params; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+
+
+
+echo
+echo 'Printing each value in a "copy" of ("$@")'
+counter=1
+params=("$@")
+for param in "$params"; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+echo 'Printing each value in a "copy" of ("$*")'
+counter=1
+params=("$*")
+for param in "$params"; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+
+
+
+echo
+echo 'Printing each value in a "$copy[@]" of ("$@")'
+counter=1
+params=("$@")
+for param in "${params[@]}"; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
+done
+
+echo 'Printing each value in a "$copy[@]" of ("$*")'
+counter=1
+params=("$*")
+for param in "${params[@]}"; do
+	echo "\$$counter: $param"
+	counter=$(($counter+1))
 done
 
