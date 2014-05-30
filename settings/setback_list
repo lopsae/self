@@ -3,6 +3,16 @@
 # Each set defines backup and deploy locations, along with the list
 # of files to keep in sync.
 
+# First line of each set is an string to identify the set, this string
+# Is only printed in the output of setback.
+
+# Following two lines are the backup and deploy locations. This locations
+# should be directories.
+
+# Any following lines are the files to keep in sync between the two given
+# locations. The file is always relative to the deploy and backup
+# directories.
+
 @ Sublime settings and scripts
 ~/self/settings/sublime
 ~/Library/Application Support/Sublime Text 3/Packages/User/
@@ -11,5 +21,13 @@
 	Preferences.sublime-settings
     reset_font_size_command.py
     
-    
+
+# @ Quicklook generator for Markdown
+# ~/self/settings/qlmarkdown
+# This location does not exists by default, the script should create it
+# ~/Library/QuickLook
+
+# This file is a bundle, thus a directory
+# Should the script copy this and then compare? han directories be hardlinked?
+# 	QLMarkdown.qlgenerator
 
