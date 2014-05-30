@@ -2,16 +2,16 @@
 
 # dotcheck helps to keep a backup of dotfiles in a given backup folder.
 # 
-# By default the program reads its settings from the ~/.self_dotcheck file,
-# if the file is not pressent and none is provided through the options the
-# program halts.
+# By default the program reads its settings from the ~/.self_dotcheck file.
+# Alternatively a file can be provided with the -s option.
+# If no file is provided or found by default the program halts.
 # 
 # If the settings file is found the first line read is considered the
 # backup folder and the rest is considered a list of dotfiles to consider.
 # 
 # Without options the program will print only status information for each
 # dotfile defined in the settings file. For each file two letters will be
-# displayed, the forst for its status in home, the second in backup:
+# displayed, the first for its status in home, the second in backup:
 # MM - missing on both places
 # MF - missing in home, present in backup
 # FM - missing in backup, present in home
@@ -32,7 +32,7 @@
 # -s FILE provides an alternate path for the settings file.
 
 
-# Normal usage for a new machine should be:
+# Setup for a new machine:
 # Run it once with the settings file from the backup location. This will
 # copy all files from backup to home:
 # > dotcheck -F -s ~/self/dotfiles/self_dotcheck
