@@ -1,5 +1,7 @@
 [user]
 	name = Maic Lopez Saenz
+#	enabling email while there is nothing else to use different mail
+	email = maic@lopsae.com
 #	email should be defined by repository
 [push]
 	default = tracking

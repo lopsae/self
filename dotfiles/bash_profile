@@ -10,9 +10,9 @@ popd > /dev/null
 
 # TODO move to its own file
 # zelfconfig
-pushd zelf > /dev/null
-	source $HOME/zelf/zelfconfig
-popd > /dev/null
+# pushd zelf > /dev/null
+#	source $HOME/zelf/zelfconfig
+# popd > /dev/null
 
 # TODO move to its own file in self
 addpath /usr/local/araxis
