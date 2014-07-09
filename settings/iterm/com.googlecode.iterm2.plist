@@ -310,13 +310,13 @@
 	<key>NSWindow Frame Preferences</key>
 	<string>269 110 924 485 0 0 1440 878 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>13 42 730 836 0 0 1440 878 </string>
-	<key>NSWindow Frame iTerm Window 1</key>
-	<string>78 11 730 836 0 0 1440 878 </string>
-	<key>NSWindow Frame iTerm Window 2</key>
-	<string>629 36 730 836 0 0 1440 878 </string>
-	<key>NSWindow Frame iTerm Window 3</key>
 	<string>696 6 730 836 0 0 1440 878 </string>
+	<key>NSWindow Frame iTerm Window 1</key>
+	<string>78 4 730 874 0 0 1440 878 </string>
+	<key>NSWindow Frame iTerm Window 2</key>
+	<string>629 4 730 874 0 0 1440 878 </string>
+	<key>NSWindow Frame iTerm Window 3</key>
+	<string>696 4 730 874 0 0 1440 878 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -885,7 +885,7 @@
 			<key>Right Option Key Sends</key>
 			<integer>0</integer>
 			<key>Rows</key>
-			<integer>50</integer>
+			<integer>45</integer>
 			<key>Screen</key>
 			<integer>-1</integer>
 			<key>Scrollback Lines</key>
@@ -1120,9 +1120,11 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2014-05-30T17:43:13Z</date>
+	<date>2014-07-08T09:25:56Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
+	<key>SUSkippedVersion</key>
+	<string>1.0.0.20140629</string>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>ShowBookmarkName</key>
@@ -1156,7 +1158,7 @@
 	<key>WebKitDefaultFontSize</key>
 	<integer>11</integer>
 	<key>WebKitStandardFont</key>
-	<string>.Lucida Grande UI</string>
+	<string>Lucida Grande</string>
 	<key>Window Arrangements</key>
 	<dict>
 		<key>Leonora</key>
