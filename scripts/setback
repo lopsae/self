@@ -189,7 +189,7 @@ for line in $(cat $settingsFile); do
 				continue
 			else
 				readStage='jumpBlock'
-				echo 'Invalid deploy location found: $line' >&2
+				echo "Invalid deploy location found: $line" >&2
 				continue
 			fi
 			;;
