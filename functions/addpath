@@ -3,6 +3,9 @@
 # Adds values to the top of the PATH enviroment variable.
 # If a value is already there it is put at the top.
 
+# If the provided folder does not exist it is not added to the PATH
+# variable.
+
 addpath() {
 	# Cleanup the path if it exists previously
 	# Sed has different options in each system
@@ -20,9 +23,9 @@ addpath() {
 	
 	# If the directory exists, add it on top
 	if [[ -d $1 ]]; then
-		PATH=$1:$PATH
+		export PATH=$1:$PATH
 	else
-		echo "addpath with invalid directory: '$1'" >&2
+		echo "addpath called with invalid directory: '$1'" >&2
 	fi
 }
 
