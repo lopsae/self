@@ -20,6 +20,8 @@ read -p 'Git add? (y) ' addConfirm
 
 if [ "$addConfirm" = 'y' ]; then
 	echo $fileFound | gadd
+	echo
+	git status --short --branch
 else
 	echo 'Aborted' >&2
 	exit 1
