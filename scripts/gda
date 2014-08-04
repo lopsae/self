@@ -1,8 +1,10 @@
 #!/bin/bash
 
-# Runs the gif script, followed with a gad of the same file.
+# Finds with gick a file from the modified files with a workspace status.
+# With it, runs the giff command, followed with the gadd command for the
+# same file.
 
-fileFound=$(gick "$@" 2> /dev/null)
+fileFound=$(gick -w "$@" 2> /dev/null)
 
 if [[ $? != 0 ]]; then
 	echo 'No file found' >&2
