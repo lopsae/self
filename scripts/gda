@@ -4,7 +4,15 @@
 # With it, runs the giff command, followed with the gadd command for the
 # same file.
 
-fileFound=$(gick -w "$@" 2> /dev/null)
+# If run without any paramters it will pick the first unstaged file found.
+
+
+# Checking for no options case
+if [[ $# = '0' ]]; then
+	fileFound=$(gick -w -d "." 2> /dev/null)
+else
+	fileFound=$(gick -w "$@" 2> /dev/null)
+fi
 
 if [[ $? != 0 ]]; then
 	echo 'No file found' >&2
