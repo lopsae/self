@@ -6,7 +6,7 @@ branchesNames=$(git branch | tr -d [:blank:] | grep -v '^*')
 
 IFS=$'\n'
 for branchName in $branchesNames; do
-	git branch -d $branchName
+	git branch -D $branchName
 done
 unset IFS
 
