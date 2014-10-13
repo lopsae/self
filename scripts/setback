@@ -1,39 +1,40 @@
 #!/bin/bash
 
-# setback keeps two directories syncronized by creating hardlinked files
-# between them. A file can be provided that contains sets of the two
-# locations and the files in these to keep syncronized. Generaly the first
-# folder is called the backup directory, the second one the deploy
-# directory.
-
-
-# The -s FILE option must be provided to define the settings file to use.
+# setback
 # 
-# Without further options the program will print only status information.
-# For each file defined in the settings file two letters will be displayed,
-# the first for its status in backuo, the second in deploy:
+# Checks that the same files exists between two directories, and creates
+# hardlinked files between the two locations to make them match.
+#
+# The list of directories and files to check is provided through a settings
+# file. The first directory is refered as "backup", the second as "deploy".
+
+
+# Without any options the program will use ~/.self_setback for settings or
+# fail of the file does not exist. For each file checked a two letter 
+# status is printed: first for its status in backup, the second in deploy.
 # 
 # MM - missing on both folders
 # MF - missing in backup, present in deploy
-# FM - missing in deploy, present in backup
+# FM - present in backup, missing in deploy
 # FF - Present in both folders and matching
 # FX - Present in both folders and different
 
 
-# The script also accepts the following options:
+# The following options are available:
+#
+# -s <file> : Defines the setings file to use.
 # 
-# -D will deploy the backup files into the deploy directory. The script
-# will create a hardlinked file in de deploy directory, from its counterpart
-# in the backup directory, for each file it handles.
+# -D : Deploy the backup files into the deploy directory. For each file 
+# checked in the backup directory, a hardlinked file will be created in the
+# deploy directory.
 # 
-# -B will update the files in the backup folder. The script will create
-# a hardlinked file in the backup directory, from its counterpart in the
-# deploy directory, for each file it handles.
+# -B : Backup the deploy files into the backup directory. For each file 
+# checked in the deploy directory, a hardlinked file will be created in the
+# backup directory.
 # 
-# -f by default the script prints the only the relative portion of the
-# handled filenames. If -f is provided the full filenames are printed.
-# This only applies when using the -D or -B options, since the status
-# printout always display only the relative portion of the filename.
+# -l : Displays the full path and filename of the files being checked. By
+# default the program only prints the filename relative to the backup and
+# deploy directories.
 
 
 
@@ -42,10 +43,10 @@
 ########################################
 
 # Options values
-settingsFile=''
+settingsFile="$HOME/.self_setback"
 backupMode='false'
 deployMode='false'
-fullFileName='false'
+longFilename='false'
 
 # Error codes
 error_invalidOptions=1
@@ -57,7 +58,7 @@ error_missingSettingsFile=2
 # Options parsing
 ########################################
 
-params=$(getopt DBfs: $*)
+params=$(getopt DBls: $*)
 getoptStatus=$?
 set -- $params
 
@@ -84,9 +85,9 @@ for param; do
 			backupMode='true'
 			shift
 			;;
-		-f)
+		-l)
 			# Update dotfiles
-			fullFileName='true'
+			longFilename='true'
 			shift
 			;;
 		--)
@@ -109,7 +110,7 @@ if [[ ! -f $settingsFile ]]; then
 fi
 
 if [[ $deployMode = 'true' && $backupMode = 'true' ]]; then
-	echo 'Invalid options: -F and -U cannot be used simultaneously'
+	echo 'Invalid options: -F and -B cannot be used simultaneously'
 	exit $error_invalidOptions
 fi
 
@@ -121,11 +122,16 @@ fi
 
 backupLocation=''
 deployLocation=''
+
+# Normal stages for reading the settings file are
+# backupDir -> deployDir -> files -> backupDir
+# If something wrong is found "jumbBlock" is used
 readStage='backupDir' # -> deployDir -> files -> backupDir
 
 IFS=$'\n'
 for line in $(cat $settingsFile); do
 	
+	# Cleaning and preparing the lines to be processed
 	# Trimming any edge whitespace
 	leading="${line%%[![:space:]]*}"
 	trailing="${var##*[![:space:]]}"
@@ -229,7 +235,12 @@ for line in $(cat $settingsFile); do
 			fi
 		fi
 		
-		echo "$backupStatus$deployStatus $simpleFilePath"
+		if [[ $longFilename = 'true' ]]; then
+			echo "$backupStatus$deployStatus $backupFilePath $deployFilePath"
+		else
+			echo "$backupStatus$deployStatus $simpleFilePath"
+		fi
+		
 		continue
 	fi
 	
@@ -240,7 +251,7 @@ for line in $(cat $settingsFile); do
 	
 	if [[ $backupMode = 'true' ]]; then
 		if [[ -f "$deployFilePath" ]]; then
-			if [[ $fullFileName = 'true' ]]; then
+			if [[ $longFilename = 'true' ]]; then
 				echo "B $backupFilePath"
 			else
 				echo "B $simpleFilePath"
@@ -249,7 +260,7 @@ for line in $(cat $settingsFile); do
 			ln -f "$deployFilePath" "$backupFilePath"
 			
 		else
-			if [[ $fullFileName = 'true' ]]; then
+			if [[ $longFilename = 'true' ]]; then
 				echo "M $deployFilePath"
 			else
 				echo "M $simpleFilePath"
@@ -260,7 +271,7 @@ for line in $(cat $settingsFile); do
 	
 	if [[ $deployMode = 'true' ]]; then
 		if [[ -f "$backupFilePath" ]]; then
-			if [[ $fullFileName = 'true' ]]; then
+			if [[ $longFilename = 'true' ]]; then
 				echo "D $deployFilePath"
 			else
 				echo "D $simpleFilePath"
@@ -269,7 +280,7 @@ for line in $(cat $settingsFile); do
 			ln -f "$backupFilePath" "$deployFilePath"
 			
 		else
-			if [[ $fullFileName = 'true' ]]; then
+			if [[ $longFilename = 'true' ]]; then
 				echo "M $backupFilePath"
 			else
 				echo "M $simpleFilePath"
