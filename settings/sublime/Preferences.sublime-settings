@@ -2,10 +2,12 @@
 	"default_font_size": 15,
 	"detect_indentation": false,
 	"draw_minimap_border": true,
+	"always_show_minimap_viewport": true,
 	"draw_white_space": "all",
 	"font_face": "Bitstream Vera Sans Mono",
 	"font_size": 15,
 	"highlight_line": true,
+	"drag_text": false,
 	"indent_guide_options":
 	[
 		"draw_normal",
@@ -14,6 +16,7 @@
 	"line_padding_bottom": 2,
 	"line_padding_top": 2,
 	"open_files_in_new_window": false,
+	"show_tab_close_buttons": false,
 	"rulers":
 	[
 		75,
