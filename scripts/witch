@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Opens a script with vim. If the given parameter is a function
+# Opens a script with sublime. If the given parameter is a function
 # or an alias a message is printed in the stderr.
 
 
@@ -20,5 +20,5 @@ if [[ $? != 0 ]]; then
 fi
 
 echo "opening '$pathToFile'"
-vim $pathToFile
+subl $pathToFile
 
