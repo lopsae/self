@@ -2,12 +2,15 @@
 
 # dotcheck helps to keep a backup of dotfiles in a given backup folder.
 # 
-# By default the program reads its settings from the ~/.self_dotcheck file.
-# Alternatively a file can be provided with the -s option.
-# If no file is provided or found by default the program halts.
+# The program reads its settings from the ~/.self_dotcheck file by default.
+# A settings file can be provided with the -s option alternatively.
 # 
-# If the settings file is found the first line read is considered the
-# backup folder and the rest is considered a list of dotfiles to consider.
+# The program halts if no settings file is provided or found by default.
+# 
+# The settings file follows this format:
+# Lines can be disabled as comments by starting them with "#"
+# The first line is read as the backup folder.
+# Any subsequent line is a dotfile to consider.
 # 
 # Without options the program will print only status information for each
 # dotfile defined in the settings file. For each file two letters will be
@@ -15,11 +18,12 @@
 # MM - missing on both places
 # MF - missing in home, present in backup
 # FM - missing in backup, present in home
-# FF - Present and matching
-# FX - Present and different
+# FF - Present and both files are hardlinked
+# Ff - Present and both files have the same content
+# FX - Present and both files have different content
 
 
-# The script accepts the following options:
+# The following options are available:
 # 
 # -F will force the backup dotfiles into the home folder. Each file in the
 # home folder will be created as a hard link of the file in the backup
@@ -28,6 +32,9 @@
 # -u will update the files in the backup folder. Each file in the
 # backup folder will be created as a hard link of the file in the home
 # folder.
+# 
+# -c will run the compare command with any files found with different
+# content. If all files match only status information will be printed.
 # 
 # -s FILE provides an alternate path for the settings file.
 
@@ -39,6 +46,9 @@
 # 
 # Afterwards just run it to check status:
 # > dotcheck
+# 
+# When files are different run in compare mode to solve diferences
+# > dotcheck -c
 # 
 # To update the backup just in update mode and then save the backup
 # > dotcheck -u
@@ -54,11 +64,12 @@ error_noDotfiles=4
 
 # Options values
 settingsFile=~/.self_dotcheck
+compareMode='false'
 updateMode='false'
 forceMode='false'
 
 # Options parsing
-params=$(getopt Fus: $*)
+params=$(getopt Fucs: $*)
 getoptStatus=$?
 set -- $params
 
@@ -73,6 +84,10 @@ for param; do
 			# settings file
 			shift
 			settingsFile=$1
+			shift
+			;;
+		-c)
+			compareMode='true'
 			shift
 			;;
 		-F)
@@ -103,16 +118,21 @@ if [[ $forceMode = 'true' && $updateMode = 'true' ]]; then
 	exit $error_invalidOptions
 fi
 
+if [[ $compareMode = 'true' && ( $forceMode = 'true' || $updateMode = 'true' ) ]]; then
+	echo 'Invalid options: -c cannot be used along -F nor -u'
+	exit $error_invalidOptions
+fi
+
 
 # Reading settings
 backupLocation=''
 dotfiles=()
 
 IFS=$'\n'
-for settingsLine in $(cat $settingsFile); do
+for currentLine in $(cat $settingsFile); do
 	
 	# Checking for empty lines
-	trimmed=$(echo $settingsLine | tr -d [[:space:]])
+	trimmed=$(echo $currentLine | tr -d [[:space:]])
 	if [[ $trimmed = '' ]]; then
 		continue
 	fi
@@ -124,14 +144,14 @@ for settingsLine in $(cat $settingsFile); do
 	
 	# First line is always the backup location
 	if [[ $backupLocation = '' ]]; then
-		backupLocation=$settingsLine
+		backupLocation=$currentLine
 		# Expanding relative paths
 		eval backupLocation=$backupLocation
 		continue
 	fi
 	
 	# Rest of lines are dotfiles
-	dotfiles+=($settingsLine)
+	dotfiles+=($currentLine)
 done
 unset IFS
 
@@ -156,14 +176,14 @@ if [[ $lastCharacter = '/' ]]; then
 fi
 
 
-# Working with the dotfiles
-IFS=$'\n'
-for dotfile in ${dotfiles[@]}; do
-	homeDotfile=$HOME/.$dotfile
-	backupDotfile=$backupLocation/$dotfile
+# Status and compare mode
+if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
 	
-	# Running status mode
-	if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
+	IFS=$'\n'
+	for dotfile in ${dotfiles[@]}; do
+		homeDotfile=$HOME/.$dotfile
+		backupDotfile=$backupLocation/$dotfile
+		
 		homeStatus='M'
 		if [[ -f $homeDotfile ]]; then
 			homeStatus='F'
@@ -175,19 +195,47 @@ for dotfile in ${dotfiles[@]}; do
 		fi
 		
 		# If both files where found
-		if [[ $backupStatus = 'F' && $backupStatus = 'F' ]]; then
+		if [[ $homeStatus$backupStatus = 'FF' ]]; then
 			# TODO check here that if one file is a symbolic link it will still say true
 			# we probably just need to check for symbolic link in the backup location
 			# otherwise the content is not really backed up to git
+			
 			if [[ ! $homeDotfile -ef $backupDotfile ]]; then
-				backupStatus='X'
+				# Files are not hardlinked, check contents
+				homeHash=$(md5 -q "$homeDotfile")
+				backupHash=$(md5 -q "$backupDotfile")
+				
+				if [[ $homeHash = $backupHash ]]; then
+					backupStatus='f'
+				else
+					backupStatus='X'
+				fi
 			fi
 		fi
 		
 		echo "$homeStatus$backupStatus $dotfile"
+		
+		# Compare mode
+		if [[ $compareMode = 'true' && $backupStatus = 'X' ]]; then
+			echo "Comparing $dotfile"
+			compare -title1:"home:$homeDotfile" $homeDotfile -title2:"backup:$backupDotfile" "$backupDotfile"
+			exit
+		fi
+		
 		continue
-	fi
+		
+	done
+	unset IFS
 	
+	exit
+fi
+
+
+# Update and force modes
+IFS=$'\n'
+for dotfile in ${dotfiles[@]}; do
+	homeDotfile=$HOME/.$dotfile
+	backupDotfile=$backupLocation/$dotfile
 	
 	# Running update mode
 	if [[ $updateMode = 'true' ]]; then
