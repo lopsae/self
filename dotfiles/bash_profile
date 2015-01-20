@@ -20,6 +20,3 @@ addpath /usr/local/gools
 
 addpath '/Applications/Sublime Text.app/Contents/SharedSupport/bin'
 addpath '/Applications/Araxis Merge.app/Contents/Utilities'
-
-addpath /usr/local/share/python
-
