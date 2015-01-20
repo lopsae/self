@@ -1,0 +1,331 @@
+#!/bin/bash
+
+# efexem helps to compare a list of files in two locations by printing a
+# status message that outlines if the files are the same, have equal
+# content, are diferent, or are missing.
+#
+# The of the script name comes from the three letters used for the status:
+# F, X, and M.
+#
+# The list of files to compare can be provided as a file or as parameters
+# to the script.
+# 
+# If provided as a file the file can contain any amount of blocks, each
+# block defining either two folders and a list of files to compare, or
+#
+#
+# Either through file or parameters the information to provide is:
+# * Two directories, optional
+# * List of shared files to compare
+# ** This is a list of files under the two directories provided
+# ** origin directories are required for single file list
+# * List of pair files to compare
+# ** If origin directories are provided, each pair is appenteded to the
+#    directories to compare those files
+# ** If no origin directories are provided, the pair of files are considered as root paths
+# 
+
+current file for setback looks like:
+
+@ Sublime settings and scripts
+~/self/settings/sublime
+~/Library/Application Support/Sublime Text 3/Packages/User/
+
+	Default (OSX).sublime-keymap
+	Preferences.sublime-settings
+    reset_font_size_command.py
+
+how do we define the optional folders?
+
+@ Optional folders
+	
+
+
+for parameters:
+default with folers and single file list?
+
+efexem ~/folder1/ ~/anotherFolder/ mother.txt someSettings.info
+
+with deploy/backup options, and rest is single file list
+
+efexem -d ~/deploy/ -b ~/backup/ one.file two.files
+
+with -p options to define pairs (and that makes -db optional)
+
+efexem -d ~/deploy/ -b ~/backup/ -p one.file one_alternate.file ohMama.txt ohPapa.txt
+
+
+
+#
+#
+# =========================================================================
+# =========================================================================
+# =========================================================================
+# =========================================================================
+# =========================================================================
+# 
+#
+#
+# dotcheck helps to keep a backup of dotfiles in a given backup folder.
+# 
+# The program reads its settings from the ~/.self_dotcheck file by default.
+# A settings file can be provided with the -s option alternatively.
+# 
+# The program halts if no settings file is provided or found by default.
+# 
+# The settings file follows this format:
+# Lines can be disabled as comments by starting them with "#"
+# The first line is read as the backup folder.
+# Any subsequent line is a dotfile to consider.
+# 
+# Without options the program will print only status information for each
+# dotfile defined in the settings file. For each file two letters will be
+# displayed, the first for its status in home, the second in backup:
+# MM - missing on both places
+# MF - missing in home, present in backup
+# FM - missing in backup, present in home
+# FF - Present and both files are hardlinked
+# Ff - Present and both files have the same content
+# FX - Present and both files have different content
+
+
+# The following options are available:
+# 
+# -F will force the backup dotfiles into the home folder. Each file in the
+# home folder will be created as a hard link of the file in the backup
+# folder.
+# 
+# -u will update the files in the backup folder. Each file in the
+# backup folder will be created as a hard link of the file in the home
+# folder.
+# 
+# -c will run the compare command with any files found with different
+# content. If all files match only status information will be printed.
+# 
+# -s FILE provides an alternate path for the settings file.
+
+
+# Setup for a new machine:
+# Run it once with the settings file from the backup location. This will
+# copy all files from backup to home:
+# > dotcheck -F -s ~/self/dotfiles/self_dotcheck
+# 
+# Afterwards just run it to check status:
+# > dotcheck
+# 
+# When files are different run in compare mode to solve diferences
+# > dotcheck -c
+# 
+# To update the backup just in update mode and then save the backup
+# > dotcheck -u
+
+
+
+
+# Error codes
+error_invalidOptions=1
+error_missingSettingsFile=2
+error_invalidBackupLocation=3
+error_noDotfiles=4
+
+# Options values
+settingsFile=~/.self_dotcheck
+compareMode='false'
+updateMode='false'
+forceMode='false'
+
+# Options parsing
+params=$(getopt Fucs: $*)
+getoptStatus=$?
+set -- $params
+
+if [[ $getoptStatus != 0 ]]; then
+	echo 'Invalid options' >&2
+	exit $error_invalidOptions
+fi
+
+for param; do
+	case "$param" in
+		-s)
+			# settings file
+			shift
+			settingsFile=$1
+			shift
+			;;
+		-c)
+			compareMode='true'
+			shift
+			;;
+		-F)
+			# Force copy from dotfiles to home
+			forceMode='true'
+			shift
+			;;
+		-u)
+			# Update dotfiles
+			updateMode='true'
+			shift
+			;;
+		--)
+			shift
+			break
+			;;
+	esac
+done
+
+# Checks for options before we start
+if [[ ! -f $settingsFile ]]; then
+	echo "Settings file not found: $settingsFile" >&2
+	exit $error_missingSettingsFile
+fi
+
+if [[ $forceMode = 'true' && $updateMode = 'true' ]]; then
+	echo 'Invalid options: -F and -u cannot be used simultaneously'
+	exit $error_invalidOptions
+fi
+
+if [[ $compareMode = 'true' && ( $forceMode = 'true' || $updateMode = 'true' ) ]]; then
+	echo 'Invalid options: -c cannot be used along -F nor -u'
+	exit $error_invalidOptions
+fi
+
+
+# Reading settings
+backupLocation=''
+dotfiles=()
+
+IFS=$'\n'
+for currentLine in $(cat $settingsFile); do
+	
+	# Checking for empty lines
+	trimmed=$(echo $currentLine | tr -d [[:space:]])
+	if [[ $trimmed = '' ]]; then
+		continue
+	fi
+	
+	# Checking for comments
+	if [[ ${trimmed:0:1} = '#' ]]; then
+		continue
+	fi
+	
+	# First line is always the backup location
+	if [[ $backupLocation = '' ]]; then
+		backupLocation=$currentLine
+		# Expanding relative paths
+		eval backupLocation=$backupLocation
+		continue
+	fi
+	
+	# Rest of lines are dotfiles
+	dotfiles+=($currentLine)
+done
+unset IFS
+
+
+# Checking for valid settings
+if [[ ! -d $backupLocation ]]; then
+	echo "Invalid backup location: $backupLocation" >&2
+	exit $error_invalidBackupLocation
+fi
+
+if [[ ${#dotfiles[@]} -le 0 ]]; then
+	echo "No dotfiles found in settings" >&2
+	exit $error_noDotfiles
+fi
+
+
+# Checking backup location for ending slash
+stringLength=$((${#backupLocation}-1))
+lastCharacter=${backupLocation:$stringLength:1}
+if [[ $lastCharacter = '/' ]]; then
+	backupLocation=${backupLocation:0:$stringLength}
+fi
+
+
+# Status and compare mode
+if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
+	
+	IFS=$'\n'
+	for dotfile in ${dotfiles[@]}; do
+		homeDotfile=$HOME/.$dotfile
+		backupDotfile=$backupLocation/$dotfile
+		
+		homeStatus='M'
+		if [[ -f $homeDotfile ]]; then
+			homeStatus='F'
+		fi
+		
+		backupStatus='M'
+		if [[ -f $backupDotfile ]]; then
+			backupStatus='F'
+		fi
+		
+		# If both files where found
+		if [[ $homeStatus$backupStatus = 'FF' ]]; then
+			# TODO check here that if one file is a symbolic link it will still say true
+			# we probably just need to check for symbolic link in the backup location
+			# otherwise the content is not really backed up to git
+			
+			if [[ ! $homeDotfile -ef $backupDotfile ]]; then
+				# Files are not hardlinked, check contents
+				homeHash=$(md5 -q "$homeDotfile")
+				backupHash=$(md5 -q "$backupDotfile")
+				
+				if [[ $homeHash = $backupHash ]]; then
+					backupStatus='f'
+				else
+					backupStatus='X'
+				fi
+			fi
+		fi
+		
+		echo "$homeStatus$backupStatus $dotfile"
+		
+		# Compare mode
+		if [[ $compareMode = 'true' && $backupStatus = 'X' ]]; then
+			echo "Comparing $dotfile"
+			compare -title1:"home:$homeDotfile" $homeDotfile -title2:"backup:$backupDotfile" "$backupDotfile"
+			exit
+		fi
+		
+		continue
+		
+	done
+	unset IFS
+	
+	exit
+fi
+
+
+# Update and force modes
+IFS=$'\n'
+for dotfile in ${dotfiles[@]}; do
+	homeDotfile=$HOME/.$dotfile
+	backupDotfile=$backupLocation/$dotfile
+	
+	# Running update mode
+	if [[ $updateMode = 'true' ]]; then
+		if [[ -f $homeDotfile ]]; then
+			echo "Updating $backupDotfile"
+			ln -f "$homeDotfile" "$backupDotfile"
+		else
+			echo "Missing $homeDotfile"
+		fi
+		continue
+	fi
+	
+	
+	# Running update mode
+	if [[ $forceMode = 'true' ]]; then
+		if [[ -f $backupDotfile ]]; then
+			echo "Forcing $homeDotfile"
+			ln -f "$backupDotfile" "$homeDotfile"
+		else
+			echo "Missing $backupDotfile"
+		fi
+		continue
+	fi
+	
+done
+unset IFS
+
