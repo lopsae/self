@@ -2,16 +2,66 @@
 
 # efexem helps to compare a list of files in two locations by printing a
 # status message that outlines if the files are the same, have equal
-# content, are diferent, or are missing.
+# content, are diferent, or are missing from any of the locations.
+#
+# The script can also overwrite one of the set of files with the
+# corresponding files of the other location.
+# 
+# Finaly the script can help check the diferences between unmatching files
+# by opetning a compare tool.
+#
 #
 # The of the script name comes from the three letters used for the status:
 # F, X, and M.
 #
-# The list of files to compare can be provided as a file or as parameters
-# to the script.
 # 
-# If provided as a file the file can contain any amount of blocks, each
-# block defining either two folders and a list of files to compare, or
+# The script can be provided, either by options or through a file one of
+# the following alternatives:
+# * Two directories and a list of files. The script will search for each of
+#   the provided files, relative to each of the directories, and compare
+#   them.
+# * Two directories and a list of file pairs. The script will look in the
+#   first directory for the first file of the pair, relative to the 
+#   directory, and in the second directory likewise. Both files are then 
+#   compared.
+# * A list of file pairs with absolute paths. The script will compare 
+#   each of the files against it's pair.
+#
+#
+# The list of files to compare can be provided as a file or as parameters
+# to the script. In either case the following options can be provided to
+# the script:
+# * Two directories and a list of files present in both to compare.
+# * Two directories and a list of file pairs present, one present in each
+#   location, to compare.
+# * A list of file pairs with absolute paths to compare between each other.
+# 
+# The following options are available:
+# 
+# -b DIRECTORY defines the backup directory. This parameter is required
+#    unless a file is specified with -s, or absolute file pairs are defined
+#    with -p.
+# 
+# -d DIRECTORY
+# 
+# -v verbose
+# 
+# -p pairs
+# 
+# -D will force the backup dotfiles into the home folder. Each file in the
+# home folder will be created as a hard link of the file in the backup
+# folder.
+# 
+# -B will update the files in the backup folder. Each file in the
+# backup folder will be created as a hard link of the file in the home
+# folder.
+# 
+# -c will run the compare command with any files found with different
+# content. If all files match only status information will be printed.
+# 
+# -s FILE provides an alternate path for the settings file.
+# 
+# 
 #
 #
 # Either through file or parameters the information to provide is:
