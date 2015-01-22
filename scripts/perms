@@ -23,7 +23,7 @@ permitions of the folder itself, instead of their contents. Option
 --contents can be used along with --self to display both the <target>
 folder and its contents.
 
-Options --files and -dirs can limit the displayed items to only files
+Options --files and --dirs can limit the displayed items to only files
 or directories. By default both are shown. Using option --all displays
 also hidden files and/or folders.
 
