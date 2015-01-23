@@ -47,6 +47,10 @@ HELPDOC
 # -v 
 #    Enables verbose mode, printing additional information about the
 #    options and input file being read.
+#
+# -l
+#    When printing status each of the files compared is printed with its 
+#    full path.
 # 
 # -p
 #    Enables pairs mode. In this mode file pairs are provided instead of a
@@ -60,6 +64,8 @@ HELPDOC
 #
 # -B - THIS PART IS CONFUSING, -B MEANS THAT BACKUP FILES WILL SURVIVE? OR
 #    FILES WILL BE BACKED UP (DESTROYING BACKUP)?
+#
+#    SETBACK USES -B TO BACKUP, THAT IS REPLACE BACKUP FILES WITH DEPLOY
 #
 #    Makes the script create hardlinked files from the deploy directory to
 #    its counterpart in the backup directory. All matching files in the
@@ -152,22 +158,6 @@ HELPDOC
 # FX - Present and both files have different content
 
 
-# The following options are available:
-# 
-# -F will force the backup dotfiles into the home folder. Each file in the
-# home folder will be created as a hard link of the file in the backup
-# folder.
-# 
-# -u will update the files in the backup folder. Each file in the
-# backup folder will be created as a hard link of the file in the home
-# folder.
-# 
-# -c will run the compare command with any files found with different
-# content. If all files match only status information will be printed.
-# 
-# -s FILE provides an alternate path for the settings file.
-
-
 # Setup for a new machine:
 # Run it once with the settings file from the backup location. This will
 # copy all files from backup to home:
@@ -188,17 +178,21 @@ HELPDOC
 # Error codes
 error_invalidOptions=1
 error_missingSettingsFile=2
-error_invalidBackupLocation=3
-error_noDotfiles=4
 
 # Options values
 settingsFile=~/.self_dotcheck
+backupDirectory=''
+deployDirectory=''
+
+longMode='false'
+verboseMode='false'
 compareMode='false'
-updateMode='false'
-forceMode='false'
+
+backupMode='false'
+deployMode='false'
 
 # Options parsing
-params=$(getopt Fucs: $*)
+params=$(getopt vlcpBDb:d:s: $*)
 getoptStatus=$?
 set -- $params
 
@@ -212,21 +206,41 @@ for param; do
 		-s)
 			# settings file
 			shift
-			settingsFile=$1
+			settingsFile="$1"
+			shift
+			;;
+		-b)
+			# backup directory
+			shift
+			backupDirectory="$1"
+			shift
+			;;
+		-d)
+			# deploy directory
+			shift
+			deployDirectory="$1"
 			shift
 			;;
 		-c)
 			compareMode='true'
 			shift
 			;;
-		-F)
-			# Force copy from dotfiles to home
-			forceMode='true'
+		-v)
+			verboseMode='true'
 			shift
 			;;
-		-u)
+		-l)
+			longMode='true'
+			shift
+			;;
+		-B)
+			# Force copy from dotfiles to home
+			backupMode='true'
+			shift
+			;;
+		-D)
 			# Update dotfiles
-			updateMode='true'
+			deployMode='true'
 			shift
 			;;
 		--)
@@ -235,6 +249,21 @@ for param; do
 			;;
 	esac
 done
+
+
+# Options validation
+
+# if there is no settings file, -p or -bd must be present
+
+# if there is -b, -d must be present, and viceversa
+
+# if there is no -db, -p must be present
+
+# if there is -p arguments should be pairs
+
+# -B and -D are mutually exclusive
+
+# compare mode only works without -B or -D
 
 # Checks for options before we start
 if [[ ! -f $settingsFile ]]; then
