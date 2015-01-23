@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# efexem helps to compare a list of files in two locations by printing a
-# status message that outlines if the files are the same, have equal
+# HELPDOC not being used because it breaks sublime syntax highlight
+read -d '' helpdoc << "HELPDOC"
+HELPDOC
+
+# efexem helps to compare a list of files between two locations by printing
+# a status message that outlines if the files are the same, have equal
 # content, are diferent, or are missing from any of the locations.
 #
 # The script can also overwrite one of the set of files with the
@@ -15,94 +19,103 @@
 # F, X, and M.
 #
 # 
-# The script can be provided, either by options or through a file one of
-# the following alternatives:
+# The script can be provided, either by options or through an input file,
+# one of the following alternatives:
 # * Two directories and a list of files. The script will search for each of
 #   the provided files, relative to each of the directories, and compare
 #   them.
 # * Two directories and a list of file pairs. The script will look in the
 #   first directory for the first file of the pair, relative to the 
-#   directory, and in the second directory likewise. Both files are then 
-#   compared.
+#   directory; and in the second directory for the second file of the pair.
+#   Both files are then compared.
 # * A list of file pairs with absolute paths. The script will compare 
 #   each of the files against it's pair.
 #
-#
-# The list of files to compare can be provided as a file or as parameters
-# to the script. In either case the following options can be provided to
-# the script:
-# * Two directories and a list of files present in both to compare.
-# * Two directories and a list of file pairs present, one present in each
-#   location, to compare.
-# * A list of file pairs with absolute paths to compare between each other.
 # 
 # The following options are available:
 # 
-# -b DIRECTORY defines the backup directory. This parameter is required
-#    unless a file is specified with -s, or absolute file pairs are defined
+# -b <directory>
+#    Defines the backup directory. This parameter is required unless an
+#    input file is specified with -s, or absolute file pairs are provided
 #    with -p.
 # 
-# -d DIRECTORY
+# -d <directory>
+#    Defines the deploy directory. This paramenter is required unless an
+#    input file is specifiued with -s, or absolute file pairs are provided
+#    with -p.
 # 
-# -v verbose
+# -v 
+#    Enables verbose mode, printing additional information about the
+#    options and input file being read.
 # 
-# -p pairs
-# 
-# -D will force the backup dotfiles into the home folder. Each file in the
-# home folder will be created as a hard link of the file in the backup
-# folder.
-# 
-# -B will update the files in the backup folder. Each file in the
-# backup folder will be created as a hard link of the file in the home
-# folder.
-# 
-# -c will run the compare command with any files found with different
-# content. If all files match only status information will be printed.
-# 
-# -s FILE provides an alternate path for the settings file.
-# 
-# 
+# -p
+#    Enables pairs mode. In this mode file pairs are provided instead of a
+#    file list. Each file in the pair is compared against the other one.
+#    If an odd amount of files are provided the program will halt. If the
+#    -b or -d options are used, the first file in the pair will be
+#    considered relative to the backup directory; the second file in the
+#    pair will be considered relative to the deploy directory. When used
+#    without -b or -d options, the first file in the pair is considered
+#    the backup, the second the deploy.
+#
+# -B - THIS PART IS CONFUSING, -B MEANS THAT BACKUP FILES WILL SURVIVE? OR
+#    FILES WILL BE BACKED UP (DESTROYING BACKUP)?
+#
+#    Makes the script create hardlinked files from the deploy directory to
+#    its counterpart in the backup directory. All matching files in the
+#    backup directory will be overwritten.
+#
+# -D
+#    Makes the script create hardlinked files from the backup directory to
+#    its counterpart in the deploy directory. All matching files in the
+#    deploy directory will be overwritten.
+#
+# -c
+#    Will run the compare command with any files found with different
+#    content. If all files match only status information will be printed.
+#
+# -s <file>
+#    Provides to the script an input file to define the directories and
+#    files to compare.
 #
 #
-# Either through file or parameters the information to provide is:
-# * Two directories, optional
-# * List of shared files to compare
-# ** This is a list of files under the two directories provided
-# ** origin directories are required for single file list
-# * List of pair files to compare
-# ** If origin directories are provided, each pair is appenteded to the
-#    directories to compare those files
-# ** If no origin directories are provided, the pair of files are considered as root paths
-# 
-
-current file for setback looks like:
-
-@ Sublime settings and scripts
-~/self/settings/sublime
-~/Library/Application Support/Sublime Text 3/Packages/User/
-
-	Default (OSX).sublime-keymap
-	Preferences.sublime-settings
-    reset_font_size_command.py
-
-how do we define the optional folders?
-
-@ Optional folders
-	
-
-
-for parameters:
-default with folers and single file list?
-
-efexem ~/folder1/ ~/anotherFolder/ mother.txt someSettings.info
-
-with deploy/backup options, and rest is single file list
-
-efexem -d ~/deploy/ -b ~/backup/ one.file two.files
-
-with -p options to define pairs (and that makes -db optional)
-
-efexem -d ~/deploy/ -b ~/backup/ -p one.file one_alternate.file ohMama.txt ohPapa.txt
+# The input file provided with the -s option follows this format:
+#
+#    # Lines can be commented by starting with the '#' symbol
+#    # Full lines are commented, a '#' after the first character will not
+#    # start a comment mid-line.
+#    
+#    # Blocks are started with the '@' symbol. The text afterward is only
+#    # used to to print in the script output for human consumption.
+#    @ First block
+#    -d /path/to/deploy/directory/
+#    -b /bath/to/backup/directory/
+#    
+#    fileOne
+#    fileTwo
+#    fileThree
+#    
+#    @ Second block
+#    -d /path/to/other/deploy/directory/
+#    -b /bath/to/other/backup/directory/
+#    
+#    # enables pair mode
+#    -p
+#    backupFileOne
+#    deployFileOne
+#    
+#    backupFileTwo
+#    deployFileTwo
+#    
+#    @ Third block
+#    # With only -p each file is on an absolute path
+#    -p
+#    
+#    /path/to/backupFileOne
+#    /path/to/deployFileOne
+#    
+#    /path/to/backupFileTwo
+#    /path/to/deployFileTwo
 
 
 
