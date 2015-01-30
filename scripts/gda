@@ -4,7 +4,8 @@
 # With it, runs the giff command, followed with the gadd command for the
 # same file.
 
-# If run without any paramters it will pick the first unstaged file found.
+# If run without any parameters it will pick the first available unstaged
+# file.
 
 
 # Checking for no options case
