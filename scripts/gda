@@ -20,17 +20,17 @@ if [[ $? != 0 ]]; then
 	exit 1
 fi
 
-echo "filename: $fileFound"
+echo "diff '$fileFound'"
 echo 'Waiting for diff tool to return...'
 
 # With the -n option giff will just use the parameter as filename
 # instead of searching it with gick again
-giff -n "$fileFound"
+giff -p "$fileFound"
 
 read -p 'Git add? (y) ' addConfirm
 
 if [ "$addConfirm" = 'y' ]; then
-	echo $fileFound | gadd
+	echo "$fileFound" | gadd
 	echo
 	git status --short --branch
 else
