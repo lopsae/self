@@ -14,7 +14,7 @@ fi
 
 # git aliases
 # some use the gools project: https://github.com/lopsae/gools
-alias gs='git status --short --branch'
+alias gs='git status --short --branch --untracked-files'
 alias gss='git status'
 alias gb='git branch -v'
 alias gol='git log --graph --decorate --pretty=medium --abbrev-commit'
