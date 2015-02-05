@@ -10,7 +10,7 @@
 
 # Checking for no options case
 if [[ $# = '0' ]]; then
-	fileFound=$(gick -w -d "." 2> /dev/null)
+	fileFound=$(gick -w "." 2> /dev/null)
 else
 	fileFound=$(gick -w "$@" 2> /dev/null)
 fi
