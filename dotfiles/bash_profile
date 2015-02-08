@@ -16,7 +16,7 @@ addpath /usr/local/bin
 # TODO move to its own file in self
 # Gools
 export GOOLS_DIFFTOOL='araxis'
-addpath /usr/local/gools
+addpath /usr/local/gick
 
 addpath '/Applications/Sublime Text.app/Contents/SharedSupport/bin'
 addpath '/Applications/Araxis Merge.app/Contents/Utilities'
