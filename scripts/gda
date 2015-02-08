@@ -10,9 +10,9 @@
 
 # Checking for no options case
 if [[ $# = '0' ]]; then
-	fileFound=$(gick -w "." 2> /dev/null)
+	fileFound=$(gick -xw "." 2> /dev/null)
 else
-	fileFound=$(gick -w "$@" 2> /dev/null)
+	fileFound=$(gick -xw "$@" 2> /dev/null)
 fi
 
 if [[ $? != 0 ]]; then
@@ -20,20 +20,36 @@ if [[ $? != 0 ]]; then
 	exit 1
 fi
 
-echo 'Waiting for diff tool to return...'
 
-# With the -p option giff will just use the parameter as filename
-# instead of searching it with gick again
-giff -p "$fileFound"
+# Checking status
+stageStatus=${fileFound:0:1}
+workspaceStatus=${fileFound:1:1}
+fileName=${fileFound:3}
+
+if [[ $workspaceStatus = '?' ]]; then
+	echo "untracked '$fileName'"
+	read -p 'Intent to add? (y) ' intentConfirm
+	if [[ "$intentConfirm" != 'y' ]]; then
+		echo 'Aborted' >&2
+		exit 1
+	fi
+	
+	# TODO pass as parameter to gadd once -p is supported
+	echo "$fileName" | gadd -N
+fi
+
+
+echo 'Waiting for diff tool to return...'
+giff -p "$fileName"
 
 read -p 'Git add? (y) ' addConfirm
 
-if [ "$addConfirm" = 'y' ]; then
-	echo "$fileFound" | gadd
-	echo
-	git status --short --branch
-else
+if [[ "$addConfirm" != 'y' ]]; then
 	echo 'Aborted' >&2
 	exit 1
 fi
+
+echo "$fileName" | gadd
+echo
+git status --short --branch
 
