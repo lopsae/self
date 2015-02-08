@@ -20,10 +20,9 @@ if [[ $? != 0 ]]; then
 	exit 1
 fi
 
-echo "diff '$fileFound'"
 echo 'Waiting for diff tool to return...'
 
-# With the -n option giff will just use the parameter as filename
+# With the -p option giff will just use the parameter as filename
 # instead of searching it with gick again
 giff -p "$fileFound"
 
