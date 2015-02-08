@@ -1,0 +1,25 @@
+#!/bin/bash
+
+read -d '' helpDoc <<"helpDoc"
+Saves the workspace into a stash.
+
+If used without parameters "git stash --include-untracked" is simply invoked.
+
+If present, any parameters passed are used as the save message.
+helpDoc
+
+if [[ $1 = '-h' || $1 = '--help' ]]; then
+	echo "$helpDoc" >&2
+	exit
+fi
+
+# No parameters
+if [[ $# = 0 ]]; then
+	git stash --include-untracked
+	
+# Message in parameters
+else
+	message="$@"
+	git stash save --include-untracked "$message"
+fi
+

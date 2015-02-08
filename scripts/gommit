@@ -1,0 +1,32 @@
+#!/bin/bash
+
+read -d '' helpDoc <<"helpDoc"
+Commits the current index.
+
+If used without parameters "git commit" is simply invoked.
+
+If present, any parameters passed are used as the commit message.
+
+If any content is piped in it is used as the commit message. This will
+override any parameters.
+helpDoc
+
+if [[ $1 = '-h' || $1 = '--help' ]]; then
+	echo "$helpDoc" >&2
+	exit
+fi
+
+# Piped in
+if [[ ! -t 0 ]]; then
+	git commit -F <(cat)
+	
+# No parameters
+elif [[ $# = 0 ]]; then
+	git commit
+	
+# Message in parameters
+else
+	message="$@"
+	git commit -m "$message"
+fi
+
