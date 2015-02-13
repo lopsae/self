@@ -21,8 +21,7 @@ alias gol='git log --graph --decorate --pretty=medium --abbrev-commit'
 alias getch='git fetch --prune; echo; git branch -v | grep "^*"'
 alias gup='git merge $(ginfo tracking)'
 alias glast='git --no-pager log --pretty=short -n 1'
-alias glist='git --no-pager stash list'
-alias gardup='git reset --hard @{u}'
+alias gache='git --no-pager stash list'
 alias gitcheck='ssh -T git@github.com'
 
 # subversion aliases

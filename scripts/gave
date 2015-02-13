@@ -16,10 +16,11 @@ fi
 # No parameters
 if [[ $# = 0 ]]; then
 	git stash --include-untracked
-	
+
 # Message in parameters
 else
+	# Flattening the message
 	message="$@"
-	git stash save --include-untracked "$message"
+	git stash save --include-untracked -- "$message"
 fi
 
