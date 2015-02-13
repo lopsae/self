@@ -5,11 +5,11 @@
 	"font_size": 15,
 	"line_padding_bottom": 2,
 	"line_padding_top": 2,
-	
+
 	// Minimap and viewports
 	"draw_minimap_border": true,
 	"always_show_minimap_viewport": true,
-	
+
 	// Text hightlights and artifacts
 	"draw_white_space": "all",
 	"highlight_line": true,
@@ -18,7 +18,7 @@
 		"draw_normal",
 		"draw_active"
 	],
-	
+
 	// Rulers and wraps
 	"wrap_width": 81,
 	"rulers":
@@ -26,30 +26,23 @@
 		75,
 		80
 	],
-	
+
 	// Autocomplete
 	"auto_complete_commit_on_tab": true,
 	"auto_complete_with_fields": false,
-	
+
 	// Tabs and UI
 	"find_selected_text": true,
 	"open_files_in_new_window": false,
 	"show_tab_close_buttons": false,
 	"highlight_modified_tabs": true,
-	
+
 	// Miscelaneous
-	"detect_indentation": false,
+	"detect_indentation": true,
 	"drag_text": false,
-	"trim_automatic_white_space": false,
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	"trim_automatic_white_space": true,
+	"trim_trailing_white_space_on_save": true,
+
+
 }
 
