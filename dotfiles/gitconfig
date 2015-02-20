@@ -5,6 +5,10 @@
 	default = tracking
 [mergetool]
 	keepBackup = false
+[diff]
+	tool = araxis
+[merge]
+	tool = araxis
 [color]
 	branch = auto
 	status = auto

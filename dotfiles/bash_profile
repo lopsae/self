@@ -1,6 +1,5 @@
 # .bash_profile
 
-
 # TODO move to its own file
 # Self settings
 pushd self > /dev/null
@@ -11,11 +10,8 @@ popd > /dev/null
 # Homebrew installed commands first
 addpath /usr/local/bin
 
-
-
 # TODO move to its own file in self
 # Gools
-export GOOLS_DIFFTOOL='araxis'
 addpath /usr/local/gick
 
 addpath '/Applications/Sublime Text.app/Contents/SharedSupport/bin'
