@@ -8,6 +8,13 @@
 # file.
 
 
+# Checking for patching -k option
+threeWayPatch='false'
+if [[ $1 = '-k' ]]; then
+	threeWayPatch='true'
+	shift
+fi
+
 # Checking for no options case
 if [[ $# = '0' ]]; then
 	fileFound=$(gick -xw "." 2> /dev/null)
@@ -33,23 +40,67 @@ if [[ $workspaceStatus = '?' ]]; then
 		echo 'Aborted' >&2
 		exit 1
 	fi
-	
+
 	# TODO pass as parameter to gadd once -p is supported
 	echo "$fileName" | gadd -N
 fi
 
 
-echo 'Waiting for diff tool to return...'
-giff -p "$fileName"
+if [[ $threeWayPatch = 'false' ]]; then
+	echo 'Waiting for diff tool to return...'
+	giff -p "$fileName"
 
-read -p 'Git add? (y) ' addConfirm
+	read -p 'Stage? (y) ' stageConfirm
 
-if [[ "$addConfirm" != 'y' ]]; then
-	echo 'Aborted' >&2
-	exit 1
+	if [[ "$stageConfirm" != 'y' ]]; then
+		echo 'Aborted' >&2
+		exit 1
+	fi
+
+	echo "$fileName" | gadd
+	echo
+	git status --short --branch
+else
+	# Three way patch mode
+
+	backupPath="/tmp/gda/"
+	mkdir -p "$backupPath"
+
+	# Creating a time stamp for the file
+	# year, month, day, hour, minute, second
+	timeStamp=$(date +"%Y%m%d_%H%M%S")
+	fileBaseName=$(basename "$fileName")
+
+	workspaceFileName="${backupPath}${timeStamp}_workspace_${fileBaseName}_XXXX"
+	stageFileName="${backupPath}${timeStamp}_stage_${fileBaseName}_XXXX"
+	headFileName="${backupPath}${timeStamp}_head_${fileBaseName}_XXXX"
+
+	workspaceFileName=$(mktemp "$workspaceFileName")
+	stageFileName=$(mktemp "$stageFileName")
+	headFileName=$(mktemp "$headFileName")
+
+	cp "$fileName" "$workspaceFileName"
+	cp "$fileName" "$stageFileName"
+	git cat-file blob "HEAD:$fileName" > "$headFileName"
+
+	compare -3 -wait \
+		-title1:"head" -title2:"stage" -title3:"workspace" \
+		"$headFileName" "$stageFileName" "$workspaceFileName"
+
+	read -p 'Stage? (y) ' stageConfirm
+
+	if [[ "$stageConfirm" != 'y' ]]; then
+		echo 'Aborted' >&2
+		exit 1
+	fi
+
+	# Copy stage version to workspace and stage
+	cp "$stageFileName" "$fileName"
+	echo "$fileName" | gadd
+
+	# Restore workspace version to worspace
+	cp "$workspaceFileName" "$fileName"
+	echo 'DONE'
 fi
 
-echo "$fileName" | gadd
-echo
-git status --short --branch
 
