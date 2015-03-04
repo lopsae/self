@@ -16,12 +16,13 @@ fi
 # some use the gools project: https://github.com/lopsae/gools
 alias gs='git status --short --branch --untracked-files'
 alias gss='git status'
-alias gb='git branch -v'
+alias gb='git branch --verbose'
 alias gol='git log --graph --decorate --pretty=medium --abbrev-commit'
-alias getch='git fetch --prune; echo; git branch -v | grep "^*"'
+alias getch='git fetch --prune; echo; git branch --verbose | grep "^*"'
 alias gup='git merge $(ginfo tracking)'
 alias glast='git --no-pager log --pretty=short -n 1'
 alias gache='git --no-pager stash list'
+alias glean='git clean --force -xd'
 alias gitcheck='ssh -T git@github.com'
 
 # subversion aliases
