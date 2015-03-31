@@ -10,21 +10,24 @@
 
 # Checking for patching -k option
 threeWayPatch='false'
-if [[ $1 = '-k' ]]; then
+if [[ $1 == '-k' ]]; then
 	threeWayPatch='true'
 	shift
 fi
 
 # Checking for no options case
-if [[ $# = '0' ]]; then
+if [[ $# -eq 0 ]]; then
 	fileFound=$(gick -xw "." 2> /dev/null)
+	if [[ $? != 0 ]]; then
+		echo 'No more unstaged files' >&2
+		exit 1
+	fi
 else
 	fileFound=$(gick -xw "$@" 2> /dev/null)
-fi
-
-if [[ $? != 0 ]]; then
-	echo 'No file found' >&2
-	exit 1
+	if [[ $? != 0 ]]; then
+		echo 'No file found' >&2
+		exit 1
+	fi
 fi
 
 
@@ -33,7 +36,7 @@ stageStatus=${fileFound:0:1}
 workspaceStatus=${fileFound:1:1}
 fileName=${fileFound:3}
 
-if [[ $workspaceStatus = '?' ]]; then
+if [[ $workspaceStatus == '?' ]]; then
 	echo "untracked '$fileName'"
 	read -p 'Intent to add? (y) ' intentConfirm
 	if [[ "$intentConfirm" != 'y' ]]; then
@@ -45,7 +48,7 @@ if [[ $workspaceStatus = '?' ]]; then
 fi
 
 
-if [[ $threeWayPatch = 'false' ]]; then
+if [[ $threeWayPatch == 'false' ]]; then
 	echo 'Waiting for diff tool to return...'
 	giff -p "$fileName"
 
@@ -99,7 +102,6 @@ else
 
 	# Restore workspace version to worspace
 	cp "$workspaceFileName" "$fileName"
-	echo 'DONE'
 fi
 
 
