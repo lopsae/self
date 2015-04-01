@@ -1,0 +1,47 @@
+#!/bin/bash
+
+read -d '' helpDoc <<"helpDoc"
+NAME
+    gache - helper script for git stash
+
+SYNOPSIS
+    gache [ <n> | p | save <message> | apply <n> | drop <n> | index ]
+
+DESCRIPTION
+    gache
+        Displays the the list of stashes.
+
+    gache pop|p|<n>
+        Pops the stash in the <n> psotion. If `pop` or `p` is used the
+        last stash is popped.
+
+    gache save|s <message>
+        Creates a new stash. All given parameters after `save` or `s` are
+        used as the stash message.
+
+    gache apply|a [<n>]
+        Aplies the stash in the <n> position. If no <n> is given the last
+        stash is applied.
+
+    gache drop|d [<n>]
+        Drops the stash in the <n> position. If no <n> is given the last
+        stash is dropped.
+
+    gache index|i
+        Creates a stash only with the contents in the stage, afterwards the
+        stage is reset. The workspace is not modified.
+
+        TODO see if we can leave both stage and workspace without changes
+helpDoc
+
+
+# Error codes
+error_invalidOptions=1
+
+
+# Options values
+
+
+# Options parsing
+
+
