@@ -5,19 +5,26 @@ NAME
     gache - helper script for git stash
 
 SYNOPSIS
-    gache [ <n> | p | save <message> | apply <n> | drop <n> | index ]
+    gache [ <n> | pop | save <message> | apply <n> | drop <n> | index ]
 
 DESCRIPTION
     gache
         Displays the the list of stashes.
 
-    gache pop|p|<n>
-        Pops the stash in the <n> psotion. If `pop` or `p` is used the
-        last stash is popped.
-
     gache save|s <message>
         Creates a new stash. All given parameters after `save` or `s` are
         used as the stash message.
+
+    gache index|i
+        Creates a stash only with the contents in the stage, afterwards the
+        stage is reset. The workspace is not modified.
+
+        TODO see if we can leave both stage and workspace without changes
+
+    gache <n>, gache pop|p [<n>]
+        Pops the stash in the `<n>` psotion. If `pop` or `p` is used without
+        <n> the
+        last stash is popped.
 
     gache apply|a [<n>]
         Aplies the stash in the <n> position. If no <n> is given the last
@@ -26,22 +33,166 @@ DESCRIPTION
     gache drop|d [<n>]
         Drops the stash in the <n> position. If no <n> is given the last
         stash is dropped.
-
-    gache index|i
-        Creates a stash only with the contents in the stage, afterwards the
-        stage is reset. The workspace is not modified.
-
-        TODO see if we can leave both stage and workspace without changes
 helpDoc
 
 
 # Error codes
-error_invalidOptions=1
+error_invalidArguments=1
+error_outOfBounds=2
+error_stashError=3
 
 
-# Options values
+# help
+if [[ $1 == '-h' || $1 == '--help' ]]; then
+	if [[ -t 0 ]]; then
+		echo "$helpDoc" | less
+	else
+		echo "$helpDoc"
+	fi
+	exit
+fi
+
+# gache
+if [[ $# -eq 0 ]]; then
+	stashList=$(git --no-pager stash list)
+	if [[ ${#stashList} -gt 0 ]]; then
+		echo "$stashList"
+	else
+		[[ -t 1 ]] && echo "No stashes" >&2
+	fi
+	exit
+fi
 
 
-# Options parsing
+# gache save|s <message>
+if [[ $1 == 'save' || $1 == 's' ]]; then
+	shift
 
+	message="$@"
+	if [[ -n $message ]]; then
+		git stash save --include-untracked -- "$message"
+	else
+		git stash --include-untracked
+	fi
+
+	if [[ $? -ne 0 ]]; then
+		exit $error_stashError
+	fi
+	exit
+
+fi
+
+# TODO # gache index|i
+
+
+# Any other commands afterwards work over the existing stashes
+
+# Getting the list of available stashes
+stashList=()
+IFS=$'\n'
+for item in $(git stash list); do
+	stashList+=("$item")
+done
+unset IFS
+
+intRegex='^[0-9]+$'
+
+
+# gache pop|p [<n>]
+if [[ $1 == 'pop' || $1 == 'p' ]]; then
+	if [[ $# -gt 2 ]]; then
+		[[ -t 1 ]] && echo 'Invalid arguments: `gache pop <n>` does not accept any more arguments' >&2
+		exit $error_invalidArguments
+	fi
+
+	if [[ $# -eq 2 && ! $2 =~ $intRegex ]]; then
+		[[ -t 1 ]] && echo 'Invalid arguments: `gache pop <n>` second argument must be a positive integer' >&2
+		exit $error_invalidArguments
+	fi
+
+	if [[ $# -eq 1 ]]; then
+		# Only `gache pop`
+		git stash pop
+		exit
+	fi
+
+	# making equivalent to `gache <n>`
+	shift
+fi
+
+
+# gache <n>
+if [[ $1 =~ $intRegex ]]; then
+	if [[ $# -gt 1 ]]; then
+		[[ -t 1 ]] && echo 'Invalid arguments: `gache <n>` does not accept any more arguments' >&2
+		exit $error_invalidArguments
+	fi
+
+	if [[ $1 -ge ${#stashList[@]} ]]; then
+		[[ -t 1 ]] && echo 'Stash index out of bounds' >&2
+		exit $error_outOfBounds
+	fi
+
+	echo "Popping: ${stashList[$1]}"
+	git stash pop "stash@{$1}"
+	exit
+fi
+
+
+# gache apply|a [<n>]
+if [[ $1 == 'apply' || $1 == 'a' ]]; then
+	if [[ $# -gt 2 ]]; then
+		[[ -t 1 ]] && echo 'Invalid arguments: `gache apply <n>` does not accept any more arguments' >&2
+		exit $error_invalidArguments
+	fi
+
+	if [[ $# -eq 2 && ! $2 =~ $intRegex ]]; then
+		[[ -t 1 ]] && echo 'Invalid arguments: `gache apply <n>` second argument must be a positive integer' >&2
+		exit $error_invalidArguments
+	fi
+
+	if [[ $# -eq 1 ]]; then
+		# Only `gache apply`
+		git stash apply
+		exit
+	else
+		if [[ $2 -ge ${#stashList[@]} ]]; then
+			[[ -t 1 ]] && echo 'Stash index out of bounds' >&2
+			exit $error_outOfBounds
+		fi
+
+		echo "Applying: ${stashList[$2]}"
+		git stash apply "stash@{$2}"
+		exit
+	fi
+fi
+
+
+# gache drop|d [<n>]
+if [[ $1 == 'drop' || $1 == 'd' ]]; then
+	if [[ $# -gt 2 ]]; then
+		[[ -t 1 ]] && echo 'Invalid arguments: `gache drop <n>` does not accept any more arguments' >&2
+		exit $error_invalidArguments
+	fi
+
+	if [[ $# -eq 2 && ! $2 =~ $intRegex ]]; then
+		[[ -t 1 ]] && echo 'Invalid arguments: `gache drop <n>` second argument must be a positive integer' >&2
+		exit $error_invalidArguments
+	fi
+
+	if [[ $# -eq 1 ]]; then
+		# Only `gache drop`
+		git stash drop
+		exit
+	else
+		if [[ $2 -ge ${#stashList[@]} ]]; then
+			[[ -t 1 ]] && echo 'Stash index out of bounds' >&2
+			exit $error_outOfBounds
+		fi
+
+		echo "Dropping: ${stashList[$2]}"
+		git stash drop "stash@{$2}"
+		exit
+	fi
+fi
 
