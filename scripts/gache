@@ -210,3 +210,9 @@ if [[ $1 == 'drop' || $1 == 'd' ]]; then
 	fi
 fi
 
+
+# any other invalid arguments
+[[ -t 1 ]] && echo 'Invalid arguments' >&2
+exit $error_invalidArguments
+
+
