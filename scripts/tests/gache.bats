@@ -174,10 +174,10 @@ teardown() {
 
 	[[ $(gache | wc -l) -eq 0 ]] || false
 
-	# run gache drop
-	# [[ $status -ne 0 ]] || false
-	# run gache pop
-	# [[ $status -ne 0 ]] || false
+	run gache drop
+	[[ $status -ne 0 ]] || false
+	run gache pop
+	[[ $status -ne 0 ]] || false
 }
 
 
