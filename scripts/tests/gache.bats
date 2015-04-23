@@ -11,7 +11,6 @@ testRepo="testrepo_gache"
 # ┣ thirdfile  (commited, stashed)
 # ┣ fourthfile (commited, modified)
 # ┗ fifthfile  (untracked)
-
 setup() {
 	rm -rf $testRepo
 
@@ -41,21 +40,23 @@ setup() {
 
 teardown() {
 	cd ..
-	# rm -rf $testRepo
+	rm -rf $testRepo
 }
 
 @test "gache help output and invalid commands" {
 	run gache
 	[[ ${#output} -eq 3 ]]
 
-	[[ $(gache h) =~ ^NAME ]]
-	[[ $(gache help) =~ ^NAME ]]
+	helpDocRegex='^NAME[[:space:]]+gache'
+
+	[[ $(gache h) =~ $helpDocRegex ]] || false
+	[[ $(gache help) =~ $helpDocRegex ]] || false
 
 	run gache nothelp
-	[[ $status -ne 0 ]]
+	[[ $status -ne 0 ]] || false
 
 	run gache x
-	[[ $status -ne 0 ]]
+	[[ $status -ne 0 ]] || false
 }
 
 @test "gache save and apply" {
@@ -63,4 +64,52 @@ teardown() {
 
 	gache s
 	[[ $(gache | wc -l) -eq 4 ]] || false
+
+	[[ $(cat fourthfile) == "fourth file" ]] || false
+	[[ ! -f fifthfile ]] || false
+
+	gache a
+	[[ $(gache | wc -l) -eq 4 ]] || false
+	[[ $(cat fourthfile) == "fourth changed" ]] || false
+	[[ $(cat fifthfile) == "fifth file" ]] || false
+
+	[[ $(cat thirdfile) == "third file" ]] || false
+	gache a 1
+	[[ $(gache | wc -l) -eq 4 ]] || false
+	[[ $(cat thirdfile) == "third changed" ]] || false
+
+	[[ $(cat secondfile) == "second file" ]] || false
+	gache apply 2
+	[[ $(gache | wc -l) -eq 4 ]] || false
+	[[ $(cat secondfile) == "second changed" ]] || false
+
+	run gache a 10
+	[[ $status -ne 0 ]]
+	[[ $(gache | wc -l) -eq 4 ]] || false
+
+	run gache apply 10
+	[[ $status -ne 0 ]]
+	[[ $(gache | wc -l) -eq 4 ]] || false
+
+	shortSaveMessage='save message short'
+	gache s $shortSaveMessage
+	[[ $(gache | wc -l) -eq 5 ]] || false
+	[[ $(cat thirdfile) == "third file" ]] || false
+	[[ $(cat fourthfile) == "fourth file" ]] || false
+
+	run gache
+	[[ ${output[0]} =~ $shortSaveMessage ]] || false
+
+	gache apply
+	[[ $(cat fourthfile) == "fourth changed" ]] || false
+	[[ $(cat secondfile) == "second changed" ]] || false
+
+	longSaveMessage='save message long'
+	gache save $longSaveMessage
+	[[ $(gache | wc -l) -eq 6 ]] || false
+	[[ $(cat thirdfile) == "third file" ]] || false
+	[[ $(cat fourthfile) == "fourth file" ]] || false
+
+	run gache
+	[[ ${output[0]} =~ $longSaveMessage ]] || false
 }
