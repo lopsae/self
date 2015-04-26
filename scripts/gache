@@ -19,13 +19,30 @@ DESCRIPTION
 
     gache save|s [<message>]
         Creates a new stash. All given parameters after `save` or `s` are
-        used as the stash message.
+        used as the stash message. Afterwards the workspace is reset and
+        all modifications are removed.
+
+    TODO
+    gache snap | n [<message>]
+        Creates a new stash. All given parameters after `snap` or `n` are
+        used as the stash message. The workspace is left untouched.
 
     TODO see if we can leave both stage and workspace without changes
     TODO this functionality is still pending
     gache index|i [<message>]
         Creates a stash only with the contents in the stage, afterwards the
         stage is reset. The workspace is not modified.
+
+    TODO probably remove the <n> option
+        vanilla git stash does not provide a default action (but then we are
+        building this exactly to provide sensible defaults...)
+        still, removing <n> option simplifies
+        default option, maybe, if it remains, should be apply, since it is not
+        destructive... questions questions....
+    WHAT IF
+        default option <n> is not destruve to neither stash nor workspace
+        it displays the content of the figging stash, which is fantastic
+        because its superhard to peek into those (or so it seems)
 
     gache <n>, gache pop|p [<n>]
         Pops the stash in the `<n>` position. If `pop` or `p` is used
