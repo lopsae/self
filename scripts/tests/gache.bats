@@ -198,6 +198,8 @@ teardown() {
 	run gache p something
 	[[ $status -ne 0 ]] || false
 
+	[[ $(gache | wc -l) -eq 3 ]] || false
+
 	# Apply
 	run gache apply 2 extra
 	[[ $status -ne 0 ]] || false
@@ -211,6 +213,8 @@ teardown() {
 	run gache a something
 	[[ $status -ne 0 ]] || false
 
+	[[ $(gache | wc -l) -eq 3 ]] || false
+
 	# Drop
 	run gache drop 2 extra
 	[[ $status -ne 0 ]] || false
@@ -223,6 +227,8 @@ teardown() {
 
 	run gache d something
 	[[ $status -ne 0 ]] || false
+
+	[[ $(gache | wc -l) -eq 3 ]] || false
 }
 
 
