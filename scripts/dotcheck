@@ -110,16 +110,17 @@ done
 # Checks for options before we start
 if [[ ! -f $settingsFile ]]; then
 	echo "Settings file not found: $settingsFile" >&2
+	echo 'Use `-s <file>` to specify the dotcheck settings file' >&2
 	exit $error_missingSettingsFile
 fi
 
 if [[ $forceMode = 'true' && $updateMode = 'true' ]]; then
-	echo 'Invalid options: -F and -u cannot be used simultaneously'
+	echo 'Invalid options: `-F` and `-u` cannot be used simultaneously'  >&2
 	exit $error_invalidOptions
 fi
 
 if [[ $compareMode = 'true' && ( $forceMode = 'true' || $updateMode = 'true' ) ]]; then
-	echo 'Invalid options: -c cannot be used along -F nor -u'
+	echo 'Invalid options: `-c` cannot be used along `-F` nor `-u`'  >&2
 	exit $error_invalidOptions
 fi
 
