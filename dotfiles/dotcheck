@@ -2,9 +2,10 @@
 ~/self/dotfiles
 
 # Some extra lines for dotcheck sanity
+	# Some comments here
 	#
-	
-    
+
+
 
 # All the following lines are dotfiles to keep in sync, without the dot
 
@@ -16,5 +17,5 @@ hgrc
 
 vimrc
 
-self_dotcheck
+dotcheck
 self_setback

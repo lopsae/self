@@ -2,7 +2,7 @@
 
 # dotcheck helps to keep a backup of dotfiles in a given backup folder.
 #
-# The program reads its settings from the ~/.self_dotcheck file by default.
+# The program reads its settings from the ~/.dotcheck file by default.
 # A settings file can be provided with the -s option alternatively.
 #
 # The program halts if no settings file is provided or found by default.
@@ -42,7 +42,7 @@
 # Setup for a new machine:
 # Run it once with the settings file from the backup location. This will
 # copy all files from backup to home:
-# > dotcheck -F -s ~/self/dotfiles/self_dotcheck
+# > dotcheck -F -s ~/self/dotfiles/dotcheck
 #
 # Afterwards just run it to check status:
 # > dotcheck
@@ -63,7 +63,7 @@ error_invalidBackupLocation=3
 error_noDotfiles=4
 
 # Options values
-settingsFile=~/.self_dotcheck
+settingsFile=~/.dotcheck
 compareMode='false'
 updateMode='false'
 forceMode='false'
