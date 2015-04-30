@@ -16,3 +16,7 @@ addpath /usr/local/gick
 
 addpath '/Applications/Sublime Text.app/Contents/SharedSupport/bin'
 addpath '/Applications/Araxis Merge.app/Contents/Utilities'
+
+# TODO move to its own file in self
+# Local development binaries
+addpath ~/bin
