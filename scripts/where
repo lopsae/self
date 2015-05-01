@@ -1,20 +1,27 @@
 #!/bin/bash
 
-# Displays the first line string found in ~/.self_where followed 
+# Displays the first line string found in ~/.self_where followed
 
 if [[ -f ~/.self_where ]]; then
-	where=$(cat ~/.self_where | head -n 1)
+	IFS=$'\n' where=($(cat ~/.self_where))
+	unset IFS
 else
 	echo '~/.self_where file does not exist' >&2
-	where='nowhere'
+	where=('nowhere')
 fi
 
-# --short option, the only one
+# --short option, only name no path
 if [[ $1 = '--short' ]]; then
-	echo $where
+	printf "${where[0]}"
+	exit
+fi
+
+# --ps option, for PS var
+if [[ $1 = '--ps' ]]; then
+	printf "${where[1]}"
 	exit
 fi
 
 pwd=$(pwd)
-echo "$where:$pwd"
+echo "${where[0]}:$pwd"
 

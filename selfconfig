@@ -2,16 +2,16 @@
 #
 # Sets the settings contained in self.
 # This file must be sourced from the directory where it resides.
+# Usualy ~/self.
 
 
 source functions/addpath
 source functions/seepath
 
-source vars
-source aliases
-
 addpath $(pwd)/scripts
 
+source vars
+source aliases
 
 # Autocompletes
 # if [[ $(where --short) = 'zynga' ]]; then
