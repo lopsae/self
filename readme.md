@@ -1,25 +1,31 @@
 self
 ====
 
-Miscellaneous settings and tools for self use.
+Settings and tools for self use.
 
 
 Quick Setup
 -----------
 
-`selfconfig` is available to setup the functions, scripts, and aliases in *self*. It must be run from within the `self` folder, in your bash_profile add:
+The usual clone folder for self is in your home directory, in `~/self`:
 
-	pushd ~/self > /dev/null
-		source selfconfig
-	popd > /dev/null
+	cd
+	git clone git@github.com:lopsae/self.git self
+
+Run `dotcheck`. This first time it is just to assert what collitions of dotfiles there will be. Usualy only `.bash_profile` exists beforehand:
+
+	./self/scripts/dotcheck -s self/dotfiles/dotcheck
+
+If there are no important collisions just force all dotfiles into the home directory:
+
+	./self/scripts/dotcheck -s self/dotfiles/dotcheck -F
 
 
-Miscelaneous
+Dependencies
 ------------
 
-Some of the scrips in *self* depend on the [gools][gools] project.
+Some of the scrips in *self* depend on the [gick][gick] project.
 
 
-
-[gools]: https://github.com/lopsae/gools
+[gick]: https://github.com/lopsae/gick
 
