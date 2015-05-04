@@ -6,9 +6,9 @@ NAME
 
 SYNOPSIS
     gache [help]
-    gache save|index [<message>]
     gache <n>
-    gache pop|apply|drop [<n>]
+    gache save|index [<message>]
+    gache apply|pop|drop [<n>]
 
 DESCRIPTION
     gache
@@ -16,6 +16,10 @@ DESCRIPTION
 
     gache help|h
         Prints this help output and quits the program.
+
+    TODO
+    gache <n>
+        Displays the changed files of the stash in the `<n>` position.
 
     gache save|s [<message>]
         Creates a new stash. All given parameters after `save` or `s` are
@@ -33,24 +37,13 @@ DESCRIPTION
         Creates a stash only with the contents in the stage, afterwards the
         stage is reset. The workspace is not modified.
 
-    TODO probably remove the <n> option
-        vanilla git stash does not provide a default action (but then we are
-        building this exactly to provide sensible defaults...)
-        still, removing <n> option simplifies
-        default option, maybe, if it remains, should be apply, since it is not
-        destructive... questions questions....
-    WHAT IF
-        default option <n> is not destruve to neither stash nor workspace
-        it displays the content of the figging stash, which is fantastic
-        because its superhard to peek into those (or so it seems)
-
-    gache <n>, gache pop|p [<n>]
-        Pops the stash in the `<n>` position. If `pop` or `p` is used
-        without `<n>` the last stash is popped.
-
     gache apply|a [<n>]
         Aplies the stash in the `<n>` position. If no `<n>` is given the
         last stash is applied.
+
+    gache pop|p [<n>]
+        Pops the stash in the `<n>` position. If `pop` or `p` is used
+        without `<n>` the last stash is popped.
 
     gache drop|d [<n>]
         Drops the stash in the `<n>` position. If no `<n>` is given the
@@ -129,6 +122,20 @@ unset IFS
 intRegex='^[0-9]+$'
 
 
+# gache <n>
+# if [[ $1 =~ $intRegex ]]; then
+# 	if [[ $# -gt 1 ]]; then
+# 		[[ -t 1 ]] && echo 'Invalid arguments: `gache <n>` does not accept any more arguments' >&2
+# 		exit $error_invalidArguments
+# 	fi
+
+# 	if [[ $1 -ge ${#stashList[@]} ]]; then
+# 		[[ -t 1 ]] && echo 'Stash index out of bounds' >&2
+# 		exit $error_outOfBounds
+# 	fi
+# fi
+
+
 # gache pop|p [<n>]
 if [[ $1 == 'pop' || $1 == 'p' ]]; then
 	if [[ $# -gt 2 ]]; then
@@ -145,28 +152,16 @@ if [[ $1 == 'pop' || $1 == 'p' ]]; then
 		# Only `gache pop`
 		git stash pop
 		exit 0
+	else
+		if [[ $2 -ge ${#stashList[@]} ]]; then
+			[[ -t 1 ]] && echo 'Stash index out of bounds' >&2
+			exit $error_outOfBounds
+		fi
+
+		echo "Popping: ${stashList[$2]}"
+		git stash pop "stash@{$2}"
+		exit 0
 	fi
-
-	# making equivalent to `gache <n>`
-	shift
-fi
-
-
-# gache <n>
-if [[ $1 =~ $intRegex ]]; then
-	if [[ $# -gt 1 ]]; then
-		[[ -t 1 ]] && echo 'Invalid arguments: `gache <n>` does not accept any more arguments' >&2
-		exit $error_invalidArguments
-	fi
-
-	if [[ $1 -ge ${#stashList[@]} ]]; then
-		[[ -t 1 ]] && echo 'Stash index out of bounds' >&2
-		exit $error_outOfBounds
-	fi
-
-	echo "Popping: ${stashList[$1]}"
-	git stash pop "stash@{$1}"
-	exit 0
 fi
 
 

@@ -36,6 +36,11 @@ setup() {
 
 	echo "fourth changed" > fourthfile
 	echo "fifth file" > fifthfile
+
+	# stashes at this point:
+	# 0: third stash (M thirdfile)
+	# 1: second stash (M secondfile)
+	# 2: first stash (M firstfile)
 }
 
 
@@ -119,65 +124,100 @@ teardown() {
 @test "gache pop and drop" {
 	[[ $(gache | wc -l) -eq 3 ]] || false
 
-	# Repeating the original 3 stashes
-	stashToDeleteMessage='stash to delete'
-	gache save $stashToDeleteMessage
+	gache save fourth stash
+
+	# stashes at this point:
+	# 0: fourth stash (M fourthfile ? fifthfile)
+	# 1: third stash (M thirdfile)
+	# 2: second stash (M secondfile)
+	# 3: first stash (M firstfile)
+
+	# Repeating the current 4 stashes
 	gache apply 3
 	gache save first stash repeat
 	gache apply 3
 	gache save second stash repeat
 	gache apply 3
 	gache save third stash repeat
+	gache apply 3
+	gache save fourth stash repeat
 
+	# stashes at this point:
+	# 0: fourth stash repeat (M fourthfile ? fifthfile)
+	# 1: third stash repeat (M thirdfile)
+	# 2: second stash repeat (M secondfile)
+	# 3: first stash repeat (M firstfile)
+	# 4: fourth stash (M fourthfile ? fifthfile)
+	# 5: third stash (M thirdfile)
+	# 6: second stash (M secondfile)
+	# 7: first stash (M firstfile)
+
+	[[ $(gache | wc -l) -eq 8 ]] || false
+
+	# First 4 stashes are popped
+	# pop   > 0: fourth stash repeat (M fourthfile ? fifthfile)
+	# p     > 1: third stash repeat (M thirdfile)
+	# pop x > 2: second stash repeat (M secondfile)
+	# p x   > 3: first stash repeat (M firstfile)
+	# ...
+
+	# p x > first
+	[[ $(gache) =~ "first stash repeat" ]] || false
+	[[ $(cat firstfile) == "first file" ]] || false
+	gache p 3
+	[[ ! $(gache) =~ "first stash repeat" ]] || false
+	[[ $(cat firstfile) == "first changed" ]] || false
 	[[ $(gache | wc -l) -eq 7 ]] || false
 
-	[[ $(gache) =~ "stash to delete" ]] || false
-	gache d 3
-	[[ ! $(gache) =~ "stash to delete" ]] || false
-	[[ $(gache | wc -l) -eq 6 ]] || false
-
-	[[ $(gache) =~ "first stash repeat" ]] || false
-	gache drop 2
-	[[ ! $(gache) =~ "first stash repeat" ]] || false
-	[[ $(gache | wc -l) -eq 5 ]] || false
-
+	# pop x > second
 	[[ $(gache) =~ "second stash repeat" ]] || false
 	[[ $(cat secondfile) == "second file" ]] || false
-	gache p 1
+	gache pop 2
 	[[ ! $(gache) =~ "second stash repeat" ]] || false
 	[[ $(cat secondfile) == "second changed" ]] || false
-	[[ $(gache | wc -l) -eq 4 ]] || false
+	[[ $(gache | wc -l) -eq 6 ]] || false
 
+	# p > fourthfile
+	[[ $(gache) =~ "fourth stash repeat" ]] || false
+	[[ $(cat fourthfile) == "fourth file" ]] || false
+	gache p
+	[[ ! $(gache) =~ "fourth stash repeat" ]] || false
+	[[ $(cat fourthfile) == "fourth changed" ]] || false
+	[[ $(gache | wc -l) -eq 5 ]] || false
+
+	# pop > third
 	[[ $(gache) =~ "third stash repeat" ]] || false
 	[[ $(cat thirdfile) == "third file" ]] || false
 	gache pop
 	[[ ! $(gache) =~ "third stash repeat" ]] || false
 	[[ $(cat thirdfile) == "third changed" ]] || false
-	[[ $(gache | wc -l) -eq 3 ]] || false
-
-	[[ $(cat firstfile) == "first file" ]] || false
-	gache 2
-	[[ $(cat firstfile) == "first changed" ]] || false
-	[[ $(gache | wc -l) -eq 2 ]] || false
+	[[ $(gache | wc -l) -eq 4 ]] || false
 
 
-	run gache pop 5
-	[[ $status -ne 0 ]] || false
-	[[ $(gache | wc -l) -eq 2 ]] || false
+	# [[ $(gache) =~ "first stash repeat" ]] || false
+	# gache drop 2
+	# [[ ! $(gache) =~ "first stash repeat" ]] || false
+	# [[ $(gache | wc -l) -eq 5 ]] || false
 
-	run gache drop 5
-	[[ $status -ne 0 ]] || false
-	[[ $(gache | wc -l) -eq 2 ]] || false
 
-	gache drop
-	gache drop
+	# Invalid indexes
+	# run gache pop 5
+	# [[ $status -ne 0 ]] || false
+	# [[ $(gache | wc -l) -eq 2 ]] || false
 
-	[[ $(gache | wc -l) -eq 0 ]] || false
+	# run gache drop 5
+	# [[ $status -ne 0 ]] || false
+	# [[ $(gache | wc -l) -eq 2 ]] || false
 
-	run gache drop
-	[[ $status -ne 0 ]] || false
-	run gache pop
-	[[ $status -ne 0 ]] || false
+	# gache drop
+	# gache d
+
+	# [[ $(gache | wc -l) -eq 0 ]] || false
+
+	# run gache drop
+	# [[ $status -ne 0 ]] || false
+	# run gache pop
+	# [[ $status -ne 0 ]] || false
 }
 
 
@@ -185,17 +225,21 @@ teardown() {
 	run gache 2 extra
 	[[ $status -ne 0 ]] || false
 
+	# Invalid until implemented
+	run gache 2
+	[[ $status -ne 0 ]] || false
+
 	# Pop
 	run gache pop 2 extra
 	[[ $status -ne 0 ]] || false
 
-	run gache pop something
+	run gache pop notnumber
 	[[ $status -ne 0 ]] || false
 
 	run gache p 2 extra
 	[[ $status -ne 0 ]] || false
 
-	run gache p something
+	run gache p notnumber
 	[[ $status -ne 0 ]] || false
 
 	[[ $(gache | wc -l) -eq 3 ]] || false
@@ -204,13 +248,13 @@ teardown() {
 	run gache apply 2 extra
 	[[ $status -ne 0 ]] || false
 
-	run gache apply something
+	run gache apply notnumber
 	[[ $status -ne 0 ]] || false
 
 	run gache a 2 extra
 	[[ $status -ne 0 ]] || false
 
-	run gache a something
+	run gache a notnumber
 	[[ $status -ne 0 ]] || false
 
 	[[ $(gache | wc -l) -eq 3 ]] || false
@@ -219,13 +263,13 @@ teardown() {
 	run gache drop 2 extra
 	[[ $status -ne 0 ]] || false
 
-	run gache drop something
+	run gache drop notnumber
 	[[ $status -ne 0 ]] || false
 
 	run gache d 2 extra
 	[[ $status -ne 0 ]] || false
 
-	run gache d something
+	run gache d notnumber
 	[[ $status -ne 0 ]] || false
 
 	[[ $(gache | wc -l) -eq 3 ]] || false
