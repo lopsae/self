@@ -60,10 +60,10 @@ teardown() {
 	[[ $(gache help) =~ $helpDocRegex ]] || false
 
 	run gache nothelp
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	run gache x
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 }
 
 
@@ -92,11 +92,11 @@ teardown() {
 	[[ $(cat secondfile) == "second changed" ]] || false
 
 	run gache a 10
-	[[ $status -ne 0 ]]
+	[[ $status -gt 0 ]]
 	[[ $(gache | wc -l) -eq 4 ]] || false
 
 	run gache apply 10
-	[[ $status -ne 0 ]]
+	[[ $status -gt 0 ]]
 	[[ $(gache | wc -l) -eq 4 ]] || false
 
 	gache s "short save message"
@@ -134,19 +134,19 @@ teardown() {
 
 	# Repeating the current 4 stashes
 	gache apply 3
-	gache save first stash repeat
+	gache save first repeat stash
 	gache apply 3
-	gache save second stash repeat
+	gache save second repeat stash
 	gache apply 3
-	gache save third stash repeat
+	gache save third repeat stash
 	gache apply 3
-	gache save fourth stash repeat
+	gache save fourth repeat stash
 
 	# stashes at this point:
-	# 0: fourth stash repeat (M fourthfile ? fifthfile)
-	# 1: third stash repeat (M thirdfile)
-	# 2: second stash repeat (M secondfile)
-	# 3: first stash repeat (M firstfile)
+	# 0: fourth repeat stash (M fourthfile ? fifthfile)
+	# 1: third repeat stash (M thirdfile)
+	# 2: second repeat stash (M secondfile)
+	# 3: first repeat stash (M firstfile)
 	# 4: fourth stash (M fourthfile ? fifthfile)
 	# 5: third stash (M thirdfile)
 	# 6: second stash (M secondfile)
@@ -155,122 +155,256 @@ teardown() {
 	[[ $(gache | wc -l) -eq 8 ]] || false
 
 	# First 4 stashes are popped
-	# pop   > 0: fourth stash repeat (M fourthfile ? fifthfile)
-	# p     > 1: third stash repeat (M thirdfile)
-	# pop x > 2: second stash repeat (M secondfile)
-	# p x   > 3: first stash repeat (M firstfile)
+	# pop   > 0: fourth repeat stash (M fourthfile ? fifthfile)
+	# p     > 1: third repeat stash (M thirdfile)
+	# pop x > 2: second repeat stash (M secondfile)
+	# p x   > 3: first repeat stash (M firstfile)
 	# ...
 
 	# p x > first
-	[[ $(gache) =~ "first stash repeat" ]] || false
+	[[ $(gache) =~ "first repeat stash" ]] || false
 	[[ $(cat firstfile) == "first file" ]] || false
 	gache p 3
-	[[ ! $(gache) =~ "first stash repeat" ]] || false
+	[[ ! $(gache) =~ "first repeat stash" ]] || false
 	[[ $(cat firstfile) == "first changed" ]] || false
 	[[ $(gache | wc -l) -eq 7 ]] || false
 
 	# pop x > second
-	[[ $(gache) =~ "second stash repeat" ]] || false
+	[[ $(gache) =~ "second repeat stash" ]] || false
 	[[ $(cat secondfile) == "second file" ]] || false
 	gache pop 2
-	[[ ! $(gache) =~ "second stash repeat" ]] || false
+	[[ ! $(gache) =~ "second repeat stash" ]] || false
 	[[ $(cat secondfile) == "second changed" ]] || false
 	[[ $(gache | wc -l) -eq 6 ]] || false
 
-	# p > fourthfile
-	[[ $(gache) =~ "fourth stash repeat" ]] || false
+	# p > fourth
+	[[ $(gache) =~ "fourth repeat stash" ]] || false
 	[[ $(cat fourthfile) == "fourth file" ]] || false
 	gache p
-	[[ ! $(gache) =~ "fourth stash repeat" ]] || false
+	[[ ! $(gache) =~ "fourth repeat stash" ]] || false
 	[[ $(cat fourthfile) == "fourth changed" ]] || false
 	[[ $(gache | wc -l) -eq 5 ]] || false
 
 	# pop > third
-	[[ $(gache) =~ "third stash repeat" ]] || false
+	[[ $(gache) =~ "third repeat stash" ]] || false
 	[[ $(cat thirdfile) == "third file" ]] || false
 	gache pop
-	[[ ! $(gache) =~ "third stash repeat" ]] || false
+	[[ ! $(gache) =~ "third repeat stash" ]] || false
 	[[ $(cat thirdfile) == "third changed" ]] || false
 	[[ $(gache | wc -l) -eq 4 ]] || false
 
+	# All changes are stashed and dropped for cleanup
+	gache save
+	[[ $(gache | wc -l) -eq 5 ]] || false
 
-	# [[ $(gache) =~ "first stash repeat" ]] || false
-	# gache drop 2
-	# [[ ! $(gache) =~ "first stash repeat" ]] || false
-	# [[ $(gache | wc -l) -eq 5 ]] || false
+	gache drop
+	[[ $(gache | wc -l) -eq 4 ]] || false
+	[[ $(cat firstfile) == "first file" ]] || false
+	[[ $(cat secondfile) == "second file" ]] || false
+	[[ $(cat thirdfile) == "third file" ]] || false
+	[[ $(cat fourthfile) == "fourth file" ]] || false
 
+	# Next 4 stashes are dropped
+	# drop   > 0: fourth stash (M fourthfile ? fifthfile)
+	# d      > 1: third stash (M thirdfile)
+	# drop x > 2: second stash (M secondfile)
+	# d x    > 3: first stash (M firstfile)
+
+	# d x > first
+	[[ $(gache) =~ "first stash" ]] || false
+	[[ $(cat firstfile) == "first file" ]] || false
+	gache d 3
+	[[ ! $(gache) =~ "first stash" ]] || false
+	[[ $(cat firstfile) == "first file" ]] || false
+	[[ $(gache | wc -l) -eq 3 ]] || false
+
+	# drop x > second
+	[[ $(gache) =~ "second stash" ]] || false
+	[[ $(cat secondfile) == "second file" ]] || false
+	gache drop 2
+	[[ ! $(gache) =~ "second stash" ]] || false
+	[[ $(cat secondfile) == "second file" ]] || false
+	[[ $(gache | wc -l) -eq 2 ]] || false
+
+	# drop > fourth
+	[[ $(gache) =~ "fourth stash" ]] || false
+	[[ $(cat fourthfile) == "fourth file" ]] || false
+	gache drop
+	[[ ! $(gache) =~ "fourth stash" ]] || false
+	[[ $(cat fourthfile) == "fourth file" ]] || false
+	[[ $(gache | wc -l) -eq 1 ]] || false
+
+	# d > fourth
+	[[ $(gache) =~ "third stash" ]] || false
+	[[ $(cat thirdfile) == "third file" ]] || false
+	gache d
+	[[ ! $(gache) =~ "third stash" ]] || false
+	[[ $(cat thirdfile) == "third file" ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	[[ $(cat firstfile) == "first file" ]] || false
+	[[ $(cat secondfile) == "second file" ]] || false
+	[[ $(cat thirdfile) == "third file" ]] || false
+	[[ $(cat fourthfile) == "fourth file" ]] || false
+}
+
+
+@test "invalid indexes" {
+	[[ $(gache | wc -l) -eq 3 ]] || false
+
+	# Enviroment cleanup
+	gache save
+	[[ $(gache | wc -l) -eq 4 ]] || false
 
 	# Invalid indexes
-	# run gache pop 5
-	# [[ $status -ne 0 ]] || false
-	# [[ $(gache | wc -l) -eq 2 ]] || false
+	run gache apply 4
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 4 ]] || false
 
-	# run gache drop 5
-	# [[ $status -ne 0 ]] || false
-	# [[ $(gache | wc -l) -eq 2 ]] || false
+	run gache a 5
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 4 ]] || false
 
-	# gache drop
-	# gache d
+	run gache pop 4
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 4 ]] || false
 
-	# [[ $(gache | wc -l) -eq 0 ]] || false
+	run gache p 5
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 4 ]] || false
 
-	# run gache drop
-	# [[ $status -ne 0 ]] || false
-	# run gache pop
-	# [[ $status -ne 0 ]] || false
+	run gache drop 4
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 4 ]] || false
+
+	run gache d 5
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 4 ]] || false
+
+	# Emtpy stashes
+	gache drop
+	gache d
+	gache drop
+	gache d
+
+	[[ $(gache | wc -l) -eq 0 ]] || false
+	[[ $(cat firstfile) == "first file" ]] || false
+	[[ $(cat secondfile) == "second file" ]] || false
+	[[ $(cat thirdfile) == "third file" ]] || false
+	[[ $(cat fourthfile) == "fourth file" ]] || false
+
+	# Retry bad indexes
+	run gache apply 0
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	run gache a 1
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	run gache pop 0
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	run gache p 1
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	run gache drop 0
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	run gache d 1
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	[[ $(cat firstfile) == "first file" ]] || false
+	[[ $(cat secondfile) == "second file" ]] || false
+	[[ $(cat thirdfile) == "third file" ]] || false
+	[[ $(cat fourthfile) == "fourth file" ]] || false
+
+	# WIthout index
+	run gache apply
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	run gache a
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	run gache pop
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	run gache p
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	run gache drop
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	run gache d
+	[[ $status -gt 0 ]] || false
+	[[ $(gache | wc -l) -eq 0 ]] || false
+
+	[[ $(cat firstfile) == "first file" ]] || false
+	[[ $(cat secondfile) == "second file" ]] || false
+	[[ $(cat thirdfile) == "third file" ]] || false
+	[[ $(cat fourthfile) == "fourth file" ]] || false
 }
 
 
 @test "invalid arguments" {
 	run gache 2 extra
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
-	# Invalid until implemented
+	# TODO Invalid until implemented
 	run gache 2
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	# Pop
 	run gache pop 2 extra
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	run gache pop notnumber
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	run gache p 2 extra
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	run gache p notnumber
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	[[ $(gache | wc -l) -eq 3 ]] || false
 
 	# Apply
 	run gache apply 2 extra
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	run gache apply notnumber
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	run gache a 2 extra
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	run gache a notnumber
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	[[ $(gache | wc -l) -eq 3 ]] || false
 
 	# Drop
 	run gache drop 2 extra
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	run gache drop notnumber
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	run gache d 2 extra
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	run gache d notnumber
-	[[ $status -ne 0 ]] || false
+	[[ $status -gt 0 ]] || false
 
 	[[ $(gache | wc -l) -eq 3 ]] || false
 }
