@@ -323,7 +323,7 @@ teardown() {
 	[[ $(cat thirdfile) == "third file" ]] || false
 	[[ $(cat fourthfile) == "fourth file" ]] || false
 
-	# WIthout index
+	# Without index
 	run gache apply
 	[[ $status -gt 0 ]] || false
 	[[ $(gache | wc -l) -eq 0 ]] || false

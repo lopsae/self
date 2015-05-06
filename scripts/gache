@@ -143,25 +143,20 @@ if [[ $1 == 'pop' || $1 == 'p' ]]; then
 		exit $error_invalidArguments
 	fi
 
-	if [[ $# -eq 2 && ! $2 =~ $intRegex ]]; then
+	stashIndex=${2:-'0'}
+	if [[ ! $stashIndex =~ $intRegex ]]; then
 		[[ -t 1 ]] && echo 'Invalid arguments: `gache pop <n>` second argument must be a positive integer' >&2
 		exit $error_invalidArguments
 	fi
 
-	if [[ $# -eq 1 ]]; then
-		# Only `gache pop`
-		git stash pop
-		exit 0
-	else
-		if [[ $2 -ge ${#stashList[@]} ]]; then
-			[[ -t 1 ]] && echo 'Stash index out of bounds' >&2
-			exit $error_outOfBounds
-		fi
-
-		echo "Popping: ${stashList[$2]}"
-		git stash pop "stash@{$2}"
-		exit 0
+	if [[ $stashIndex -ge ${#stashList[@]} ]]; then
+		[[ -t 1 ]] && echo 'Stash index out of bounds' >&2
+		exit $error_outOfBounds
 	fi
+
+	echo "Popping: ${stashList[$stashIndex]}"
+	git stash pop "stash@{$stashIndex}"
+	exit 0
 fi
 
 
@@ -172,25 +167,20 @@ if [[ $1 == 'apply' || $1 == 'a' ]]; then
 		exit $error_invalidArguments
 	fi
 
-	if [[ $# -eq 2 && ! $2 =~ $intRegex ]]; then
+	stashIndex=${2:-'0'}
+	if [[ ! $stashIndex =~ $intRegex ]]; then
 		[[ -t 1 ]] && echo 'Invalid arguments: `gache apply <n>` second argument must be a positive integer' >&2
 		exit $error_invalidArguments
 	fi
 
-	if [[ $# -eq 1 ]]; then
-		# Only `gache apply`
-		git stash apply
-		exit 0
-	else
-		if [[ $2 -ge ${#stashList[@]} ]]; then
-			[[ -t 1 ]] && echo 'Stash index out of bounds' >&2
-			exit $error_outOfBounds
-		fi
-
-		echo "Applying: ${stashList[$2]}"
-		git stash apply "stash@{$2}"
-		exit 0
+	if [[ $stashIndex -ge ${#stashList[@]} ]]; then
+		[[ -t 1 ]] && echo 'Stash index out of bounds' >&2
+		exit $error_outOfBounds
 	fi
+
+	echo "Applying: ${stashList[$stashIndex]}"
+	git stash apply "stash@{$stashIndex}"
+	exit 0
 fi
 
 
@@ -201,25 +191,20 @@ if [[ $1 == 'drop' || $1 == 'd' ]]; then
 		exit $error_invalidArguments
 	fi
 
-	if [[ $# -eq 2 && ! $2 =~ $intRegex ]]; then
+	stashIndex=${2:-'0'}
+	if [[ ! $stashIndex =~ $intRegex ]]; then
 		[[ -t 1 ]] && echo 'Invalid arguments: `gache drop <n>` second argument must be a positive integer' >&2
 		exit $error_invalidArguments
 	fi
 
-	if [[ $# -eq 1 ]]; then
-		# Only `gache drop`
-		git stash drop
-		exit 0
-	else
-		if [[ $2 -ge ${#stashList[@]} ]]; then
-			[[ -t 1 ]] && echo 'Stash index out of bounds' >&2
-			exit $error_outOfBounds
-		fi
-
-		echo "Dropping: ${stashList[$2]}"
-		git stash drop "stash@{$2}"
-		exit 0
+	if [[ $stashIndex -ge ${#stashList[@]} ]]; then
+		[[ -t 1 ]] && echo 'Stash index out of bounds' >&2
+		exit $error_outOfBounds
 	fi
+
+	echo "Dropping: ${stashList[$stashIndex]}"
+	git stash drop "stash@{$stashIndex}"
+	exit 0
 fi
 
 
