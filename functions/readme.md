@@ -1,10 +1,5 @@
 functions
 =========
 
-Collection of functions for bash.
+Collection of functions for bash. Sourced as part of `selfconfig`.
 
-
-Reminder
---------
-
-TODO: add note about if functions still exists in subshells?
