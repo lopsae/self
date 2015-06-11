@@ -48,6 +48,7 @@ DESCRIPTION
     gache drop|d [<n>]
         Drops the stash in the `<n>` position. If no `<n>` is given the
         last stash is dropped.
+        TODO destructive procedures should enforce <n>
 helpDoc
 
 

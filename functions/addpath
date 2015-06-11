@@ -14,13 +14,13 @@ addpath() {
 	else
 		extendedOption="-r"
 	fi
-	
-	PATH=$(echo $PATH | sed $extendedOption "s<(^|:)$1(:|$)<:<g")
-	
+
+	PATH=$(echo $PATH | sed $extendedOption 's/(^|:)$1(:|$)/:/g')
+
 	# Remove leading and trailing ':' that may happen
 	PATH=${PATH#:}
 	PATH=${PATH%:}
-	
+
 	# If the directory exists, add it on top
 	if [[ -d $1 ]]; then
 		export PATH=$1:$PATH
