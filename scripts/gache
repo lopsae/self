@@ -8,7 +8,8 @@ SYNOPSIS
     gache [help]
     gache <n>
     gache save|index [<message>]
-    gache apply|pop|drop [<n>]
+    gache apply|pop [<n>]
+    gache drop <n>
 
 DESCRIPTION
     gache
@@ -17,8 +18,7 @@ DESCRIPTION
     gache help|h
         Prints this help output and quits the program.
 
-    TODO
-    gache <n>
+    TODO gache <n>
         Displays the changed files of the stash in the `<n>` position.
 
     gache save|s [<message>]
@@ -26,14 +26,12 @@ DESCRIPTION
         used as the stash message. Afterwards the workspace is reset and
         all modifications are removed.
 
-    TODO
-    gache snap | n [<message>]
+    TODO gache snap | n [<message>]
         Creates a new stash. All given parameters after `snap` or `n` are
         used as the stash message. The workspace is left untouched.
 
     TODO see if we can leave both stage and workspace without changes
-    TODO this functionality is still pending
-    gache index|i [<message>]
+    TODOgache index|i [<message>]
         Creates a stash only with the contents in the stage, afterwards the
         stage is reset. The workspace is not modified.
 
@@ -42,13 +40,11 @@ DESCRIPTION
         last stash is applied.
 
     gache pop|p [<n>]
-        Pops the stash in the `<n>` position. If `pop` or `p` is used
-        without `<n>` the last stash is popped.
+        Pops the stash in the `<n>` position. If no `<n>` is given the last
+        stash is popped.
 
-    gache drop|d [<n>]
-        Drops the stash in the `<n>` position. If no `<n>` is given the
-        last stash is dropped.
-        TODO destructive procedures should enforce <n>
+    gache drop|d <n>
+        Drops the stash in the `<n>` position.
 helpDoc
 
 
@@ -185,7 +181,7 @@ if [[ $1 == 'apply' || $1 == 'a' ]]; then
 fi
 
 
-# gache drop|d [<n>]
+# gache drop|d <n>
 if [[ $1 == 'drop' || $1 == 'd' ]]; then
 	if [[ $# -gt 2 ]]; then
 		[[ -t 1 ]] && echo 'Invalid arguments: `gache drop <n>` does not accept any more arguments' >&2
