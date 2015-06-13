@@ -196,7 +196,7 @@ teardown() {
 	gache save
 	[[ $(gache | wc -l) -eq 5 ]] || false
 
-	gache drop
+	gache drop 0
 	[[ $(gache | wc -l) -eq 4 ]] || false
 
 	# Unmodified files
@@ -230,7 +230,7 @@ teardown() {
 	# drop > fourth
 	[[ $(gache) =~ 'fourth stash' ]] || false
 	[[ $(cat fourthfile) == 'fourth file' ]] || false
-	gache drop
+	gache drop 0
 	[[ ! $(gache) =~ 'fourth stash' ]] || false
 	[[ $(cat fourthfile) == 'fourth file' ]] || false
 	[[ $(gache | wc -l) -eq 1 ]] || false
@@ -238,7 +238,7 @@ teardown() {
 	# d > fourth
 	[[ $(gache) =~ 'third stash' ]] || false
 	[[ $(cat thirdfile) == 'third file' ]] || false
-	gache d
+	gache d 0
 	[[ ! $(gache) =~ 'third stash' ]] || false
 	[[ $(cat thirdfile) == 'third file' ]] || false
 	[[ $(gache | wc -l) -eq 0 ]] || false
@@ -283,10 +283,10 @@ teardown() {
 	[[ $(gache | wc -l) -eq 4 ]] || false
 
 	# Emtpy stashes
-	gache drop
-	gache d
-	gache drop
-	gache d
+	gache drop 0
+	gache d 0
+	gache drop 0
+	gache d 0
 	[[ $(gache | wc -l) -eq 0 ]] || false
 
 	# Unmodified files
@@ -343,7 +343,7 @@ teardown() {
 	[[ $status -gt 0 ]] || false
 	[[ $(gache | wc -l) -eq 0 ]] || false
 
-	run gache drop
+	run gache drop 0
 	[[ $status -gt 0 ]] || false
 	[[ $(gache | wc -l) -eq 0 ]] || false
 
@@ -404,10 +404,16 @@ teardown() {
 	run gache drop notnumber
 	[[ $status -gt 0 ]] || false
 
+	run gache drop
+	[[ $status -gt 0 ]] || false
+
 	run gache d 2 extra
 	[[ $status -gt 0 ]] || false
 
 	run gache d notnumber
+	[[ $status -gt 0 ]] || false
+
+	run gache d
 	[[ $status -gt 0 ]] || false
 
 	[[ $(gache | wc -l) -eq 3 ]] || false

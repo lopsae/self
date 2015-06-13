@@ -192,7 +192,7 @@ if [[ $1 == 'drop' || $1 == 'd' ]]; then
 		exit $error_invalidArguments
 	fi
 
-	stashIndex=${2:-'0'}
+	stashIndex=$2
 	if [[ ! $stashIndex =~ $intRegex ]]; then
 		[[ -t 1 ]] && echo 'Invalid arguments: `gache drop <n>` second argument must be a positive integer' >&2
 		exit $error_invalidArguments
