@@ -77,12 +77,32 @@ if [[ $# -eq 0 ]]; then
 fi
 
 
-# Preparing arguments for rest of commands
+# gache save|s [<message>]
+if [[ $1 == 'save' || $1 == 's' ]]; then
+	shift
+	message="$@"
+	if [[ -n $message ]]; then
+		git stash save --include-untracked -- "$message"
+	else
+		git stash --include-untracked
+	fi
+
+	if [[ $? -ne 0 ]]; then
+		exit $error_stashError
+	fi
+	exit 0
+fi
+
+
+# TODO # gache index|i
+# TODO # gache <n>
+
+
+# Commands after here work with the stash index
 subcommand=$1
 shift
-message="$@"
 
-stashIndex=$2
+stashIndex=$1
 autozeroed='false'
 if [[ -z $stashIndex ]]; then
 	stashIndex=0
@@ -107,27 +127,6 @@ if [[ $stashIndex -ge ${#stashList[@]} ]]; then
 	exit $error_outOfBounds
 fi
 
-
-# gache save|s [<message>]
-if [[ $subcommand == 'save' || $subcommand == 's' ]]; then
-	if [[ -n $message ]]; then
-		git stash save --include-untracked -- "$message"
-	else
-		git stash --include-untracked
-	fi
-
-	if [[ $? -ne 0 ]]; then
-		exit $error_stashError
-	fi
-	exit 0
-fi
-
-
-# TODO # gache index|i
-# TODO # gache <n>
-
-
-# Commands after this do not accept extra arguments
 if [[ $# -gt 1 ]]; then
 	[[ -t 1 ]] && echo 'Invalid arguments: `gache <subcommand> <n>` does not accept any more arguments' >&2
 	exit $error_invalidArguments
