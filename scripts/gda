@@ -48,23 +48,8 @@ if [[ $workspaceStatus == '?' ]]; then
 fi
 
 
-if [[ $threeWayPatch == 'false' ]]; then
-	echo 'Waiting for diff tool to return...'
-	giff -p "$fileName"
-
-	read -p 'Stage? (y) ' stageConfirm
-
-	if [[ "$stageConfirm" != 'y' ]]; then
-		echo 'Aborted' >&2
-		exit 1
-	fi
-
-	gadd -p "$fileName"
-	echo
-	git status --short --branch --untracked-files
-else
-	# Three way patch mode
-
+# Three way patch mode
+if [[ $threeWayPatch == 'true' ]]; then
 	backupPath="/tmp/gda/"
 	mkdir -p "$backupPath"
 
@@ -104,4 +89,19 @@ else
 	cp "$workspaceFileName" "$fileName"
 fi
 
+
+# Normal diff
+echo 'Waiting for diff tool to return...'
+giff -p "$fileName"
+
+read -p 'Stage? (y) ' stageConfirm
+
+if [[ "$stageConfirm" != 'y' ]]; then
+	echo 'Aborted' >&2
+	exit 1
+fi
+
+gadd -p "$fileName"
+echo
+git status --short --branch --untracked-files
 
