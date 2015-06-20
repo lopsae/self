@@ -94,6 +94,13 @@ fi
 echo 'Waiting for diff tool to return...'
 giff -p "$fileName"
 
+glist -w "$fileName" >&2 2> /dev/null
+if [[ $? -ne 0 ]]; then
+	# File no longer has workspace status
+	echo 'Workspace file no longer has changes' >&2
+	exit 1
+fi
+
 read -p 'Stage? (y) ' stageConfirm
 
 if [[ "$stageConfirm" != 'y' ]]; then
