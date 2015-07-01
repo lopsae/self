@@ -5,9 +5,10 @@ NAME
     gache - helper script for git stash
 
 SYNOPSIS
-    gache [help]
+    gache
+    gache help
     gache <n>
-    gache save|index [<message>]
+    gache save|snap|index [<message>]
     gache apply|pop [<n>]
     gache drop <n>
 
@@ -26,9 +27,10 @@ DESCRIPTION
         used as the stash message. Afterwards the workspace is reset and
         all modifications are removed.
 
-    TODO gache snap | n [<message>]
+    gache snap|n [<message>]
         Creates a new stash. All given parameters after `snap` or `n` are
-        used as the stash message. The workspace is left untouched.
+        used as the stash message. The workspace is not touched, all
+        modifications remain in place.
 
     TODO see if we can leave both stage and workspace without changes
     TODOgache index|i [<message>]
@@ -86,6 +88,30 @@ if [[ $1 == 'save' || $1 == 's' ]]; then
 	else
 		git stash --include-untracked
 	fi
+
+	if [[ $? -ne 0 ]]; then
+		exit $error_stashError
+	fi
+	exit 0
+fi
+
+
+# gache snap|n [<message>]
+if [[ $1 =~ ^(snap|n)$ ]]; then
+	shift
+	message="$@"
+	echo "Snapping: $message"
+	if [[ -n $message ]]; then
+		git stash save --include-untracked -- "$message"
+	else
+		git stash --include-untracked
+	fi
+
+	if [[ $? -ne 0 ]]; then
+		exit $error_stashError
+	fi
+
+	git stash apply
 
 	if [[ $? -ne 0 ]]; then
 		exit $error_stashError
