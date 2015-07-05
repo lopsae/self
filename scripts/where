@@ -6,8 +6,10 @@ if [[ -f ~/.self_where ]]; then
 	IFS=$'\n' where=($(cat ~/.self_where))
 	unset IFS
 else
-	echo '~/.self_where file does not exist' >&2
-	where=('nowhere')
+	if [[ -t 1 ]]; then
+		echo '~/.self_where file does not exist' >&2
+	fi
+	where=('unknown' 'unk')
 fi
 
 # --short option, only name no path
