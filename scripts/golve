@@ -2,8 +2,8 @@
 
 # Run git mergetool using the first matching file found using gick
 
-# TODO when supported by gick or glist, limit to files with UU status only
-fileFound=$(gick "$@" 2> /dev/null)
+conflictedFiles=$(glist | grep ^UU | cut -c 4-)
+fileFound=$(echo "$conflictedFiles" | pick "$@" 2> /dev/null)
 
 if [[ $? -ne 0 ]]; then
 	echo 'No file found' >&2
