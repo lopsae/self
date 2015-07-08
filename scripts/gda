@@ -70,8 +70,9 @@ if [[ $threeWayPatch == 'true' ]]; then
 	cp "$fileName" "$stageFileName"
 	git cat-file blob "HEAD:$fileName" > "$headFileName"
 
+	echo 'Waiting for diff tool to return...'
 	compare -3 -wait \
-		-title1:"head" -title2:"stage" -title3:"workspace" \
+		-title1:"in head" -title2:"to stage" -title3:"in workspace" \
 		"$headFileName" "$stageFileName" "$workspaceFileName"
 
 	read -p 'Stage? (y) ' stageConfirm
@@ -87,6 +88,9 @@ if [[ $threeWayPatch == 'true' ]]; then
 
 	# Restore workspace version to worspace
 	cp "$workspaceFileName" "$fileName"
+	echo
+	git status --short --branch --untracked-files
+	exit 0
 fi
 
 
