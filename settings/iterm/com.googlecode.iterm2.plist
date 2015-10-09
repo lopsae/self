@@ -299,49 +299,26 @@
 	<true/>
 	<key>MaxVertically</key>
 	<true/>
-	<key>NSColorPanelMode</key>
-	<string>0</string>
 	<key>NSNavLastRootDirectory</key>
 	<string>~/Documents</string>
+	<key>NSNavPanelExpandedSizeForOpenMode</key>
+	<string>{712, 448}</string>
 	<key>NSQuotedKeystrokeBinding</key>
 	<string></string>
 	<key>NSRepeatCountBinding</key>
 	<string></string>
 	<key>NSScrollAnimationEnabled</key>
 	<false/>
-	<key>NSToolbar Configuration com.apple.NSColorPanel</key>
-	<dict>
-		<key>TB Is Shown</key>
-		<integer>1</integer>
-	</dict>
-	<key>NSWindow Frame NSColorPanel</key>
-	<string>384 499 231 329 0 0 1680 1027 </string>
 	<key>NSWindow Frame Preferences</key>
-	<string>233 280 924 485 0 0 1680 1027 </string>
+	<string>321 253 924 485 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>120 54 730 836 0 0 1680 1027 </string>
+	<string>29 165 730 836 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>111 80 730 836 0 0 1680 1027 </string>
-	<key>NSWindow Frame iTerm Window 10</key>
-	<string>502 192 730 836 0 0 1680 1028 </string>
-	<key>NSWindow Frame iTerm Window 11</key>
-	<string>523 192 730 836 0 0 1680 1028 </string>
+	<string>989 69 570 451 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
-	<string>778 166 730 836 0 0 1680 1028 </string>
+	<string>250 72 570 451 0 0 1680 1027 </string>
 	<key>NSWindow Frame iTerm Window 3</key>
-	<string>871 79 730 836 0 0 1680 1028 </string>
-	<key>NSWindow Frame iTerm Window 4</key>
-	<string>292 4 730 836 0 0 1680 1028 </string>
-	<key>NSWindow Frame iTerm Window 5</key>
-	<string>313 4 730 836 0 0 1680 1028 </string>
-	<key>NSWindow Frame iTerm Window 6</key>
-	<string>418 192 730 836 0 0 1680 1028 </string>
-	<key>NSWindow Frame iTerm Window 7</key>
-	<string>439 192 730 836 0 0 1680 1028 </string>
-	<key>NSWindow Frame iTerm Window 8</key>
-	<string>460 192 730 836 0 0 1680 1028 </string>
-	<key>NSWindow Frame iTerm Window 9</key>
-	<string>481 192 730 836 0 0 1680 1028 </string>
+	<string>271 49 570 451 0 0 1680 1027 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -519,7 +496,7 @@
 			<key>Blinking Cursor</key>
 			<false/>
 			<key>Blur</key>
-			<true/>
+			<false/>
 			<key>Blur Radius</key>
 			<real>15</real>
 			<key>Bold Color</key>
@@ -1054,7 +1031,7 @@
 			<key>Terminal Type</key>
 			<string>xterm</string>
 			<key>Transparency</key>
-			<real>0.13733820617198944</real>
+			<real>0.0</real>
 			<key>Triggers</key>
 			<array/>
 			<key>Unlimited Scrollback</key>
@@ -1077,6 +1054,10 @@
 			<string>/Users/mlopez</string>
 		</dict>
 	</array>
+	<key>NoSyncTimeOfLastPromo</key>
+	<real>466119563.25510901</real>
+	<key>NoSyncTimeOfLastPromoDownload</key>
+	<real>466119563.25553399</real>
 	<key>OnlyWhenMoreTabs</key>
 	<true/>
 	<key>OpenArrangementAtStartup</key>
@@ -1125,7 +1106,7 @@
 		</dict>
 	</dict>
 	<key>PrefsCustomFolder</key>
-	<string>/Users/maic/self/settings/iterm</string>
+	<string>~/self/settings/iterm</string>
 	<key>PromptOnClose</key>
 	<true/>
 	<key>PromptOnQuit</key>
@@ -1143,7 +1124,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2015-01-20T18:39:21Z</date>
+	<date>2015-10-09T21:37:43Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>ShowBookmarkName</key>
@@ -7670,6 +7651,6 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>2.0.0.20141103</string>
+	<string>2.1.1</string>
 </dict>
 </plist>
