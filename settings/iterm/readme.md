@@ -1,12 +1,13 @@
 iTerm settings
 ==============
 
-In Preferences/General, enable "Load preferences from custom folder" and use
-	/Users/mlopez/self/settings/iterm
+In `Preferences/General`, enable "Load preferences from custom folder" and use
 
-The application will prompt to save the settings in the folder, choose "No". If you do so the current settings will override the saved ones.
+	~/self/settings/iterm
 
-Close the application and reopen.
+Close Preferences and the application. If at any point the settings are requested to be saved select `No`, otherwise current settings will override the ones in this folder.
+
+When the application is reopened new settings should be in effect.
 
 
 Changes in the plist file
