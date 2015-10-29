@@ -4,6 +4,8 @@
 	{ "keys": ["super+l"], "command": "show_overlay", "args": {"overlay": "goto", "text": ":"} },
 	{ "keys": ["super+j"], "command": "toggle_setting", "args": {"setting": "word_wrap"} },
 	{ "keys": ["super+0"], "command": "reset_font_size_to_user_defaults" },
+	{ "keys": ["super+="], "command": "increase_view_font_size" },
+	{ "keys": ["super+-"], "command": "decrease_view_font_size" },
 	{ "keys": ["ctrl+tab"], "command": "next_view" },
 	{ "keys": ["ctrl+shift+tab"], "command": "prev_view" }
 

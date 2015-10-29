@@ -20,7 +20,8 @@
 	Default (OSX).sublime-keymap
 	Preferences.sublime-settings
     reset_font_size_command.py
-    
+    increase_view_font_size_command.py
+    decrease_view_font_size_command.py
 
 # @ Quicklook generator for Markdown
 # ~/self/settings/qlmarkdown
