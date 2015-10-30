@@ -1,10 +1,12 @@
 {
 	// Fonts
 	"default_font_size": 15,
-	"font_face": "Bitstream Vera Sans Mono",
-	"font_size": 15,
-	"line_padding_bottom": 2,
-	"line_padding_top": 2,
+	// "font_face": "Source Code Pro",
+	"font_face": "Source Code Pro Medium",
+	// "font_face": "Bitstream Vera Sans Mono",
+	"font_size": 16,
+	"line_padding_bottom": 1,
+	"line_padding_top": 1,
 
 	// Minimap and viewports
 	"draw_minimap_border": true,
