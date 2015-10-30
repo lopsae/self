@@ -54,10 +54,9 @@ fi
 # least seems like they are not setup on non-interactive commands
 # TODO figure out if placing aliases in bashrc would help with this?
 
-echo "$commandType: '$1'"
-
 case $commandType in
  	'keyword'|'builtin')
+		echo "$commandType: '$1'"
 		if [[ -t 0 ]]; then
 			sleep 0.5
 			help "$1" | less
@@ -67,13 +66,17 @@ case $commandType in
 		exit 0
 		;;
  	'alias')
+		echo "$commandType: '$1'"
 		exit 0
 		;;
 	'function')
+		echo "$commandType: '$1'"
 		exit 0
 		;;
 	'file')
-		pathToFile=$(which "$1" 2>/def/null)
+		pathToFile=$(which "$1" 2>/dev/null)
+		echo "$commandType: '$pathToFile'"
+		sleep 0.5
 		subl "$pathToFile"
 		exit 0
 		;;
