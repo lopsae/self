@@ -57,10 +57,16 @@ fi
 echo "$commandType: '$1'"
 
 case $commandType in
- 	'alias')
+ 	'keyword'|'builtin')
+		if [[ -t 0 ]]; then
+			sleep 0.5
+			help "$1" | less
+		else
+			help "$1"
+		fi
 		exit 0
 		;;
-	'keyword'|'builtin')
+ 	'alias')
 		exit 0
 		;;
 	'function')
