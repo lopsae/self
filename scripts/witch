@@ -49,23 +49,24 @@ if [[ $? != 0 ]]; then
 	exit $error_noType
 fi
 
+# Aliases and functions seem to not exist in the subshell that is created
+# for running this command. Aliases are no inherited by subcomands, or at
+# least seems like they are not setup on non-interactive commands
+# TODO figure out if placing aliases in bashrc would help with this?
 
-# `alias', `keyword', `function', `builtin', `file' or `'
+echo "$commandType: '$1'"
+
 case $commandType in
  	'alias')
-		echo "alias: '$1'"
 		exit 0
 		;;
 	'keyword'|'builtin')
-		echo "keyword|builtin: '$1'"
 		exit 0
 		;;
 	'function')
-		echo "function: '$1'"
 		exit 0
 		;;
 	'file')
-		echo "file: '$1'"
 		pathToFile=$(which "$1" 2>/def/null)
 		subl "$pathToFile"
 		exit 0
