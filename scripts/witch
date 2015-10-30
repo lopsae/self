@@ -1,7 +1,49 @@
 #!/bin/bash
 
-# Opens a script with sublime. If the given parameter is a function
-# or an alias a message is printed in the stderr.
+read -d '' helpDoc <<"helpDoc"
+NAME
+    witch - open the file of a command or prints its type
+
+SYNOPSIS
+    witch [-h] [--] <command>
+
+DESCRIPTION
+    Opens a command program or script with sublime. If `<command>` is not
+    a `file` its information is printed instead.
+
+OPTIONS
+    -h  Prints this help output and quits the program.
+helpDoc
+
+
+# Error codes
+error_invalidOptions=1
+error_noArguments=2
+error_noType=3
+
+
+# Options parsing
+while getopts :h option; do
+	case $option in
+ 		'h')
+			# Print help
+			if [[ -t 0 ]]; then
+				echo "$helpDoc" | less
+			else
+				echo "$helpDoc"
+			fi
+			exit 0
+			;;
+		'?')
+			echo "Invalid option: -$OPTARG" >&2
+			exit $error_invalidOptions
+			;;
+	esac
+done
+shift $(( OPTIND - 1 ));
+
+
+
 
 
 pathToFile=$(which $@ 2>/dev/null)
@@ -9,7 +51,7 @@ pathToFile=$(which $@ 2>/dev/null)
 # Not a program
 if [[ $? != 0 ]]; then
 	echo 'No program found' >&2
-	
+
 	# Trying to print the type here will not work since aliases,
 	# the most common after scripts, will fail. Making aliases
 	# available here would be too complicated and would require
