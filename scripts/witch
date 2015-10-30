@@ -25,7 +25,7 @@ error_noType=3
 # Options parsing
 while getopts :h option; do
 	case $option in
- 		'h')
+		'h')
 			# Print help
 			if [[ -t 0 ]]; then
 				echo "$helpDoc" | less
@@ -43,24 +43,32 @@ done
 shift $(( OPTIND - 1 ));
 
 
-
-
-
-pathToFile=$(which $@ 2>/dev/null)
-
-# Not a program
+commandType=$(type -t "$1")
 if [[ $? != 0 ]]; then
-	echo 'No program found' >&2
-
-	# Trying to print the type here will not work since aliases,
-	# the most common after scripts, will fail. Making aliases
-	# available here would be too complicated and would require
-	# sourcing with a hardcoded path to the specific file that
-	# contains the alias definitions.
-
-	exit 1
+	echo 'Command not found' >&2
+	exit $error_noType
 fi
 
-echo "opening '$pathToFile'"
-subl $pathToFile
+
+# `alias', `keyword', `function', `builtin', `file' or `'
+case $commandType in
+ 	'alias')
+		echo "alias: '$1'"
+		exit 0
+		;;
+	'keyword'|'builtin')
+		echo "keyword|builtin: '$1'"
+		exit 0
+		;;
+	'function')
+		echo "function: '$1'"
+		exit 0
+		;;
+	'file')
+		echo "file: '$1'"
+		pathToFile=$(which "$1" 2>/def/null)
+		subl "$pathToFile"
+		exit 0
+		;;
+esac
 
