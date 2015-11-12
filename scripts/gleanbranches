@@ -1,6 +1,43 @@
 #!/bin/bash
 
-# Deletes all local branches except for the current one.
+# TODO
+# default behaviour needs parameter to do gickb
+# with option removes all branches except current
+
+read -d '' helpDoc <<"helpDoc"
+NAME
+    gleanbranches - delete all local branches except the current one
+
+SYNOPSIS
+    gleanbranches [-h]
+
+DESCRIPTION
+    Deletes all local branches except the current checked-out branch.
+
+OPTIONS
+    -h  Prints this help output and quits the program.
+helpDoc
+
+
+# Error codes
+error_invalidOptions=1
+
+
+# Options parsing
+while getopts :h option; do
+	case $option in
+		'h') # Print help
+			echo "$helpDoc" | less
+			exit 0
+			;;
+		'?') # Invalid option
+			[[ -t 1 ]] && echo "Invalid option: -$OPTARG" >&2
+			exit $error_invalidOptions
+			;;
+	esac
+done
+shift $(( OPTIND - 1 ));
+
 
 branchesNames=$(git branch | tr -d [:blank:] | grep -v '^*')
 
