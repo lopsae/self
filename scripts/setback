@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # setback
-# 
+#
 # Checks that the same files exists between two directories, and creates
 # hardlinked files between the two locations to make them match.
 #
@@ -10,28 +10,29 @@
 
 
 # Without any options the program will use ~/.self_setback for settings or
-# fail of the file does not exist. For each file checked a two letter 
+# fail of the file does not exist. For each file checked a two letter
 # status is printed: first for its status in backup, the second in deploy.
-# 
+#
 # MM - missing on both folders
 # MF - missing in backup, present in deploy
 # FM - present in backup, missing in deploy
 # FF - Present in both folders and matching
 # FX - Present in both folders and different
 
+#TODO BUG file in deploy but not backup shows MX
 
 # The following options are available:
 #
 # -s <file> : Defines the setings file to use.
-# 
-# -D : Deploy the backup files into the deploy directory. For each file 
+#
+# -D : Deploy the backup files into the deploy directory. For each file
 # checked in the backup directory, a hardlinked file will be created in the
 # deploy directory.
-# 
-# -B : Backup the deploy files into the backup directory. For each file 
+#
+# -B : Backup the deploy files into the backup directory. For each file
 # checked in the deploy directory, a hardlinked file will be created in the
 # backup directory.
-# 
+#
 # -l : Displays the full path and filename of the files being checked. By
 # default the program only prints the filename relative to the backup and
 # deploy directories.
@@ -130,16 +131,16 @@ readStage='backupDir' # -> deployDir -> files -> backupDir
 
 IFS=$'\n'
 for line in $(cat $settingsFile); do
-	
+
 	# Cleaning and preparing the lines to be processed
 	# Trimming any edge whitespace
 	leading="${line%%[![:space:]]*}"
 	trailing="${var##*[![:space:]]}"
 	line="${line#$leading}"
 	line="${line%$trailing}"
-	
+
 	firstChar=${line:0:1}
-	
+
 	# Checking for empty lines or comments
 	if [[ $line = '' ]]; then
 		continue
@@ -147,12 +148,12 @@ for line in $(cat $settingsFile); do
 	if [[ $firstChar = '#' ]]; then
 		continue
 	fi
-	
+
 	# If jumping a block, we ignore everything except a block separator
 	if [[ $readStage = 'jumpBlock' && ! $firstChar = '@' ]]; then
 		continue
 	fi
-	
+
 	# Handling block separator
 	if [[ $firstChar = '@' ]]; then
 		blockMessage="${line#'@'}"
@@ -162,11 +163,11 @@ for line in $(cat $settingsFile); do
 		readStage='backupDir'
 		continue
 	fi
-	
+
 	# TODO jump block could be handled here, and in the case we just jump
 	# everything unless we are already in a block, instead of having the
 	# jumpBlock stage
-	
+
 	# Parse and check depending on the stage
 	case "$readStage" in
 		'backupDir')
@@ -203,28 +204,28 @@ for line in $(cat $settingsFile); do
 			# The rest of the logic for files is after the case statement
 			;;
 	esac
-	
+
 ########################################
 # Status logic
 ########################################
-	
+
 	# If we reached this place we have a file in hands
 	simpleFilePath="$line"
 	backupFilePath="$backupLocation/$simpleFilePath"
 	deployFilePath="$deployLocation/$simpleFilePath"
-	
+
 	# Running status mode
 	if [[ $deployMode = 'false' && $backupMode = 'false' ]]; then
 		backupStatus='M'
 		if [[ -f "$backupFilePath" ]]; then
 			backupStatus='F'
 		fi
-		
+
 		deployStatus='M'
 		if [[ -f "$deployFilePath" ]]; then
 			deployStatus='F'
 		fi
-		
+
 		# If both files where found
 		if [[ $deployStatus = 'F' && $deployStatus = 'F' ]]; then
 			# TODO check here that if one file is a symbolic link it will still say true
@@ -234,21 +235,21 @@ for line in $(cat $settingsFile); do
 				deployStatus='X'
 			fi
 		fi
-		
+
 		if [[ $longFilename = 'true' ]]; then
 			echo "$backupStatus$deployStatus $backupFilePath $deployFilePath"
 		else
 			echo "$backupStatus$deployStatus $simpleFilePath"
 		fi
-		
+
 		continue
 	fi
-	
-	
+
+
 ########################################
 # File linking
 ########################################
-	
+
 	if [[ $backupMode = 'true' ]]; then
 		if [[ -f "$deployFilePath" ]]; then
 			if [[ $longFilename = 'true' ]]; then
@@ -256,9 +257,9 @@ for line in $(cat $settingsFile); do
 			else
 				echo "B $simpleFilePath"
 			fi
-			
+
 			ln -f "$deployFilePath" "$backupFilePath"
-			
+
 		else
 			if [[ $longFilename = 'true' ]]; then
 				echo "M $deployFilePath"
@@ -268,7 +269,7 @@ for line in $(cat $settingsFile); do
 		fi
 		continue
 	fi
-	
+
 	if [[ $deployMode = 'true' ]]; then
 		if [[ -f "$backupFilePath" ]]; then
 			if [[ $longFilename = 'true' ]]; then
@@ -276,9 +277,9 @@ for line in $(cat $settingsFile); do
 			else
 				echo "D $simpleFilePath"
 			fi
-			
+
 			ln -f "$backupFilePath" "$deployFilePath"
-			
+
 		else
 			if [[ $longFilename = 'true' ]]; then
 				echo "M $backupFilePath"
@@ -288,7 +289,7 @@ for line in $(cat $settingsFile); do
 		fi
 		continue
 	fi
-	
+
 done
 unset IFS
 

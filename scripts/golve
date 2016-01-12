@@ -20,3 +20,6 @@ fi
 echo "solve '$fileFound'"
 git mergetool --no-prompt -- "$fileFound"
 
+# TODO seems like merge tool uses relative paths, no absolute GODDAMIT
+# using `golve` from a subdirectory does not work
+
