@@ -72,7 +72,7 @@ if [[ $threeWayPatch == 'true' ]]; then
 
 	echo 'Waiting for diff tool to return...'
 	compare -3 -wait \
-		-title1:"in head" -title2:"to stage" -title3:"in workspace" \
+		-title1:"in head (readonly)" -title2:"to stage" -title3:"in workspace" \
 		"$headFileName" "$stageFileName" "$workspaceFileName"
 
 	read -p 'Stage? (y) ' stageConfirm
