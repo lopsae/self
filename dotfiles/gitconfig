@@ -3,12 +3,6 @@
 	email = maic@lopsae.com
 [push]
 	default = tracking
-[mergetool]
-	keepBackup = false
-[diff]
-	tool = araxis
-[merge]
-	tool = araxis
 [color]
 	branch = auto
 	status = auto
@@ -23,3 +17,19 @@
 	untracked = magenta bold
 	branch = green bold
 	nobranch = red bold
+
+[diff]
+	tool = araxis
+	# tool = Kaleidoscope
+[merge]
+	tool = araxis
+	# tool = Kaleidoscope
+
+[mergetool]
+	keepBackup = false
+
+[difftool "Kaleidoscope"]
+	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[mergetool "Kaleidoscope"]
+	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+	trustexitcode = true
