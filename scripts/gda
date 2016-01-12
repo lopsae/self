@@ -5,13 +5,26 @@
 # same file.
 
 # If run without any parameters it will pick the first available unstaged
-# file.
+# file and display a head-workspace comparison.
+
+# Using the `-k` option will open the selected file as a three way patch
+# allowing to see head (readonly) and modify stage and workspace versions.
+
+# Using the `-i` option forces a stage-to-workspace comparison, this is usefull
+# for files that are detected as 'renamed', since it will show the comparison
+# agains the previous file.
 
 
 # Checking for patching -k option
 threeWayPatch='false'
 if [[ $1 == '-k' ]]; then
 	threeWayPatch='true'
+	shift
+fi
+
+forceStageToWorkspace='false'
+if [[ $1 == '-i' ]]; then
+	forceStageToWorkspace='true'
 	shift
 fi
 
@@ -96,7 +109,13 @@ fi
 
 # Normal diff
 echo 'Waiting for diff tool to return...'
-giff -p "$fileName"
+
+if [[ $forceStageToWorkspace == 'true' ]]; then
+	giff -i -p "$fileName"
+else
+	giff -p "$fileName"
+fi
+
 
 glist -w "$fileName" >&2 2> /dev/null
 if [[ $? -ne 0 ]]; then
