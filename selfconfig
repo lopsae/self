@@ -7,6 +7,7 @@
 
 source functions/addpath
 source functions/seepath
+source functions/newdir
 
 addpath $(pwd)/scripts
 

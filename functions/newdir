@@ -1,0 +1,17 @@
+# newdir
+
+# Creates a new directory and navigates into it.
+
+newdir() {
+	if [[ $# -le 0 || $# -gt 1 ]]; then
+		echo 'Usage: newdir <directory>' >&2
+		return 1
+	fi
+
+	mkdir -v $1
+	if [[ $? -ne 0 ]]; then
+		return 1
+	fi
+
+	cd $1
+}
