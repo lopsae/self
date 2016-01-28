@@ -3,6 +3,7 @@
 
 # utilities
 alias cd..='cd ..'
+alias rmv='rm -rfv'
 
 # ls coloring and long list alias
 if [[ $(uname) == 'Darwin' ]]; then
@@ -13,7 +14,7 @@ else
 fi
 
 # git aliases
-# some use the gools project: https://github.com/lopsae/gools
+# some use the gick project: https://github.com/lopsae/gick
 alias gs='git status --short --branch --untracked-files'
 alias gss='git status'
 alias gb='git branch --verbose'
