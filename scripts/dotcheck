@@ -191,10 +191,10 @@ fi
 # Status and compare mode
 if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
 
-	# Status is printed only on simplest status
-	if [[ $compareMode != 'true' ]]; then
-		[[ -t 1 ]] && echo "$statusDoc" >&2
-		[[ -t 1 ]] && echo
+	# Status is printed only on simplest status to console
+	if [[ $compareMode != 'true' && -t 1 ]]; then
+		echo "$statusDoc" >&2
+		echo
 	fi
 
 	IFS=$'\n'
