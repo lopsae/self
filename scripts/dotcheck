@@ -54,7 +54,18 @@
 # > dotcheck -u
 
 
-
+read -d '' statusDoc <<"statusDoc"
+# H. - Home status, Found or Missing
+# .B - Backup status, Found or Missing
+# Ff - Different files but same content
+# FX - Different files and different content
+#
+# `dotcheck -F` - Force files from Backup into Home.
+#                 Home files will be overwritten.
+#
+# `dotcheck -u` - Update files from Home into Backup.
+#                 Backup files will be overwritten.
+statusDoc
 
 # Error codes
 error_invalidOptions=1
@@ -69,7 +80,7 @@ updateMode='false'
 forceMode='false'
 
 # Options parsing
-params=$(getopt Fucs: $*)
+params=$(getopt s:cFu $*)
 getoptStatus=$?
 set -- $params
 
@@ -120,7 +131,7 @@ if [[ $forceMode = 'true' && $updateMode = 'true' ]]; then
 fi
 
 if [[ $compareMode = 'true' && ( $forceMode = 'true' || $updateMode = 'true' ) ]]; then
-	echo 'Invalid options: `-c` cannot be used along `-F` nor `-u`'  >&2
+	echo 'Invalid options: `-c` cannot be used along neither `-F` nor `-u`'  >&2
 	exit $error_invalidOptions
 fi
 
@@ -179,6 +190,12 @@ fi
 
 # Status and compare mode
 if [[ $forceMode = 'false' && $updateMode = 'false' ]]; then
+
+	# Status is printed only on simplest status
+	if [[ $compareMode != 'true' ]]; then
+		echo "$statusDoc" >&2
+		echo
+	fi
 
 	IFS=$'\n'
 	for dotfile in ${dotfiles[@]}; do
