@@ -527,6 +527,8 @@
 			<integer>80</integer>
 			<key>Command</key>
 			<string></string>
+			<key>Cursor Boost</key>
+			<real>0.0</real>
 			<key>Cursor Color</key>
 			<dict>
 				<key>Blue Component</key>
@@ -535,6 +537,19 @@
 				<real>0.10045458376407623</real>
 				<key>Red Component</key>
 				<real>0.1155967190861702</real>
+			</dict>
+			<key>Cursor Guide Color</key>
+			<dict>
+				<key>Alpha Component</key>
+				<real>0.0776519775390625</real>
+				<key>Blue Component</key>
+				<real>0.32584273815155029</real>
+				<key>Color Space</key>
+				<string>Calibrated</string>
+				<key>Green Component</key>
+				<real>0.32583719491958618</real>
+				<key>Red Component</key>
+				<real>0.32584697008132935</real>
 			</dict>
 			<key>Cursor Text Color</key>
 			<dict>
@@ -1053,6 +1068,8 @@
 			<true/>
 			<key>Use Canonical Parser</key>
 			<false/>
+			<key>Use Cursor Guide</key>
+			<true/>
 			<key>Use Italic Font</key>
 			<false/>
 			<key>Vertical Spacing</key>
@@ -1159,7 +1176,7 @@
 	<key>SwitchWindowModifier</key>
 	<integer>4</integer>
 	<key>TabStyle</key>
-	<integer>1</integer>
+	<integer>0</integer>
 	<key>TabViewType</key>
 	<integer>0</integer>
 	<key>ThreeFingerEmulates</key>
@@ -14151,5 +14168,9 @@
 	<false/>
 	<key>iTerm Version</key>
 	<string>3.0.0</string>
+	<key>kCPKSelectionViewPreferredModeKey</key>
+	<integer>0</integer>
+	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>
+	<false/>
 </dict>
 </plist>
