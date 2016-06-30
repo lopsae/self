@@ -14,9 +14,3 @@ addpath $(pwd)/scripts
 source vars
 source aliases
 
-# Autocompletes
-# if [[ $(where --short) = 'zynga' ]]; then
-# 	source /usr/local/etc/bash_completion.d/git-completion.bash
-# 	source /usr/local/etc/bash_completion.d/hg-completion.bash
-# fi
-
