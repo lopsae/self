@@ -12,5 +12,5 @@ source functions/newdir
 addpath $(pwd)/scripts
 
 source vars
-source aliases
+source aliases/00_general
 
