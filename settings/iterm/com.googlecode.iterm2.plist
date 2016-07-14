@@ -335,10 +335,6 @@
 		<key>TB Is Shown</key>
 		<integer>1</integer>
 	</dict>
-	<key>NSWindow Frame Preferences</key>
-	<string>415 379 606 456 0 0 1680 1027 </string>
-	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>543 1818 620 392 -427 1050 2560 1417 </string>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
@@ -1100,7 +1096,7 @@
 	<key>NoSyncInstallationId</key>
 	<string>C835BDFF-D9C3-4E88-9D94-30019A430179</string>
 	<key>NoSyncLastTipTime</key>
-	<real>490137265.63175398</real>
+	<real>490228297.20544499</real>
 	<key>NoSyncPermissionToShowTip</key>
 	<true/>
 	<key>NoSyncTimeOfFirstLaunchOfVersionWithTip</key>
@@ -1126,6 +1122,7 @@
 		<string>0010</string>
 		<string>0011</string>
 		<string>0012</string>
+		<string>0013</string>
 	</array>
 	<key>OnlyWhenMoreTabs</key>
 	<true/>
@@ -1197,7 +1194,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2016-07-13T22:32:40Z</date>
+	<date>2016-07-14T22:32:44Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>ShowBookmarkName</key>
@@ -1243,10 +1240,18 @@
 				<integer>80</integer>
 				<key>Desired Rows</key>
 				<integer>45</integer>
+				<key>Has Toolbelt</key>
+				<false/>
 				<key>Height</key>
-				<real>1181</real>
+				<real>1182</real>
 				<key>Hide After Opening</key>
 				<false/>
+				<key>Hiding Toolbelt Should Resize Window</key>
+				<false/>
+				<key>Is Hotkey Window</key>
+				<false/>
+				<key>Saved Window Type</key>
+				<integer>0</integer>
 				<key>Screen</key>
 				<integer>1</integer>
 				<key>Selected Tab Index</key>
@@ -1260,7 +1265,7 @@
 							<array>
 								<dict>
 									<key>Is Active</key>
-									<true/>
+									<integer>1</integer>
 									<key>Session</key>
 									<dict>
 										<key>Bookmark</key>
@@ -1459,6 +1464,8 @@
 											<integer>80</integer>
 											<key>Command</key>
 											<string></string>
+											<key>Cursor Boost</key>
+											<real>0.0</real>
 											<key>Cursor Color</key>
 											<dict>
 												<key>Blue Component</key>
@@ -1467,6 +1474,19 @@
 												<real>0.10045458376407623</real>
 												<key>Red Component</key>
 												<real>0.1155967190861702</real>
+											</dict>
+											<key>Cursor Guide Color</key>
+											<dict>
+												<key>Alpha Component</key>
+												<real>0.0776519775390625</real>
+												<key>Blue Component</key>
+												<real>0.32584273815155029</real>
+												<key>Color Space</key>
+												<string>Calibrated</string>
+												<key>Green Component</key>
+												<real>0.32583719491958618</real>
+												<key>Red Component</key>
+												<real>0.32584697008132935</real>
 											</dict>
 											<key>Cursor Text Color</key>
 											<dict>
@@ -1985,6 +2005,8 @@
 											<true/>
 											<key>Use Canonical Parser</key>
 											<false/>
+											<key>Use Cursor Guide</key>
+											<true/>
 											<key>Use Italic Font</key>
 											<false/>
 											<key>Vertical Spacing</key>
@@ -1996,10 +2018,44 @@
 											<key>Working Directory</key>
 											<string>/Users/mlopez</string>
 										</dict>
+										<key>Bookmark Name</key>
+										<string>Default</string>
 										<key>Columns</key>
 										<integer>80</integer>
+										<key>Commands</key>
+										<array/>
+										<key>Directories</key>
+										<array/>
+										<key>Environment</key>
+										<dict>
+											<key>PWD</key>
+											<string>/Users/maiclopez/self</string>
+										</dict>
+										<key>Hosts</key>
+										<array/>
+										<key>Is UTF-8</key>
+										<true/>
+										<key>Program</key>
+										<dict>
+											<key>Type</key>
+											<string>Shell Launcher</string>
+										</dict>
 										<key>Rows</key>
 										<integer>55</integer>
+										<key>Server PID</key>
+										<integer>780</integer>
+										<key>Session Default Name</key>
+										<string>Default</string>
+										<key>Session GUID</key>
+										<string>3C0976EE-39AC-45F5-915E-FD086A8CD0A8</string>
+										<key>Session Name</key>
+										<string>Default</string>
+										<key>Shell Integration Ever Used</key>
+										<false/>
+										<key>Substitutions</key>
+										<dict/>
+										<key>TTY</key>
+										<string>/dev/ttys000</string>
 										<key>Working Directory</key>
 										<string>/Users/maiclopez</string>
 									</dict>
@@ -2010,7 +2066,7 @@
 										<key>height</key>
 										<real>1159</real>
 										<key>width</key>
-										<real>825</real>
+										<real>810</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -2025,7 +2081,7 @@
 								<key>height</key>
 								<real>1159</real>
 								<key>width</key>
-								<real>825</real>
+								<real>810</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -2039,23 +2095,31 @@
 				<key>TerminalGuid</key>
 				<string>pty-E01778E5-20D8-4243-80B3-8D1194C87D3A</string>
 				<key>Width</key>
-				<real>825</real>
+				<real>810</real>
 				<key>Window Type</key>
 				<integer>0</integer>
 				<key>X Origin</key>
-				<real>-369</real>
+				<real>-366</real>
 				<key>Y Origin</key>
-				<real>1269</real>
+				<real>1268</real>
 			</dict>
 			<dict>
 				<key>Desired Columns</key>
 				<integer>80</integer>
 				<key>Desired Rows</key>
 				<integer>45</integer>
+				<key>Has Toolbelt</key>
+				<false/>
 				<key>Height</key>
-				<real>1181</real>
+				<real>1182</real>
 				<key>Hide After Opening</key>
 				<false/>
+				<key>Hiding Toolbelt Should Resize Window</key>
+				<false/>
+				<key>Is Hotkey Window</key>
+				<false/>
+				<key>Saved Window Type</key>
+				<integer>0</integer>
 				<key>Screen</key>
 				<integer>1</integer>
 				<key>Selected Tab Index</key>
@@ -2069,7 +2133,7 @@
 							<array>
 								<dict>
 									<key>Is Active</key>
-									<true/>
+									<integer>1</integer>
 									<key>Session</key>
 									<dict>
 										<key>Bookmark</key>
@@ -2268,6 +2332,8 @@
 											<integer>80</integer>
 											<key>Command</key>
 											<string></string>
+											<key>Cursor Boost</key>
+											<real>0.0</real>
 											<key>Cursor Color</key>
 											<dict>
 												<key>Blue Component</key>
@@ -2276,6 +2342,19 @@
 												<real>0.10045458376407623</real>
 												<key>Red Component</key>
 												<real>0.1155967190861702</real>
+											</dict>
+											<key>Cursor Guide Color</key>
+											<dict>
+												<key>Alpha Component</key>
+												<real>0.0776519775390625</real>
+												<key>Blue Component</key>
+												<real>0.32584273815155029</real>
+												<key>Color Space</key>
+												<string>Calibrated</string>
+												<key>Green Component</key>
+												<real>0.32583719491958618</real>
+												<key>Red Component</key>
+												<real>0.32584697008132935</real>
 											</dict>
 											<key>Cursor Text Color</key>
 											<dict>
@@ -2794,6 +2873,8 @@
 											<true/>
 											<key>Use Canonical Parser</key>
 											<false/>
+											<key>Use Cursor Guide</key>
+											<true/>
 											<key>Use Italic Font</key>
 											<false/>
 											<key>Vertical Spacing</key>
@@ -2805,10 +2886,44 @@
 											<key>Working Directory</key>
 											<string>/Users/mlopez</string>
 										</dict>
+										<key>Bookmark Name</key>
+										<string>Default</string>
 										<key>Columns</key>
 										<integer>80</integer>
+										<key>Commands</key>
+										<array/>
+										<key>Directories</key>
+										<array/>
+										<key>Environment</key>
+										<dict>
+											<key>PWD</key>
+											<string>/Users/maiclopez</string>
+										</dict>
+										<key>Hosts</key>
+										<array/>
+										<key>Is UTF-8</key>
+										<true/>
+										<key>Program</key>
+										<dict>
+											<key>Type</key>
+											<string>Shell Launcher</string>
+										</dict>
 										<key>Rows</key>
 										<integer>55</integer>
+										<key>Server PID</key>
+										<integer>783</integer>
+										<key>Session Default Name</key>
+										<string>Default</string>
+										<key>Session GUID</key>
+										<string>27C06335-0FEF-4EE6-8E31-E3135AE545FD</string>
+										<key>Session Name</key>
+										<string>Default</string>
+										<key>Shell Integration Ever Used</key>
+										<false/>
+										<key>Substitutions</key>
+										<dict/>
+										<key>TTY</key>
+										<string>/dev/ttys001</string>
 										<key>Working Directory</key>
 										<string>/Users/maiclopez</string>
 									</dict>
@@ -2819,7 +2934,7 @@
 										<key>height</key>
 										<real>1159</real>
 										<key>width</key>
-										<real>825</real>
+										<real>810</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -2834,7 +2949,7 @@
 								<key>height</key>
 								<real>1159</real>
 								<key>width</key>
-								<real>825</real>
+								<real>810</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -2848,23 +2963,31 @@
 				<key>TerminalGuid</key>
 				<string>pty-D7B811BF-A044-41E6-A436-B745A9675BD7</string>
 				<key>Width</key>
-				<real>825</real>
+				<real>810</real>
 				<key>Window Type</key>
 				<integer>0</integer>
 				<key>X Origin</key>
 				<real>773</real>
 				<key>Y Origin</key>
-				<real>1270</real>
+				<real>1269</real>
 			</dict>
 			<dict>
 				<key>Desired Columns</key>
 				<integer>80</integer>
 				<key>Desired Rows</key>
 				<integer>45</integer>
+				<key>Has Toolbelt</key>
+				<false/>
 				<key>Height</key>
-				<real>1181</real>
+				<real>1182</real>
 				<key>Hide After Opening</key>
 				<false/>
+				<key>Hiding Toolbelt Should Resize Window</key>
+				<false/>
+				<key>Is Hotkey Window</key>
+				<false/>
+				<key>Saved Window Type</key>
+				<integer>0</integer>
 				<key>Screen</key>
 				<integer>1</integer>
 				<key>Selected Tab Index</key>
@@ -2878,7 +3001,7 @@
 							<array>
 								<dict>
 									<key>Is Active</key>
-									<true/>
+									<integer>1</integer>
 									<key>Session</key>
 									<dict>
 										<key>Bookmark</key>
@@ -3077,6 +3200,8 @@
 											<integer>80</integer>
 											<key>Command</key>
 											<string></string>
+											<key>Cursor Boost</key>
+											<real>0.0</real>
 											<key>Cursor Color</key>
 											<dict>
 												<key>Blue Component</key>
@@ -3085,6 +3210,19 @@
 												<real>0.10045458376407623</real>
 												<key>Red Component</key>
 												<real>0.1155967190861702</real>
+											</dict>
+											<key>Cursor Guide Color</key>
+											<dict>
+												<key>Alpha Component</key>
+												<real>0.0776519775390625</real>
+												<key>Blue Component</key>
+												<real>0.32584273815155029</real>
+												<key>Color Space</key>
+												<string>Calibrated</string>
+												<key>Green Component</key>
+												<real>0.32583719491958618</real>
+												<key>Red Component</key>
+												<real>0.32584697008132935</real>
 											</dict>
 											<key>Cursor Text Color</key>
 											<dict>
@@ -3603,6 +3741,8 @@
 											<true/>
 											<key>Use Canonical Parser</key>
 											<false/>
+											<key>Use Cursor Guide</key>
+											<true/>
 											<key>Use Italic Font</key>
 											<false/>
 											<key>Vertical Spacing</key>
@@ -3614,10 +3754,44 @@
 											<key>Working Directory</key>
 											<string>/Users/mlopez</string>
 										</dict>
+										<key>Bookmark Name</key>
+										<string>Default</string>
 										<key>Columns</key>
 										<integer>80</integer>
+										<key>Commands</key>
+										<array/>
+										<key>Directories</key>
+										<array/>
+										<key>Environment</key>
+										<dict>
+											<key>PWD</key>
+											<string>/Users/maiclopez</string>
+										</dict>
+										<key>Hosts</key>
+										<array/>
+										<key>Is UTF-8</key>
+										<true/>
+										<key>Program</key>
+										<dict>
+											<key>Type</key>
+											<string>Shell Launcher</string>
+										</dict>
 										<key>Rows</key>
 										<integer>55</integer>
+										<key>Server PID</key>
+										<integer>829</integer>
+										<key>Session Default Name</key>
+										<string>Default</string>
+										<key>Session GUID</key>
+										<string>C7D8512E-0F27-4571-AF18-8180E9CA2228</string>
+										<key>Session Name</key>
+										<string>Default</string>
+										<key>Shell Integration Ever Used</key>
+										<false/>
+										<key>Substitutions</key>
+										<dict/>
+										<key>TTY</key>
+										<string>/dev/ttys002</string>
 										<key>Working Directory</key>
 										<string>/Users/maiclopez</string>
 									</dict>
@@ -3628,7 +3802,7 @@
 										<key>height</key>
 										<real>1159</real>
 										<key>width</key>
-										<real>825</real>
+										<real>810</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -3643,7 +3817,7 @@
 								<key>height</key>
 								<real>1159</real>
 								<key>width</key>
-								<real>825</real>
+								<real>810</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -3657,23 +3831,31 @@
 				<key>TerminalGuid</key>
 				<string>pty-BDA8A942-CC55-4E42-A765-28A832D31A5C</string>
 				<key>Width</key>
-				<real>825</real>
+				<real>810</real>
 				<key>Window Type</key>
 				<integer>0</integer>
 				<key>X Origin</key>
 				<real>-73</real>
 				<key>Y Origin</key>
-				<real>1075</real>
+				<real>1074</real>
 			</dict>
 			<dict>
 				<key>Desired Columns</key>
 				<integer>80</integer>
 				<key>Desired Rows</key>
 				<integer>45</integer>
+				<key>Has Toolbelt</key>
+				<false/>
 				<key>Height</key>
-				<real>1181</real>
+				<real>1182</real>
 				<key>Hide After Opening</key>
 				<false/>
+				<key>Hiding Toolbelt Should Resize Window</key>
+				<false/>
+				<key>Is Hotkey Window</key>
+				<false/>
+				<key>Saved Window Type</key>
+				<integer>0</integer>
 				<key>Screen</key>
 				<integer>1</integer>
 				<key>Selected Tab Index</key>
@@ -3687,7 +3869,7 @@
 							<array>
 								<dict>
 									<key>Is Active</key>
-									<true/>
+									<integer>1</integer>
 									<key>Session</key>
 									<dict>
 										<key>Bookmark</key>
@@ -3886,6 +4068,8 @@
 											<integer>80</integer>
 											<key>Command</key>
 											<string></string>
+											<key>Cursor Boost</key>
+											<real>0.0</real>
 											<key>Cursor Color</key>
 											<dict>
 												<key>Blue Component</key>
@@ -3894,6 +4078,19 @@
 												<real>0.10045458376407623</real>
 												<key>Red Component</key>
 												<real>0.1155967190861702</real>
+											</dict>
+											<key>Cursor Guide Color</key>
+											<dict>
+												<key>Alpha Component</key>
+												<real>0.0776519775390625</real>
+												<key>Blue Component</key>
+												<real>0.32584273815155029</real>
+												<key>Color Space</key>
+												<string>Calibrated</string>
+												<key>Green Component</key>
+												<real>0.32583719491958618</real>
+												<key>Red Component</key>
+												<real>0.32584697008132935</real>
 											</dict>
 											<key>Cursor Text Color</key>
 											<dict>
@@ -4412,6 +4609,8 @@
 											<true/>
 											<key>Use Canonical Parser</key>
 											<false/>
+											<key>Use Cursor Guide</key>
+											<true/>
 											<key>Use Italic Font</key>
 											<false/>
 											<key>Vertical Spacing</key>
@@ -4423,10 +4622,44 @@
 											<key>Working Directory</key>
 											<string>/Users/mlopez</string>
 										</dict>
+										<key>Bookmark Name</key>
+										<string>Default</string>
 										<key>Columns</key>
 										<integer>80</integer>
+										<key>Commands</key>
+										<array/>
+										<key>Directories</key>
+										<array/>
+										<key>Environment</key>
+										<dict>
+											<key>PWD</key>
+											<string>/Users/maiclopez</string>
+										</dict>
+										<key>Hosts</key>
+										<array/>
+										<key>Is UTF-8</key>
+										<true/>
+										<key>Program</key>
+										<dict>
+											<key>Type</key>
+											<string>Shell Launcher</string>
+										</dict>
 										<key>Rows</key>
 										<integer>55</integer>
+										<key>Server PID</key>
+										<integer>880</integer>
+										<key>Session Default Name</key>
+										<string>Default</string>
+										<key>Session GUID</key>
+										<string>EF9201BE-8FB8-4034-A445-F98071E3E9D0</string>
+										<key>Session Name</key>
+										<string>Default</string>
+										<key>Shell Integration Ever Used</key>
+										<false/>
+										<key>Substitutions</key>
+										<dict/>
+										<key>TTY</key>
+										<string>/dev/ttys003</string>
 										<key>Working Directory</key>
 										<string>/Users/maiclopez</string>
 									</dict>
@@ -4437,7 +4670,7 @@
 										<key>height</key>
 										<real>1159</real>
 										<key>width</key>
-										<real>825</real>
+										<real>810</real>
 										<key>x</key>
 										<real>0.0</real>
 										<key>y</key>
@@ -4452,7 +4685,7 @@
 								<key>height</key>
 								<real>1159</real>
 								<key>width</key>
-								<real>825</real>
+								<real>810</real>
 								<key>x</key>
 								<real>0.0</real>
 								<key>y</key>
@@ -4466,13 +4699,13 @@
 				<key>TerminalGuid</key>
 				<string>pty-A73521BE-36C8-4A36-A655-D1CA910AA263</string>
 				<key>Width</key>
-				<real>825</real>
+				<real>810</real>
 				<key>Window Type</key>
 				<integer>0</integer>
 				<key>X Origin</key>
 				<real>1075</real>
 				<key>Y Origin</key>
-				<real>1078</real>
+				<real>1077</real>
 			</dict>
 		</array>
 		<key>Irinea</key>
@@ -14204,7 +14437,7 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.0.2</string>
+	<string>3.0.4</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>0</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>
