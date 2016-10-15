@@ -35,4 +35,6 @@
 	trustexitcode = true
 
 [credential]
+	# Used to store github credentials for connecting through https
+	# https://help.github.com/articles/caching-your-github-password-in-git/
 	helper = osxkeychain
