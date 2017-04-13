@@ -1,8 +1,6 @@
 {
 	// Fonts
-	// "font_face": "Source Code Pro",
 	"font_face": "Source Code Pro Medium",
-	// "font_face": "Bitstream Vera Sans Mono",
 	"font_size": 16,
 	"line_padding_bottom": 1,
 	"line_padding_top": 1,
