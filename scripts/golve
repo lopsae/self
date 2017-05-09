@@ -10,6 +10,11 @@ conflictedFiles=$(git ls-files --unmerged | cut -c 49- | grep ^1 | cut -c 3-)
 relativePath=$(git rev-parse --show-cdup)
 conflictedFiles=$(echo "$conflictedFiles" | sed -e "s:^:$relativePath:")
 
+if [[ $# -le 0 ]]; then
+	echo "$conflictedFiles"
+	exit 1
+fi
+
 fileFound=$(echo "$conflictedFiles" | pick "$@" 2> /dev/null)
 
 if [[ $? -ne 0 ]]; then
