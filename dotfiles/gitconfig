@@ -20,19 +20,11 @@
 
 [diff]
 	tool = araxis
-	# tool = Kaleidoscope
 [merge]
 	tool = araxis
-	# tool = Kaleidoscope
 
 [mergetool]
 	keepBackup = false
-
-[difftool "Kaleidoscope"]
-	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-[mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustexitcode = true
 
 [credential]
 	# Used to store github credentials for connecting through https
