@@ -4,9 +4,16 @@
 
 # `git ls-files --unmerged` will output a lenghty line with file flags,
 # object hash, and a stage number for unmerged files.
+conflictedFiles=$(git ls-files --unmerged)
+conflictedLineCount=$(echo -n "$conflictedFiles" | wc -l)
+if [[ $conflictedLineCount -le 0 ]]; then
+	echo "No conflicted files found" >&2
+	exit 1
+fi
+
 # First cut removes flags and object hash
 # Second cut removes the stage number
-conflictedFiles=$(git ls-files --unmerged | cut -c 49- | grep ^1 | cut -c 3-)
+conflictedFiles=$(echo -n "$conflictedFiles" | cut -c 49- | grep ^1 | cut -c 3-)
 relativePath=$(git rev-parse --show-cdup)
 conflictedFiles=$(echo "$conflictedFiles" | sed -e "s:^:$relativePath:")
 
