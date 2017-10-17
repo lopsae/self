@@ -55,10 +55,14 @@
 
 
 read -d '' statusDoc <<"statusDoc"
-# H. - Home status, Found or Missing
-# .B - Backup status, Found or Missing
-# Ff - Different files but same content
-# FX - Different files and different content
+# █_ - Home status, Found or Missing
+# _█ - Backup status, Found or Missing
+# 
+# FF - Both files exist hardlinked
+# Ff - Both files exist with same content
+# FX - Both files exist with different content
+# FM - File present in home, missing from backup
+# MF - File present in backup, missing from home
 #
 # `dotcheck -F` - Force files from Backup into Home.
 #                 Home files will be overwritten.
