@@ -2,36 +2,46 @@
 
 # Run git mergetool using the first matching file found using gick
 
-# `git ls-files --unmerged` will output a lenghty line with file flags,
-# object hash, and a stage number for unmerged files.
-conflictedFiles=$(git ls-files --unmerged)
-conflictedLineCount=$(echo -n "$conflictedFiles" | wc -l)
-if [[ $conflictedLineCount -le 0 ]]; then
-	echo "No conflicted files found" >&2
+topLevelPath=$(git rev-parse --show-cdup 2> /dev/null)
+if [[ $? -ne 0 ]]; then
+	echo 'Not a git repository' >&2
 	exit 1
 fi
 
-# First cut removes flags and object hash
-# Second cut removes the stage number
-conflictedFiles=$(echo -n "$conflictedFiles" | cut -c 49- | grep ^1 | cut -c 3-)
-relativePath=$(git rev-parse --show-cdup)
-conflictedFiles=$(echo "$conflictedFiles" | sed -e "s:^:$relativePath:")
+if [[ ${#cosa} -eq 0 ]]; then
+	topLevelPath='./'
+fi
+
+# `--unmerged` will output mode bits, object name hash, and stage numbers
+# for unmerged files
+# `--abbrev=8` sets the size of the printed object name hash
+conflictedFiles=$(git ls-files --unmerged --abbrev=8 -- "$topLevelPath")
+conflictedLineCount=$(echo -n "$conflictedFiles" | wc -l)
+if [[ $conflictedLineCount -le 0 ]]; then
+	echo 'No conflicted files found' >&2
+	exit 1
+fi
+
+# `cut` removes mode bits and object name hash; stage number remains
+conflictedFiles=$(echo -n "$conflictedFiles" | cut -c 17-)
+
+# `grep` keeps only the files that start with stage number 1
+# `cut` cut removes the remaining stage number
+conflictedFiles=$(echo -n "$conflictedFiles" | grep ^1 | cut -c 3-)
+
 
 if [[ $# -le 0 ]]; then
 	echo "$conflictedFiles"
-	exit 1
+	exit 0
 fi
 
-fileFound=$(echo "$conflictedFiles" | pick "$@" 2> /dev/null)
+pickedFile=$(echo "$conflictedFiles" | pick "$@" 2> /dev/null)
 
 if [[ $? -ne 0 ]]; then
 	echo 'No file found' >&2
 	exit 1
 fi
 
-echo "solve '$fileFound'"
-git mergetool --no-prompt -- "$fileFound"
-
-# TODO seems like merge tool uses relative paths, no absolute GODDAMIT
-# using `golve` from a subdirectory does not work
+echo "solve '$pickedFile'"
+git mergetool --no-prompt -- "$pickedFile"
 
