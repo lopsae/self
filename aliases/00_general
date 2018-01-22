@@ -26,6 +26,7 @@ alias glast='git --no-pager log --pretty=short -n 1'
 alias glean!='git clean --force -xd'
 alias gitcheck='ssh -T git@github.com'
 alias gamend='git commit --amend'
+alias granch='git checkout -b'
 
 # subversion aliases
 alias ss='svn st'
