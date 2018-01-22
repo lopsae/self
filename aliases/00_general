@@ -13,6 +13,9 @@ else
 	alias ll='ls -al --color=tty'
 fi
 
+# self settings reset
+alias reself='pushd $HOME/self && source selfconfig && popd'
+
 # git aliases
 # some use the gick project: https://github.com/lopsae/gick
 alias gs='git status --short --branch --untracked-files'
