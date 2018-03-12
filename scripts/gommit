@@ -3,13 +3,21 @@
 read -d '' helpDoc <<"helpDoc"
 Commits the current index.
 
-If used without parameters "git commit" is simply invoked.
+A commit message is determined in the following order:
 
-If present, any parameters passed are used as the commit message.
-
-If any content is piped in it is used as the commit message. This will
+If any content is piped-in it is used as the commit message. This will
 override any parameters.
+
+If parameters are present these are used as the commit message.
+
+If the `SELF_GOMMIT_MESSAGE_FILE` enviroment variable is defined it is
+used as path to a file that is read and used as commit message. The file
+is read until a `GOMMIT_MESSAGE_END` line is found, any content afterwards
+is ignored.
+
+If none of the previous applies, `git commit` is simply invoked.
 helpDoc
+
 
 if [[ $1 = '-h' || $1 = '--help' ]]; then
 	echo "$helpDoc" >&2
@@ -19,14 +27,34 @@ fi
 # Piped in
 if [[ ! -t 0 ]]; then
 	git commit -F <(cat)
-	
-# No parameters
-elif [[ $# = 0 ]]; then
-	git commit
-	
-# Message in parameters
-else
-	message="$@"
-	git commit -m "$message"
+	exit
 fi
 
+# Message in parameters
+if [[ $# != 0 ]]; then
+	message="$@"
+	git commit -m "$message"
+	exit
+fi
+
+# Env variable
+if [[ -n $SELF_GOMMIT_MESSAGE_FILE ]]; then
+	if [[ -e $SELF_GOMMIT_MESSAGE_FILE ]]; then
+		delimiter=GOMMIT_MESSAGE_END
+
+		# sed will output all lines until the delimiter
+		# -n no line is output by default
+		# -e first command looks for string and quits
+		# -e second command just prints the line
+		cat "$SELF_GOMMIT_MESSAGE_FILE" \
+		| sed -E -n -e "/$delimiter/ q" -e 'p'
+		| git commit --file -
+		exit
+	else
+		echo "`SELF_GOMMIT_MESSAGE_FILE` is defined but does not point to a file" >&2
+	fi
+fi
+
+
+# No parameters
+git commit
