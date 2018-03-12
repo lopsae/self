@@ -43,7 +43,8 @@ if [[ -n $SELF_GOMMIT_MESSAGE_FILE ]]; then
 		delimiter=GOMMIT_MESSAGE_END
 		messagePath = '/tmp/gomit/'
 		mkdir -p "$messagePath"
-		messageFile=$(mktemp ${messagePath}gommit_msg_XXXX)
+		messageFile="${messagePath}gommit_msg_XXXX"
+		messageFile=$(mktemp $messageFile)
 
 		# sed will output all lines until the delimiter
 		# -n no line is output by default
