@@ -40,11 +40,10 @@ fi
 # Env variable
 if [[ -n $SELF_GOMMIT_MESSAGE_FILE ]]; then
 	if [[ -e $SELF_GOMMIT_MESSAGE_FILE ]]; then
-		delimiter=GOMMIT_MESSAGE_END
-		messagePath = '/tmp/gomit/'
+		delimiter='GOMMIT_MESSAGE_END'
+		messagePath='/tmp/gomit/'
 		mkdir -p "$messagePath"
-		messageFile="${messagePath}gommit_msg_XXXX"
-		messageFile=$(mktemp $messageFile)
+		messageFile=$(mktemp "${messagePath}gommit_msg_XXXX")
 
 		# sed will output all lines until the delimiter
 		# -n no line is output by default
