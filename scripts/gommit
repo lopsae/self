@@ -26,14 +26,14 @@ fi
 
 # Piped in
 if [[ ! -t 0 ]]; then
-	git commit -F <(cat)
+	git commit --edit --file <(cat)
 	exit
 fi
 
 # Message in parameters
 if [[ $# != 0 ]]; then
 	message="$@"
-	git commit -m "$message"
+	git commit --edit --message "$message"
 	exit
 fi
 
@@ -41,14 +41,18 @@ fi
 if [[ -n $SELF_GOMMIT_MESSAGE_FILE ]]; then
 	if [[ -e $SELF_GOMMIT_MESSAGE_FILE ]]; then
 		delimiter=GOMMIT_MESSAGE_END
+		messagePath = '/tmp/gomit/'
+		mkdir -p "$messagePath"
+		messageFile=$(mktemp "${messagePath}gommit_msg_XXXX")
 
 		# sed will output all lines until the delimiter
 		# -n no line is output by default
 		# -e first command looks for string and quits
 		# -e second command just prints the line
 		cat "$SELF_GOMMIT_MESSAGE_FILE" \
-		| sed -E -n -e "/$delimiter/ q" -e 'p'
-		| git commit --file -
+		| sed -E -n -e "/$delimiter/ q" -e 'p' \
+		> "$messageFile"
+		git commit --edit --file "$messageFile"
 		exit
 	else
 		echo "`SELF_GOMMIT_MESSAGE_FILE` is defined but does not point to a file" >&2
