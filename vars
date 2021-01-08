@@ -13,6 +13,9 @@ fi
 
 # Bash coloring
 # The separator line expects a with of 80 characters
-export PS1='\[\e[0;37m\]   -------------------------------  ~  $(echo $?)  ~  -------------------------------    \n\n[$(where --ps) \W] \[\e[0m\]'
-export PS2='\[\e[0;37m\]> \[\e[0m\]'
+# export PS1='\[\e[0;37m\]   -------------------------------  ~  $(echo $?)  ~  -------------------------------    \n\n[$(where --ps) \W] \[\e[0m\]'
+# export PS2='\[\e[0;37m\]> \[\e[0m\]'
+export PROMPT='%(?.✅.❌[%?]) %2~ > '
+
+
 
