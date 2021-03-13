@@ -10,10 +10,14 @@ override any parameters.
 
 If parameters are present these are used as the commit message.
 
+If the root folder of the current git repository contains a
+`.gommit_message` file it is used as commit message.
+
 If the `SELF_GOMMIT_MESSAGE_FILE` enviroment variable is defined it is
-used as path to a file that is read and used as commit message. The file
-is read until a `GOMMIT_MESSAGE_END` line is found, any content afterwards
-is ignored.
+used as path to a file that is read and used as commit message.
+
+When a file is read as commit message, the file is read until a
+`GOMMIT_MESSAGE_END` line is found, any content afterwards is ignored.
 
 If none of the previous applies, `git commit` is simply invoked.
 helpDoc
@@ -37,25 +41,33 @@ if [[ $# != 0 ]]; then
 	exit
 fi
 
-# Env variable
-if [[ -n $SELF_GOMMIT_MESSAGE_FILE ]]; then
-	if [[ -e $SELF_GOMMIT_MESSAGE_FILE ]]; then
+# Use local .gommit_message
+gitRoot=$(git rev-parse --show-toplevel)
+messageFile="$gitRoot/.gommit_message"
+if [[ ! -e "$messageFile" ]]; then # file exists
+	# or enviroment variable
+	messageFile="$SELF_GOMMIT_MESSAGE_FILE"
+fi
+
+# Check for message file
+if [[ -n "$messageFile" ]]; then # non-zero string
+	if [[ -e "$messageFile" ]]; then # file exists
 		delimiter='GOMMIT_MESSAGE_END'
-		messagePath='/tmp/gomit/'
-		mkdir -p "$messagePath"
-		messageFile=$(mktemp "${messagePath}gommit_msg_XXXX")
+		tmpMessagePath='/tmp/gommit/'
+		mkdir -p "$tmpMessagePath"
+		tmpMessageFile=$(mktemp "${tmpMessagePath}gommit_msg_XXXX")
 
 		# sed will output all lines until the delimiter
 		# -n no line is output by default
 		# -e first command looks for string and quits
 		# -e second command just prints the line
-		cat "$SELF_GOMMIT_MESSAGE_FILE" \
+		cat "$messageFile" \
 		| sed -E -n -e "/$delimiter/ q" -e 'p' \
-		> "$messageFile"
-		git commit --edit --file "$messageFile"
+		> "$tmpMessageFile"
+		git commit --edit --file "$tmpMessageFile"
 		exit
 	else
-		echo "`SELF_GOMMIT_MESSAGE_FILE` is defined but does not point to a file" >&2
+		echo "`$messageFile` is defined but does not point to a file" >&2
 	fi
 fi
 
