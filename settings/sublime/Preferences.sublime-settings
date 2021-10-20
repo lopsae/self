@@ -1,10 +1,9 @@
 {
-	// Fonts and visuals
+	// Fonts
 	"font_face": "Source Code Pro Medium",
 	"font_size": 16,
 	"line_padding_bottom": 1,
 	"line_padding_top": 1,
-	"color_scheme": "Packages/Color Scheme - Default/Monokai.sublime-color-scheme",
 
 	// Minimap and viewports
 	"draw_minimap_border": true,
@@ -45,3 +44,4 @@
 
 
 }
+
