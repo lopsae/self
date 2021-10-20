@@ -12,6 +12,9 @@
 bash_profile
 bashrc
 
+zsh_profile
+zshrc
+
 gitconfig
 hgrc
 
