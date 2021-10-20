@@ -6,8 +6,6 @@
 	<true/>
 	<key>AllowClipboardAccess</key>
 	<false/>
-	<key>AlternateMouseScroll</key>
-	<true/>
 	<key>AnimateDimming</key>
 	<false/>
 	<key>AutoHideTmuxClientSession</key>
@@ -251,6 +249,8 @@
 	<true/>
 	<key>DisableFullscreenTransparency</key>
 	<false/>
+	<key>EnableDivisionView</key>
+	<true/>
 	<key>EnableRendezvous</key>
 	<false/>
 	<key>FocusFollowsMouse</key>
@@ -268,7 +268,7 @@
 	<key>HideMenuBarInFullscreen</key>
 	<true/>
 	<key>HideScrollbar</key>
-	<false/>
+	<true/>
 	<key>HideTab</key>
 	<true/>
 	<key>HideTabCloseButton</key>
@@ -304,6 +304,8 @@
 		<dict>
 			<key>ASCII Anti Aliased</key>
 			<true/>
+			<key>ASCII Ligatures</key>
+			<false/>
 			<key>Allow Title Reporting</key>
 			<false/>
 			<key>Ambiguous Double Width</key>
@@ -559,7 +561,7 @@
 			<key>Hide After Opening</key>
 			<false/>
 			<key>Horizontal Spacing</key>
-			<real>1</real>
+			<real>0.90000000000000002</real>
 			<key>Idle Code</key>
 			<integer>0</integer>
 			<key>Initial Text</key>
@@ -874,7 +876,7 @@
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>SourceCodePro-Medium 16</string>
+			<string>SpotMono-Regular 16</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Prompt Before Closing 2</key>
@@ -924,8 +926,6 @@
 			<true/>
 			<key>Shortcut</key>
 			<string></string>
-			<key>Show Status Bar</key>
-			<true/>
 			<key>Silence Bell</key>
 			<false/>
 			<key>Smart Cursor Color</key>
@@ -1021,44 +1021,6 @@
 					<string>\btelnet:([a-z0-9A-Z_]+@)?([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\b</string>
 				</dict>
 			</array>
-			<key>Status Bar Layout</key>
-			<dict>
-				<key>advanced configuration</key>
-				<dict>
-					<key>algorithm</key>
-					<integer>0</integer>
-					<key>font</key>
-					<string>.AppleSystemUIFont 12</string>
-				</dict>
-				<key>components</key>
-				<array>
-					<dict>
-						<key>class</key>
-						<string>iTermStatusBarWorkingDirectoryComponent</string>
-						<key>configuration</key>
-						<dict>
-							<key>knobs</key>
-							<dict>
-								<key>base: compression resistance</key>
-								<integer>1</integer>
-								<key>base: priority</key>
-								<real>5</real>
-								<key>maxwidth</key>
-								<real>+infinity</real>
-								<key>minwidth</key>
-								<integer>0</integer>
-								<key>path</key>
-								<string>path</string>
-							</dict>
-							<key>layout advanced configuration dictionary value</key>
-							<dict>
-								<key>algorithm</key>
-								<integer>0</integer>
-							</dict>
-						</dict>
-					</dict>
-				</array>
-			</dict>
 			<key>Sync Title</key>
 			<false/>
 			<key>Tags</key>
@@ -1082,7 +1044,7 @@
 			<key>Use Italic Font</key>
 			<false/>
 			<key>Vertical Spacing</key>
-			<real>1</real>
+			<real>0.90000000000000002</real>
 			<key>Visual Bell</key>
 			<true/>
 			<key>Window Type</key>
@@ -1140,10 +1102,6 @@
 			<string>kNextWindowPointerAction</string>
 		</dict>
 	</dict>
-	<key>PreventEscapeSequenceFromClearingHistory</key>
-	<false/>
-	<key>Print In Black And White</key>
-	<true/>
 	<key>PromptOnClose</key>
 	<true/>
 	<key>PromptOnQuit</key>
@@ -1165,7 +1123,7 @@
 	<key>SoundForEsc</key>
 	<false/>
 	<key>SplitPaneDimmingAmount</key>
-	<real>0.60000002384185791</real>
+	<real>0.59999999999999998</real>
 	<key>SwitchTabModifier</key>
 	<integer>6</integer>
 	<key>SwitchWindowModifier</key>
@@ -8165,8 +8123,6 @@
 	<string></string>
 	<key>findIgnoreCase_iTerm</key>
 	<true/>
-	<key>findMode_iTerm</key>
-	<integer>0</integer>
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>kCPKSelectionViewPreferredModeKey</key>
