@@ -22,3 +22,6 @@ for item in $(ls aliases); do
 done
 unset IFS
 
+
+echo "▶️ selfconfig"
+

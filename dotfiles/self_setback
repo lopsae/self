@@ -15,7 +15,7 @@
 
 @ Sublime settings and scripts
 ~/self/settings/sublime
-~/Library/Application Support/Sublime Text 3/Packages/User/
+~/Library/Application Support/Sublime Text/Packages/User
 
 	Default (OSX).sublime-keymap
 	Preferences.sublime-settings
