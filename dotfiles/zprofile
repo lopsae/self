@@ -1,30 +1,8 @@
 # .zprofile
 
-# TODO move to its own file
-# Self settings
-pushd self > /dev/null
-	source selfconfig
-popd > /dev/null
 
-# TODO move to its own file in self
-# Homebrew installed commands first
-# addpath /usr/local/bin
-
-# TODO move to its own file in self
-# Gools
-addpath ~/bin/gick
-
-addpath '/Applications/Sublime Text.app/Contents/SharedSupport/bin'
-addpath '/Applications/Araxis Merge.app/Contents/Utilities'
-
-# TODO move to its own file in self
-# Local development binaries
-addpath ~/bin
+# Left intentionally blank, all setup is done in zshrc
 
 
-# TODO: readd for homebrew
-# eval "$(/opt/homebrew/bin/brew shellenv)"
-
-
-echo "▶️ .zprofile"
+# echo "▶️ .zprofile"
 
