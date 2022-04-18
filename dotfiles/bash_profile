@@ -21,4 +21,5 @@ addpath '/Applications/Araxis Merge.app/Contents/Utilities'
 # Local development binaries
 addpath ~/bin
 
+
 echo "▶️ .bash_profile"

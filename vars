@@ -22,3 +22,5 @@ export PROMPT='%(?.✅.❌[%?]) %2~ > '
 export GPG_TTY=$(tty)
 
 
+echo "▶️ vars"
+

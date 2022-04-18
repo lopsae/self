@@ -1,5 +1,5 @@
-# .bashrc
+# .zshrc
 
-source $HOME/.bash_profile
+source $HOME/.zprofile
 
 
