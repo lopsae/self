@@ -5,6 +5,9 @@
 # Usualy ~/self.
 
 
+echo "❇️ selfconfig"
+
+
 source functions/addpath
 source functions/seepath
 source functions/newdir
@@ -23,5 +26,5 @@ done
 unset IFS
 
 
-echo "▶️ selfconfig"
+echo "⏹ selfconfig"
 
