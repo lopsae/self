@@ -1,4 +1,4 @@
-# .bash_profile
+# .zprofile
 
 # TODO move to its own file
 # Self settings
@@ -8,11 +8,11 @@ popd > /dev/null
 
 # TODO move to its own file in self
 # Homebrew installed commands first
-addpath /usr/local/bin
+# addpath /usr/local/bin
 
 # TODO move to its own file in self
 # Gools
-addpath /usr/local/gick
+addpath ~/bin/gick
 
 addpath '/Applications/Sublime Text.app/Contents/SharedSupport/bin'
 addpath '/Applications/Araxis Merge.app/Contents/Utilities'
@@ -22,4 +22,9 @@ addpath '/Applications/Araxis Merge.app/Contents/Utilities'
 addpath ~/bin
 
 
-echo "▶️ .bash_profile"
+# TODO: readd for homebrew
+# eval "$(/opt/homebrew/bin/brew shellenv)"
+
+
+echo "▶️ .zprofile"
+
