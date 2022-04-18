@@ -1,4 +1,5 @@
 # .zprofile
+# https://apple.stackexchange.com/questions/388622/zsh-zprofile-zshrc-zlogin-what-goes-where
 
 
 # Left intentionally blank, all setup is done in zshrc

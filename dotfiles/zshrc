@@ -1,4 +1,5 @@
 # .zshrc
+# https://apple.stackexchange.com/questions/388622/zsh-zprofile-zshrc-zlogin-what-goes-where
 
 
 echo "❇️ zshrc"
