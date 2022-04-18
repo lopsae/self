@@ -3,6 +3,9 @@
 # Global exports used maily on other aliases or scripts
 
 
+echo "❇️ vars"
+
+
 # Only for OSX
 if [[ $(uname) == 'Darwin' ]]; then
 	# ls coloring
@@ -22,5 +25,5 @@ export PROMPT='%(?.✅.❌[%?]) %2~ > '
 export GPG_TTY=$(tty)
 
 
-echo "▶️ vars"
+echo "⏹ vars"
 

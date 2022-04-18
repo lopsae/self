@@ -1,6 +1,9 @@
 # .zshrc
 
 
+echo "❇️ zshrc"
+
+
 # TODO move to its own file
 # Self settings
 pushd self > /dev/null
@@ -23,9 +26,9 @@ addpath '/Applications/Araxis Merge.app/Contents/Utilities'
 addpath ~/bin
 
 
-# TODO: readd for homebrew
-# eval "$(/opt/homebrew/bin/brew shellenv)"
+# Homebrew
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 
-echo "▶️ .zshrc"
+echo "⏹ zshrc"
 
