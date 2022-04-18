@@ -9,10 +9,7 @@
 
 # All the following lines are dotfiles to keep in sync, without the dot
 
-bash_profile
-bashrc
-
-zsh_profile
+zprofile
 zshrc
 
 gitconfig
