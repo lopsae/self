@@ -4,24 +4,25 @@
 echo "❇️ zshrc"
 
 
-# TODO move to its own file
 # Self settings
 pushd self > /dev/null
 	source selfconfig
 popd > /dev/null
 
-# TODO move to its own file in self
-# Homebrew installed commands first
+
+# Homebrew installed commands
+# Usually first to take precedence
 # addpath /usr/local/bin
 
-# TODO move to its own file in self
-# Gools
+
+# Gick
 addpath ~/bin/gick
+
 
 addpath '/Applications/Sublime Text.app/Contents/SharedSupport/bin'
 addpath '/Applications/Araxis Merge.app/Contents/Utilities'
 
-# TODO move to its own file in self
+
 # Local development binaries
 addpath ~/bin
 
