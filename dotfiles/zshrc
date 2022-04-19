@@ -1,5 +1,10 @@
 # .zshrc
+# RunCom, or Run Commands
+
 # https://apple.stackexchange.com/questions/388622/zsh-zprofile-zshrc-zlogin-what-goes-where
+# https://superuser.com/questions/173165/what-does-the-rc-in-bashrc-etc-mean
+# https://en.wikipedia.org/wiki/RUNCOM
+
 
 
 echo "❇️ zshrc"
