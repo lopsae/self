@@ -15,10 +15,9 @@ source functions/newdir
 addpath $(pwd)/scripts
 
 source vars
-source aliases/00_general
 
 
-# TODO this should be a standalone script for use on other places
+# All aliases
 IFS=$'\n'
 for item in $(ls aliases); do
 	source "aliases/$item"

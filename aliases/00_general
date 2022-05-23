@@ -1,6 +1,9 @@
 # aliases
 
 
+echo "❇️ general aliases"
+
+
 # utilities
 alias cd..='cd ..'
 alias rmv='rm -rfv'
@@ -32,6 +35,7 @@ alias gesethard!='git reset --hard `ginfo tracking`'
 alias gitcheck='ssh -T git@github.com'
 alias gamend='git commit --amend'
 alias granch='git checkout -b'
+alias gsuri='git submodule update --recursive --init'
 
 # subversion aliases
 alias ss='svn st'
@@ -45,4 +49,6 @@ alias hin='hg incoming'
 alias hout='hg outgoing'
 alias hate='hg late'
 
+
+echo "⏹ general aliases"
 
