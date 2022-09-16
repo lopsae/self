@@ -32,10 +32,9 @@ DESCRIPTION
         used as the stash message. The workspace is not touched, all
         modifications remain in place.
 
-    TODO see if we can leave both stage and workspace without changes
-    TODOgache index|i [<message>]
+    gache index|i [<message>]
         Creates a stash only with the contents in the stage, afterwards the
-        stage is reset. The workspace is not modified.
+        stage is reset.
 
     gache apply|a [<n>]
         Aplies the stash in the `<n>` position. If no `<n>` is given the
@@ -112,6 +111,23 @@ if [[ $1 =~ ^(snap|n)$ ]]; then
 	fi
 
 	git stash apply
+
+	if [[ $? -ne 0 ]]; then
+		exit $error_stashError
+	fi
+	exit 0
+fi
+
+
+# gache index|i [<message>]
+if [[ $1 == 'index' || $1 == 'i' ]]; then
+	shift
+	message="$@"
+	if [[ -n $message ]]; then
+		git stash push --staged --message "$message"
+	else
+		git stash push --staged
+	fi
 
 	if [[ $? -ne 0 ]]; then
 		exit $error_stashError
