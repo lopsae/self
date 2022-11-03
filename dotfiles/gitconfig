@@ -1,6 +1,6 @@
 [user]
 	name = Maic Lopez Saenz
-	email = maic@lopsae.com
+	useConfigOnly = true
 [push]
 	default = tracking
 [color]
