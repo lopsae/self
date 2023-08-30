@@ -3,7 +3,7 @@
 # Global exports used maily on other aliases or scripts
 
 
-echo "❇️ vars"
+echo "❇️  vars"
 
 
 # Only for OSX
@@ -25,5 +25,5 @@ export PROMPT='%(?.✅.❌[%?]) %2~ > '
 export GPG_TTY=$(tty)
 
 
-echo "⏹ vars"
+echo "☑️  vars"
 
