@@ -872,7 +872,7 @@
 			<key>Name</key>
 			<string>Default</string>
 			<key>Non Ascii Font</key>
-			<string>Menlo-Regular 11</string>
+			<string>SpotMono-Medium 16</string>
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
@@ -1031,6 +1031,8 @@
 			<real>0.0</real>
 			<key>Triggers</key>
 			<array/>
+			<key>Unicode Version</key>
+			<integer>9</integer>
 			<key>Unlimited Scrollback</key>
 			<true/>
 			<key>Use Bold Font</key>
@@ -1042,6 +1044,8 @@
 			<key>Use Cursor Guide</key>
 			<true/>
 			<key>Use Italic Font</key>
+			<false/>
+			<key>Use Non-ASCII Font</key>
 			<false/>
 			<key>Vertical Spacing</key>
 			<real>0.90000000000000002</real>
