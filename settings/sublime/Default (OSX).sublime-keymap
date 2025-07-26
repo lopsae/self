@@ -9,13 +9,8 @@
 	// Word Wrap
 	{ "keys": ["super+j"], "command": "toggle_setting", "args": {"setting": "word_wrap"} },
 
-	// Font size commands
-	{ "keys": ["super+0"], "command": "reset_view_font_size" },
-	{ "keys": ["super+="], "command": "increase_view_font_size" },
-	{ "keys": ["super+-"], "command": "decrease_view_font_size" },
-
 	// Tab navigation
-	{ "keys": ["ctrl+tab"], "command": "next_view" },
-	{ "keys": ["ctrl+shift+tab"], "command": "prev_view" }
+	// { "keys": ["ctrl+tab"], "command": "next_view" },
+	// { "keys": ["ctrl+shift+tab"], "command": "prev_view" }
 
 ]
