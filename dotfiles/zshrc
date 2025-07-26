@@ -7,11 +7,11 @@
 
 
 
-echo "❇️  zshrc"
+echo "❇️  zshrc - $(pwd)"
 
 
 # Self settings
-pushd self > /dev/null
+pushd ~/self > /dev/null
 	source selfconfig
 popd > /dev/null
 
