@@ -10,7 +10,8 @@
 	{ "keys": ["super+j"], "command": "toggle_setting", "args": {"setting": "word_wrap"} },
 
 	// Tab navigation
-	// { "keys": ["ctrl+tab"], "command": "next_view" },
-	// { "keys": ["ctrl+shift+tab"], "command": "prev_view" }
+	// ctrl+tab moves forward and backwards, instead of the default stack behaviour.
+	{ "keys": ["ctrl+tab"], "command": "next_view" },
+	{ "keys": ["ctrl+shift+tab"], "command": "prev_view" }
 
 ]
