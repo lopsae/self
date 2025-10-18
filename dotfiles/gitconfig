@@ -18,16 +18,34 @@
 	untracked = magenta bold
 	branch = green bold
 	nobranch = red bold
-
-[diff]
-	tool = araxis
-[merge]
-	tool = araxis
-
-[mergetool]
-	keepBackup = false
-
 [credential]
 	# Used to store github credentials for connecting through https
 	# https://help.github.com/articles/caching-your-github-password-in-git/
 	helper = osxkeychain
+
+
+# For Araxis Merge
+# [diff]
+	# tool = araxis
+# [merge]
+	# tool = araxis
+# [mergetool]
+# 	keepBackup = false
+
+
+# For Kaleidoscope, as configured by Kaleidoscope app itself
+[diff]
+	tool = Kaleidoscope
+[merge]
+	tool = Kaleidoscope
+[mergetool]
+	keepBackup = false
+	prompt = false
+[difftool "Kaleidoscope"]
+	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[difftool]
+	prompt = false
+	trustExitCode = true
+[mergetool "Kaleidoscope"]
+	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+	trustExitCode = true
