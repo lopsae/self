@@ -32,8 +32,12 @@ addpath ~/bin
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Homebrew installed commands
-addpath /opt/homebrew/opt/ruby/bin
-addpath /opt/homebrew/lib/ruby/gems/3.4.0/bin/
+# addpath /opt/homebrew/opt/ruby/bin
+# addpath /opt/homebrew/lib/ruby/gems/3.4.0/bin/
+
+source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
+source /opt/homebrew/opt/chruby/share/chruby/auto.sh
+chruby ruby-3.4.1
 
 
 # NVM
