@@ -16,17 +16,12 @@ pushd ~/self > /dev/null
 popd > /dev/null
 
 
-# Homebrew installed commands
-# Usually first to take precedence
-# addpath /usr/local/bin
-
-
 # Gick
 addpath ~/bin/gick
 
 
 # Apps utilities
-addpath '/Applications/Araxis Merge.app/Contents/Utilities'
+# addpath '/Applications/Araxis Merge.app/Contents/Utilities'
 
 
 # Local development binaries
@@ -35,6 +30,10 @@ addpath ~/bin
 
 # Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Homebrew installed commands
+addpath /opt/homebrew/opt/ruby/bin
+addpath /opt/homebrew/lib/ruby/gems/3.4.0/bin/
 
 
 # NVM
